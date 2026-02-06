@@ -99,7 +99,6 @@
                     </svg>
                     <span>Jadwal Mengajar</span>
                 </a>
-
                 <a
                     href="{{ route('dosen.grading') }}"
                     class="flex items-center gap-4 p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
@@ -165,7 +164,6 @@
                         >3</span
                     >
                 </a>
-
                 <a
                     href="{{ route('dosen.profile') }}"
                     class="flex items-center gap-4 p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
@@ -289,7 +287,9 @@
             </header>
 
             <div class="p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-10">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                >
                     <div
                         class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-4"
                     >
@@ -383,36 +383,6 @@
                             <h3 class="text-2xl font-black text-slate-900">
                                 15 Tugas
                             </h3>
-                        </div>
-                    </div>
-
-                    <div
-                        class="bg-gradient-to-br from-blue-600 to-indigo-700 p-6 rounded-[2rem] shadow-lg shadow-blue-200 text-white flex items-center justify-between cursor-pointer hover:scale-[1.02] transition-transform"
-                    >
-                        <div>
-                            <p
-                                class="text-[10px] font-bold text-blue-200 uppercase tracking-widest"
-                            >
-                                Aksi Cepat
-                            </p>
-                            <h3 class="text-lg font-black">Buat Tugas</h3>
-                        </div>
-                        <div
-                            class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M12 4v16m8-8H4"
-                                ></path>
-                            </svg>
                         </div>
                     </div>
                 </div>

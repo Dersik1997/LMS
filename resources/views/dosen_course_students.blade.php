@@ -87,12 +87,12 @@
                         href="{{ route('dosen.course.assignments') }}"
                         class="snap-start shrink-0 px-5 py-2 rounded-lg text-slate-500 hover:text-slate-900 font-bold text-[10px] uppercase tracking-widest transition-all whitespace-nowrap hover:bg-white/50 flex items-center justify-center"
                     >
-                        Penugasan (2)
+                        Penugasan
                     </a>
                     <button
                         class="snap-start shrink-0 px-5 py-2 rounded-lg bg-white text-blue-700 font-bold text-[10px] uppercase tracking-widest shadow-sm border border-slate-200 whitespace-nowrap transition-all"
                     >
-                        Peserta (35)
+                        Peserta
                     </button>
                     <a
                         href="{{ route('dosen.course.grades') }}"

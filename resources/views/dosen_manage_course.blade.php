@@ -34,7 +34,7 @@
                 <div class="flex items-center gap-4 w-full md:w-auto">
                     <a
                         href="{{ route('dosen.courses') }}"
-                        class="w-10 h-10 rounded-full bg-slate-50 text-slate-400 border border-slate-200 flex items-center justify-center transition-all shrink-0 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 active:scale-95"
+                        class="w-10 h-10 rounded-full bg-slate-50 hover:bg-blue-50 text-slate-400 hover:text-blue-600 flex items-center justify-center transition-all border border-slate-200 shrink-0"
                     >
                         <svg
                             class="w-5 h-5"

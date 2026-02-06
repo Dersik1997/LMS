@@ -184,7 +184,7 @@
                         </div>
                         <a
                             href="{{ route('dosen.assignment.grade', 1) }}"
-                            class="px-6 py-2 border-2 border-blue-600 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 hover:border-blue-700 transition-all text-center shadow-md shadow-blue-200"
+                            class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all text-center"
                         >
                             Periksa
                         </a>
@@ -222,7 +222,7 @@
                             >
                         </div>
                         <a
-                            href="#"
+                            href="{{ route('dosen.assignment.edit', 2) }}"
                             class="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all text-center text-slate-600"
                         >
                             Edit

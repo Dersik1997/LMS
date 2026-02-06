@@ -2,19 +2,40 @@
 <html lang="id" class="h-full">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
         <title>Pesan | Portal Dosen</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <link
             href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
             rel="stylesheet"
         />
+        <style>
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .custom-scrollbar::-webkit-scrollbar {
+                width: 4px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-track {
+                background: #f1f5f9;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 4px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: #94a3b8;
+            }
+        </style>
     </head>
     <body
         class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] min-h-full flex overflow-hidden border-box text-slate-800"
     >
         <aside
-            class="hidden lg:flex w-80 bg-white border-r border-slate-200 flex-col h-screen sticky top-0 z-20 flex-shrink-0"
+            class="hidden lg:flex w-80 bg-white border-r border-slate-200 flex-col h-screen sticky top-0 z-20"
         >
             <div class="p-8 border-b border-slate-100 flex items-center gap-4">
                 <img
@@ -51,7 +72,7 @@
                             stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke-width="2"
-                            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
                         ></path>
                     </svg>
                     <span>Beranda</span>
@@ -75,66 +96,6 @@
                         ></path>
                     </svg>
                     <span>Mata Kuliah</span>
-                </a>
-
-                <a
-                    href="{{ route('dosen.schedule') }}"
-                    class="flex items-center gap-4 p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
-                >
-                    <svg
-                        class="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        ></path>
-                    </svg>
-                    <span>Jadwal Mengajar</span>
-                </a>
-
-                <a
-                    href="{{ route('dosen.grading') }}"
-                    class="flex items-center gap-4 p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
-                >
-                    <svg
-                        class="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                        ></path>
-                    </svg>
-                    <span>Input Nilai</span>
-                </a>
-
-                <a
-                    href="{{ route('dosen.exams') }}"
-                    class="flex items-center gap-4 p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
-                >
-                    <svg
-                        class="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                        ></path>
-                    </svg>
-                    <span>Kelola Ujian</span>
                 </a>
 
                 <a
@@ -209,148 +170,232 @@
             </div>
         </aside>
 
-        <main class="flex-1 h-screen flex flex-col bg-[#f8fafc]">
+        <main
+            class="flex-1 h-screen overflow-hidden flex flex-col relative bg-slate-50"
+        >
             <header
-                class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-8 py-6 sticky top-0 z-30 flex items-center justify-between flex-shrink-0"
+                class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-8 py-4 sticky top-0 z-30 shrink-0 flex justify-between items-center"
             >
                 <div>
                     <h2
-                        class="text-2xl font-black text-slate-900 tracking-tight"
+                        class="text-xl font-extrabold text-slate-900 tracking-tight"
                     >
                         Pesan Masuk
                     </h2>
-                    <p class="text-sm font-medium text-slate-500">
-                        Komunikasi dengan mahasiswa
-                    </p>
+                    <span
+                        class="text-xs font-bold text-slate-400 uppercase tracking-widest"
+                        >Komunikasi Mahasiswa</span
+                    >
                 </div>
             </header>
 
             <div class="flex-1 flex overflow-hidden">
                 <div
-                    class="w-80 bg-white border-r border-slate-200 overflow-y-auto z-10 flex flex-col"
+                    class="w-full md:w-80 bg-white border-r border-slate-200 overflow-y-auto z-10 flex flex-col"
                 >
-                    <div
-                        class="p-6 sticky top-0 bg-white/95 backdrop-blur-sm z-10 border-b border-slate-100"
-                    >
+                    <div class="p-4 border-b border-slate-100">
                         <input
                             type="text"
                             placeholder="Cari mahasiswa..."
-                            class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3.5 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none"
+                            class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400"
                         />
                     </div>
-                    <div class="p-4 space-y-2">
+                    <div class="flex-1 overflow-y-auto p-2 space-y-1">
                         <div
-                            class="p-4 bg-blue-50 rounded-2xl cursor-pointer flex gap-4 items-center border border-blue-100 shadow-sm transition-all relative"
+                            class="p-3 bg-blue-50 rounded-xl flex gap-3 cursor-pointer border border-blue-100 relative group transition-all"
                         >
                             <div
-                                class="w-12 h-12 bg-slate-200 rounded-full overflow-hidden shrink-0"
+                                class="w-10 h-10 rounded-xl bg-blue-200 shrink-0 overflow-hidden"
                             >
                                 <img
                                     src="https://ui-avatars.com/api/?name=Ridwan+Firdaus&background=0D8ABC&color=fff"
                                     class="w-full h-full object-cover"
                                 />
                             </div>
-                            <div class="flex-1 min-w-0">
-                                <h4
-                                    class="text-sm font-black text-slate-900 truncate"
+                            <div class="flex-1 overflow-hidden">
+                                <div
+                                    class="flex justify-between items-center mb-0.5"
                                 >
-                                    M. Ridwan Firdaus
-                                </h4>
+                                    <h4
+                                        class="font-bold text-slate-900 text-xs truncate"
+                                    >
+                                        Ridwan Firdaus
+                                    </h4>
+                                    <span
+                                        class="text-[9px] font-bold text-blue-600"
+                                        >10:42</span
+                                    >
+                                </div>
                                 <p
-                                    class="text-xs text-blue-600 truncate font-bold"
+                                    class="text-[10px] text-slate-500 truncate font-medium"
                                 >
-                                    Baik pak, terima kasih...
+                                    Belum ada pak, sedang saya kerjakan...
                                 </p>
                             </div>
-                            <span
-                                class="w-2.5 h-2.5 bg-blue-600 rounded-full"
-                            ></span>
                         </div>
 
                         <div
-                            class="p-4 hover:bg-slate-50 rounded-2xl cursor-pointer flex gap-4 items-center transition-all"
+                            class="p-3 hover:bg-slate-50 rounded-xl flex gap-3 cursor-pointer border border-transparent hover:border-slate-100 relative group transition-all"
                         >
                             <div
-                                class="w-12 h-12 bg-slate-200 rounded-full overflow-hidden shrink-0"
+                                class="w-10 h-10 rounded-xl bg-slate-200 shrink-0 overflow-hidden"
                             >
                                 <img
                                     src="https://ui-avatars.com/api/?name=Siti+Aisyah&background=F1F5F9&color=64748B"
                                     class="w-full h-full object-cover"
                                 />
                             </div>
-                            <div class="flex-1 min-w-0">
-                                <h4
-                                    class="text-sm font-bold text-slate-700 truncate"
+                            <div class="flex-1 overflow-hidden">
+                                <div
+                                    class="flex justify-between items-center mb-0.5"
                                 >
-                                    Siti Aisyah
-                                </h4>
+                                    <h4
+                                        class="font-bold text-slate-700 text-xs truncate"
+                                    >
+                                        Siti Aisyah
+                                    </h4>
+                                    <span
+                                        class="text-[9px] font-bold text-slate-400"
+                                        >Kemarin</span
+                                    >
+                                </div>
                                 <p
-                                    class="text-xs text-slate-400 truncate font-medium"
+                                    class="text-[10px] text-slate-400 truncate font-medium"
                                 >
-                                    Izin bertanya soal tugas...
+                                    Maaf pak izin bertanya mengenai...
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex-1 flex flex-col bg-slate-50 relative">
-                    <div class="flex-1 p-8 space-y-6 overflow-y-auto">
-                        <div class="flex justify-end">
+                <div
+                    class="flex-1 flex flex-col bg-[#f0f4f8] relative hidden md:flex"
+                >
+                    <div
+                        class="p-4 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between sticky top-0 z-10"
+                    >
+                        <div class="flex items-center gap-3">
                             <div
-                                class="bg-blue-600 text-white p-5 rounded-2xl rounded-tr-none max-w-lg shadow-lg shadow-blue-100"
-                            >
-                                <p class="text-sm font-medium leading-relaxed">
-                                    Ridwan, tugas kamu belum lengkap bagian
-                                    flowchartnya. Tolong dilengkapi sebelum
-                                    tenggat waktu besok.
-                                </p>
-                                <span
-                                    class="text-[10px] text-blue-200 mt-2 block text-right opacity-80"
-                                    >10:30 AM</span
-                                >
-                            </div>
-                        </div>
-
-                        <div class="flex justify-start items-end gap-3">
-                            <div
-                                class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden shrink-0 mb-1"
+                                class="w-10 h-10 rounded-xl bg-blue-100 overflow-hidden shadow-sm"
                             >
                                 <img
                                     src="https://ui-avatars.com/api/?name=Ridwan+Firdaus&background=0D8ABC&color=fff"
                                     class="w-full h-full object-cover"
                                 />
                             </div>
-                            <div
-                                class="bg-white text-slate-700 p-5 rounded-2xl rounded-tl-none max-w-lg shadow-sm border border-slate-100"
-                            >
-                                <p class="text-sm font-medium leading-relaxed">
-                                    Baik pak, akan segera saya perbaiki dan
-                                    upload ulang filenya. Terima kasih
-                                    diingatkan.
-                                </p>
-                                <span
-                                    class="text-[10px] text-slate-400 mt-2 block"
-                                    >10:32 AM</span
+                            <div>
+                                <h4
+                                    class="font-black text-slate-900 text-sm leading-tight"
                                 >
+                                    Ridwan Firdaus
+                                </h4>
+                                <span
+                                    class="inline-flex items-center text-[9px] font-bold text-emerald-600 uppercase tracking-widest"
+                                >
+                                    <span
+                                        class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5 animate-pulse"
+                                    ></span>
+                                    Online
+                                </span>
                             </div>
                         </div>
                     </div>
 
                     <div
-                        class="p-6 bg-white border-t border-slate-200 flex-shrink-0"
+                        class="flex-1 p-6 overflow-y-auto space-y-6 custom-scrollbar"
                     >
-                        <div class="flex gap-4">
-                            <input
-                                type="text"
-                                placeholder="Ketik balasan..."
-                                class="flex-1 bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none"
-                            />
+                        <div
+                            class="flex flex-col items-end ml-auto max-w-[80%]"
+                        >
+                            <div
+                                class="bg-blue-600 p-4 rounded-2xl rounded-tr-none shadow-md shadow-blue-100"
+                            >
+                                <p
+                                    class="text-sm text-white leading-relaxed font-medium"
+                                >
+                                    Ridwan, apakah ada kendala dalam pengerjaan
+                                    tugas nomor 2?
+                                </p>
+                            </div>
+                            <span
+                                class="text-[9px] font-bold text-slate-400 mt-1 mr-1"
+                                >10:40 AM</span
+                            >
+                        </div>
+
+                        <div class="flex flex-col items-start max-w-[80%]">
+                            <div
+                                class="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100"
+                            >
+                                <p
+                                    class="text-sm text-slate-700 leading-relaxed font-medium"
+                                >
+                                    Belum ada pak, sedang saya kerjakan bagian
+                                    logikanya. Nanti saya kabari lagi.
+                                </p>
+                            </div>
+                            <span
+                                class="text-[9px] font-bold text-slate-400 mt-1 ml-1"
+                                >10:42 AM</span
+                            >
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-white border-t border-slate-200">
+                        <div
+                            class="flex items-center gap-2 bg-slate-50 p-2 rounded-2xl border border-slate-200 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100 transition-all"
+                        >
                             <button
-                                class="bg-blue-600 text-white w-14 h-14 rounded-2xl flex items-center justify-center hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all"
+                                class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-white rounded-xl transition-all"
+                                title="Kirim Gambar"
                             >
                                 <svg
-                                    class="w-6 h-6 transform rotate-90 ml-1"
+                                    class="w-6 h-6"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    ></path>
+                                </svg>
+                            </button>
+
+                            <input
+                                type="text"
+                                placeholder="Ketik pesan..."
+                                class="flex-1 bg-transparent text-sm font-medium text-slate-700 placeholder-slate-400 focus:outline-none px-2"
+                            />
+
+                            <button
+                                class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                                title="Voice Note"
+                            >
+                                <svg
+                                    class="w-6 h-6"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                                    ></path>
+                                </svg>
+                            </button>
+
+                            <button
+                                class="w-12 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-md hover:bg-blue-700 transition-all"
+                                title="Kirim"
+                            >
+                                <svg
+                                    class="w-5 h-5 transform rotate-90 ml-0.5"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"

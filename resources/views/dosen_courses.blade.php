@@ -56,7 +56,6 @@
                     </svg>
                     <span>Beranda</span>
                 </a>
-
                 <a
                     href="{{ route('dosen.courses') }}"
                     class="flex items-center gap-4 p-4 bg-blue-50 text-blue-700 rounded-2xl font-bold transition-all shadow-sm border border-blue-100"
@@ -76,7 +75,6 @@
                     </svg>
                     <span>Mata Kuliah</span>
                 </a>
-
                 <a
                     href="{{ route('dosen.schedule') }}"
                     class="flex items-center gap-4 p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
@@ -115,7 +113,6 @@
                     </svg>
                     <span>Input Nilai</span>
                 </a>
-
                 <a
                     href="{{ route('dosen.exams') }}"
                     class="flex items-center gap-4 p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
@@ -135,7 +132,6 @@
                     </svg>
                     <span>Kelola Ujian</span>
                 </a>
-
                 <a
                     href="{{ route('dosen.messages') }}"
                     class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
@@ -267,11 +263,38 @@
                         >
                             SD
                         </div>
-                        <span
-                            class="px-4 py-2 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl uppercase tracking-widest"
-                            >Kelas 3C</span
-                        >
+
+                        <div class="flex items-center gap-2">
+                            <button
+                                onclick="
+                                    return confirm(
+                                        'Yakin ingin menghapus kelas ini?',
+                                    );
+                                "
+                                class="p-2 rounded-xl text-slate-300 hover:bg-red-50 hover:text-red-500 transition-all"
+                                title="Hapus Kelas"
+                            >
+                                <svg
+                                    class="w-5 h-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                    ></path>
+                                </svg>
+                            </button>
+                            <span
+                                class="px-4 py-2 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl uppercase tracking-widest"
+                                >Kelas 3C</span
+                            >
+                        </div>
                     </div>
+
                     <div class="relative z-10">
                         <h3
                             class="text-xl font-black text-slate-900 mb-2 group-hover:text-blue-600 transition-colors"
@@ -311,11 +334,38 @@
                         >
                             PBO
                         </div>
-                        <span
-                            class="px-4 py-2 bg-purple-50 text-purple-700 text-xs font-bold rounded-xl uppercase tracking-widest"
-                            >Kelas 3A</span
-                        >
+
+                        <div class="flex items-center gap-2">
+                            <button
+                                onclick="
+                                    return confirm(
+                                        'Yakin ingin menghapus kelas ini?',
+                                    );
+                                "
+                                class="p-2 rounded-xl text-slate-300 hover:bg-red-50 hover:text-red-500 transition-all"
+                                title="Hapus Kelas"
+                            >
+                                <svg
+                                    class="w-5 h-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                    ></path>
+                                </svg>
+                            </button>
+                            <span
+                                class="px-4 py-2 bg-purple-50 text-purple-700 text-xs font-bold rounded-xl uppercase tracking-widest"
+                                >Kelas 3A</span
+                            >
+                        </div>
                     </div>
+
                     <div class="relative z-10">
                         <h3
                             class="text-xl font-black text-slate-900 mb-2 group-hover:text-purple-600 transition-colors"
@@ -345,7 +395,7 @@
                 </div>
 
                 <div
-                    class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group cursor-pointer opacity-80 hover:opacity-100"
+                    class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group cursor-pointer relative overflow-hidden"
                 >
                     <div class="flex justify-between items-start mb-6">
                         <div
@@ -353,10 +403,36 @@
                         >
                             KB
                         </div>
-                        <span
-                            class="px-4 py-2 bg-slate-100 text-slate-600 text-xs font-bold rounded-xl uppercase tracking-widest"
-                            >Kelas 5B</span
-                        >
+
+                        <div class="flex items-center gap-2">
+                            <button
+                                onclick="
+                                    return confirm(
+                                        'Yakin ingin menghapus kelas ini?',
+                                    );
+                                "
+                                class="p-2 rounded-xl text-slate-300 hover:bg-red-50 hover:text-red-500 transition-all"
+                                title="Hapus Kelas"
+                            >
+                                <svg
+                                    class="w-5 h-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                    ></path>
+                                </svg>
+                            </button>
+                            <span
+                                class="px-4 py-2 bg-slate-100 text-slate-600 text-xs font-bold rounded-xl uppercase tracking-widest"
+                                >Kelas 5B</span
+                            >
+                        </div>
                     </div>
                     <h3
                         class="text-xl font-black text-slate-900 mb-2 group-hover:text-slate-600 transition-colors"
@@ -388,7 +464,6 @@
                 class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity"
                 onclick="toggleModal('modalKelas', false)"
             ></div>
-
             <div class="absolute inset-0 flex items-center justify-center p-4">
                 <div
                     class="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg transform scale-100 transition-transform"
@@ -418,7 +493,6 @@
                             </svg>
                         </button>
                     </div>
-
                     <div class="p-8 space-y-6">
                         <div>
                             <label
@@ -431,7 +505,6 @@
                                 class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
-
                         <div class="grid grid-cols-2 gap-6">
                             <div>
                                 <label
@@ -456,7 +529,6 @@
                                 />
                             </div>
                         </div>
-
                         <div>
                             <label
                                 class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2"
@@ -469,7 +541,6 @@
                             />
                         </div>
                     </div>
-
                     <div
                         class="p-8 border-t border-slate-100 flex justify-end gap-3"
                     >
@@ -494,7 +565,6 @@
                 const modal = document.getElementById(modalID);
                 if (show) {
                     modal.classList.remove("hidden");
-                    // Animasi masuk
                     const content = modal.querySelector(
                         'div[class*="transform"]',
                     );

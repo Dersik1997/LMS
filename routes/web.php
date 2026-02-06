@@ -204,6 +204,11 @@ Route::get('/dosen/session/{id}/manage', function ($id) {
 Route::get('/assignment/{id}/grade', function ($id) {
         return view('dosen_grade_assignment'); // Pastikan nama file blade-nya sesuai
     })->name('dosen.assignment.grade');
+
+   Route::get('/assignment/{id}/edit', function ($id) {
+    // Pastikan nama di dalam view() sama persis dengan nama file blade kamu
+    return view('dosen_edit_assignment'); 
+})->name('dosen.assignment.edit');
     });
 
 });
