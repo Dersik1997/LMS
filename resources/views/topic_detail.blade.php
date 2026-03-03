@@ -12,6 +12,7 @@
         
         <script src="https://unpkg.com/wavesurfer.js@7"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+        <script src="https://www.youtube.com/iframe_api"></script>
 
         <style>
             html { scrollbar-gutter: stable; }
@@ -45,6 +46,19 @@
         </style>
     </head>
     <body class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] min-h-full flex flex-col border-box overflow-x-hidden text-slate-800">
+        
+        @php
+            $materiCount = isset($session->materis) ? $session->materis->count() : 0;
+            // Angka fitur chat akan bergeser otomatis jika materinya banyak
+            $chatStart = max(5, 2 + $materiCount);
+            
+            $cmdKetik  = $chatStart;
+            $cmdGambar = $chatStart + 1;
+            $cmdRekam  = $chatStart + 2;
+            $cmdKirim  = $chatStart + 3;
+            $cmdBaca   = $chatStart + 4;
+        @endphp
+
         <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
             <div class="absolute top-[-10%] right-[-5%] w-[400px] h-[400px] bg-blue-100/40 rounded-full blur-3xl opacity-50"></div>
             <div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-indigo-50/40 rounded-full blur-3xl opacity-50"></div>
@@ -104,19 +118,60 @@
                     </div>
 
                     <div id="materi-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        @forelse($session->materis as $index => $materi)
+                        @forelse($session->materis as $materi)
                             @php
                                 $type = $materi->type ?? 'file';
                                 
-                                $voiceNum = 2; // PDF
-                                if($type === 'video' || $type === 'link') $voiceNum = 3;
-                                if($type === 'voice') $voiceNum = 4;
+                                // Penomoran Materi Dinamis menggunakan $loop->iteration agar selalu berurutan
+                                $voiceNum = 1 + $loop->iteration; 
 
+                                // PERBAIKAN: Menulis class Tailwind secara utuh agar tidak terhapus (purged)
                                 $config = [
-                                    'file'  => ['color' => 'blue',   'label' => 'PDF',   'bg' => 'bg-red-50',    'border' => 'border-red-100',   'text' => 'text-red-500'],
-                                    'video' => ['color' => 'red',    'label' => 'VIDEO', 'bg' => 'bg-red-100',   'border' => 'border-red-200',   'text' => 'text-red-600'],
-                                    'link'  => ['color' => 'red',    'label' => 'YOUTUBE', 'bg' => 'bg-red-100', 'border' => 'border-red-200',   'text' => 'text-red-600'],
-                                    'voice' => ['color' => 'purple', 'label' => 'AUDIO', 'bg' => 'bg-purple-100', 'border' => 'border-purple-200', 'text' => 'text-purple-600'],
+                                    'file'  => [
+                                        'label' => 'PDF', 
+                                        'bg' => 'bg-blue-50', 
+                                        'border' => 'border-blue-200', 
+                                        'text' => 'text-blue-600', 
+                                        'badge_bg' => 'bg-blue-500',
+                                        'hover_border' => 'hover:border-blue-300',
+                                        'hover_bg' => 'hover:bg-blue-50'
+                                    ],
+                                    'video' => [
+                                        'label' => 'VIDEO', 
+                                        'bg' => 'bg-red-50', 
+                                        'border' => 'border-red-200', 
+                                        'text' => 'text-red-600', 
+                                        'badge_bg' => 'bg-red-500',
+                                        'hover_border' => 'hover:border-red-300',
+                                        'hover_bg' => 'hover:bg-red-50'
+                                    ],
+                                    'link'  => [
+                                        'label' => 'YOUTUBE', 
+                                        'bg' => 'bg-red-50', 
+                                        'border' => 'border-red-200', 
+                                        'text' => 'text-red-600', 
+                                        'badge_bg' => 'bg-red-500',
+                                        'hover_border' => 'hover:border-red-300',
+                                        'hover_bg' => 'hover:bg-red-50'
+                                    ],
+                                    'voice' => [
+                                        'label' => 'AUDIO', 
+                                        'bg' => 'bg-purple-50', 
+                                        'border' => 'border-purple-200', 
+                                        'text' => 'text-purple-600', 
+                                        'badge_bg' => 'bg-purple-500',
+                                        'hover_border' => 'hover:border-purple-300',
+                                        'hover_bg' => 'hover:bg-purple-50'
+                                    ],
+                                    'audio' => [ // Antisipasi kalau di database tipenya tertulis 'audio'
+                                        'label' => 'AUDIO', 
+                                        'bg' => 'bg-purple-50', 
+                                        'border' => 'border-purple-200', 
+                                        'text' => 'text-purple-600', 
+                                        'badge_bg' => 'bg-purple-500',
+                                        'hover_border' => 'hover:border-purple-300',
+                                        'hover_bg' => 'hover:bg-purple-50'
+                                    ],
                                 ];
                                 $ui = $config[$type] ?? $config['file'];
                                 
@@ -124,8 +179,8 @@
                                 $isYT = ($type === 'link' && (str_contains($materi->link, 'youtu') || str_contains($materi->link, 'youtube'))) ? 'true' : 'false';
                             @endphp
 
-                            <div id="materi-{{ $voiceNum }}" data-url="{{ $fileUrl }}" data-materi-type="{{ $type }}" data-yt="{{ $isYT }}" data-title="{{ $materi->judul }}" onclick="navigasiKe({{ $voiceNum }})" class="group border border-slate-100 rounded-2xl p-4 md:p-5 hover:border-{{ $ui['color'] }}-300 hover:bg-{{ $ui['color'] }}-50/30 transition-all cursor-pointer relative active:scale-[0.98]">
-                                <div class="absolute right-4 top-4 w-6 h-6 bg-{{ $ui['color'] }}-500 text-white shadow-md rounded-lg flex items-center justify-center font-black text-[10px] transition-colors">
+                            <div id="materi-{{ $voiceNum }}" data-url="{{ $fileUrl }}" data-materi-type="{{ $type }}" data-yt="{{ $isYT }}" data-title="{{ $materi->judul }}" onclick="navigasiKe({{ $voiceNum }})" class="group border border-slate-100 rounded-2xl p-4 md:p-5 {{ $ui['hover_border'] }} {{ $ui['hover_bg'] }} transition-all cursor-pointer relative active:scale-[0.98]">
+                                <div class="absolute right-4 top-4 w-6 h-6 {{ $ui['badge_bg'] }} text-white shadow-md rounded-lg flex items-center justify-center font-black text-[10px] transition-colors">
                                     {{ $voiceNum }}
                                 </div>
                                 <div class="flex flex-col gap-3">
@@ -134,12 +189,12 @@
                                             <span class="text-[9px] font-black uppercase">PDF</span>
                                         @elseif($type === 'video' || $type === 'link')
                                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" /></svg>
-                                        @elseif($type === 'voice')
+                                        @elseif($type === 'voice' || $type === 'audio')
                                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
                                         @endif
                                     </div>
                                     <div>
-                                        <h4 class="text-sm font-bold text-slate-800 group-hover:text-{{ $ui['color'] }}-700 line-clamp-1">{{ $materi->judul }}</h4>
+                                        <h4 class="text-sm font-bold text-slate-800 group-hover:{{ $ui['text'] }} line-clamp-1">{{ $materi->judul }}</h4>
                                         <p class="text-[10px] text-slate-400 mt-1 uppercase tracking-wider">{{ $ui['label'] }} • Klik Putar/Buka</p>
                                     </div>
                                 </div>
@@ -170,8 +225,8 @@
                             <h3 class="text-base md:text-lg font-black text-slate-900 uppercase tracking-tight">Ruang Diskusi Kelas</h3>
                             <p class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Tanya jawab sesi ini bersama Dosen</p>
                         </div>
-                        <span class="text-[9px] font-bold bg-blue-100 text-blue-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 cursor-pointer hover:bg-blue-200" onclick="navigasiKe(9)">
-                            Sebut "9" Baca Chat
+                        <span class="text-[9px] font-bold bg-blue-100 text-blue-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 cursor-pointer hover:bg-blue-200" onclick="navigasiKe({{ $cmdBaca }})">
+                            Sebut "{{ $cmdBaca }}" Baca Chat
                         </span>
                     </div>
 
@@ -253,12 +308,12 @@
                                     <button type="button" id="btnUploadImage" onclick="document.getElementById('imageInput').click()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-white transition-all cursor-pointer shadow-sm border border-transparent hover:border-blue-100">
                                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                     </button>
-                                    <span class="absolute -top-1.5 -right-1.5 bg-slate-900 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border border-white">6</span>
+                                    <span class="absolute -top-1.5 -right-1.5 bg-slate-900 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border border-white">{{ $cmdGambar }}</span>
                                 </div>
 
                                 <div id="normalInputWrapper" class="flex-1 min-w-0 relative flex items-center">
-                                    <div class="absolute left-2 text-[10px] font-black text-white bg-slate-900 px-1.5 py-0.5 rounded-md shadow-sm hidden md:block z-10">5</div>
-                                    <input type="text" name="message" id="messageInput" placeholder="Sebutkan 5 untuk ketik suara..." autocomplete="off" class="w-full bg-transparent text-xs sm:text-sm font-medium text-slate-700 placeholder-slate-400 focus:outline-none transition-all py-1.5 pl-1 md:pl-8" />
+                                    <div class="absolute left-2 text-[10px] font-black text-white bg-slate-900 px-1.5 py-0.5 rounded-md shadow-sm hidden md:block z-10">{{ $cmdKetik }}</div>
+                                    <input type="text" name="message" id="messageInput" placeholder="Sebutkan {{ $cmdKetik }} untuk ketik suara..." autocomplete="off" class="w-full bg-transparent text-xs sm:text-sm font-medium text-slate-700 placeholder-slate-400 focus:outline-none transition-all py-1.5 pl-1 md:pl-8" />
                                     
                                     <button type="button" id="cancelVoiceToTextBtn" onclick="batalKetikSuara()" class="hidden absolute right-1 sm:right-2 text-[10px] font-black uppercase text-white bg-red-500 hover:bg-red-600 px-2.5 py-1.5 rounded-lg shadow-sm transition-all cursor-pointer z-20">Batal Dikte ✕</button>
                                     <button type="button" id="cancelVoiceBtn" class="hidden absolute right-1 sm:right-2 text-[10px] font-black uppercase text-white bg-red-500 hover:bg-red-600 px-2.5 py-1.5 rounded-lg shadow-sm transition-all cursor-pointer z-20">Batal Suara ✕</button>
@@ -279,7 +334,7 @@
                                     <button type="button" id="recordBtn" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all cursor-pointer border border-transparent hover:border-red-100 shadow-sm">
                                         <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"></path></svg>
                                     </button>
-                                    <span class="absolute -top-1.5 -right-1.5 bg-slate-900 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border border-white">7</span>
+                                    <span class="absolute -top-1.5 -right-1.5 bg-slate-900 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border border-white">{{ $cmdRekam }}</span>
                                 </div>
 
                                 <div class="relative shrink-0">
@@ -287,7 +342,7 @@
                                         <span id="sendIcon"><svg class="w-4 h-4 sm:w-5 sm:h-5 transform rotate-90 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg></span>
                                         <span id="sendLoading" class="hidden"><svg class="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg></span>
                                     </button>
-                                    <span class="absolute -top-1.5 -right-1.5 bg-slate-900 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border border-white z-10">8</span>
+                                    <span class="absolute -top-1.5 -right-1.5 bg-slate-900 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border border-white z-10">{{ $cmdKirim }}</span>
                                 </div>
                             </div>
                         </form>
@@ -322,7 +377,9 @@
             const synth = window.speechSynthesis;
             const SpeechRec = window.webkitSpeechRecognition || window.SpeechRecognition;
 
+            // TAMBAHAN FLAG UNTUK MENGUNCI SUARA SAAT VIDEO MAIN
             let rec = null; let interval; let modeKetikSuara = false; let menungguKonfirmasiKirim = false; let jedaKetikTimer = null;
+            let isVideoPlaying = false; 
 
             if (SpeechRec) { rec = new SpeechRec(); rec.lang = "id-ID"; rec.continuous = true; }
 
@@ -371,6 +428,8 @@
             }
 
             function openVideoPlayer(url, isYoutube, title) {
+                isVideoPlaying = true; // KUNCI MIKROFON AKTIF
+                
                 document.getElementById('videoPlayerTitle').innerText = title || "Video Player";
                 const container = document.getElementById('videoPlayerContainer');
                 container.innerHTML = '';
@@ -381,10 +440,41 @@
                     const match = url.match(regExp);
                     if (match && match[2].length === 11) { videoId = match[2]; } 
                     else { try { let urlObj = new URL(url); videoId = urlObj.searchParams.get("v") || url.split('/').pop(); } catch(e) { videoId = ''; } }
-                    let embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0` : url;
-                    container.innerHTML = `<iframe src="${embedUrl}" class="w-full h-full border-0 absolute top-0 left-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+                    
+                    let embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&enablejsapi=1` : url;
+                    container.innerHTML = `<iframe id="ytVideoIframe" src="${embedUrl}" class="w-full h-full border-0 absolute top-0 left-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+                    
+                    setTimeout(() => {
+                        if (window.YT && window.YT.Player) {
+                            new YT.Player('ytVideoIframe', {
+                                events: {
+                                    'onReady': function(event) {
+                                        event.target.playVideo(); 
+                                    },
+                                    'onStateChange': function(event) {
+                                        if (event.data === YT.PlayerState.ENDED) {
+                                            closeVideoPlayer();
+                                            arahkanSingkat("Video " + title + " sudah selesai ditonton");
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }, 1000);
+
                 } else {
-                    container.innerHTML = `<video controls autoplay class="w-full h-full absolute top-0 left-0 outline-none"><source src="${url}" type="video/mp4">Browser Anda tidak mendukung HTML5 video.</video>`;
+                    container.innerHTML = `<video id="localVideo" controls autoplay class="w-full h-full absolute top-0 left-0 outline-none"><source src="${url}" type="video/mp4">Browser Anda tidak mendukung HTML5 video.</video>`;
+                    
+                    setTimeout(() => {
+                        const vid = document.getElementById("localVideo");
+                        if (vid) {
+                            vid.play();
+                            vid.onended = function() {
+                                closeVideoPlayer();
+                                arahkanSingkat("Video " + title + " sudah selesai ditonton");
+                            };
+                        }
+                    }, 500);
                 }
 
                 const modal = document.getElementById('videoPlayerModal');
@@ -395,6 +485,8 @@
             }
 
             function closeVideoPlayer() {
+                isVideoPlaying = false; // KUNCI MIKROFON DIBUKA
+                
                 const modal = document.getElementById('videoPlayerModal');
                 const box = modal.querySelector('.modal-box');
                 box.classList.remove('modal-content-active');
@@ -410,7 +502,7 @@
                 document.getElementById('normalInputWrapper').classList.remove('dictating-active', 'confirming-active');
                 document.getElementById('cancelVoiceToTextBtn').classList.add('hidden');
                 document.getElementById("messageInput").value = "";
-                document.getElementById("messageInput").placeholder = "Sebutkan 5 untuk ketik suara...";
+                document.getElementById("messageInput").placeholder = "Sebutkan {{ $cmdKetik }} untuk ketik suara...";
             }
 
             let imageInput = document.getElementById("imageInput");
@@ -500,14 +592,14 @@
                     recordBtn.classList.add('text-slate-400');
                     
                     messageInput.disabled = false;
-                    messageInput.placeholder = "Sebutkan 5 untuk ketik suara...";
+                    messageInput.placeholder = "Sebutkan {{ $cmdKetik }} untuk ketik suara...";
                     
                     arahkanSingkat("Perekaman suara dibatalkan"); 
                 });
 
                 cancelVoiceBtn.addEventListener('click', () => {
                     voiceInput.value = ''; 
-                    messageInput.placeholder = "Sebutkan 5 untuk ketik suara...";
+                    messageInput.placeholder = "Sebutkan {{ $cmdKetik }} untuk ketik suara...";
                     messageInput.disabled = false;
                     messageInput.classList.remove('font-bold', 'text-blue-600', 'bg-blue-100/50', 'rounded-xl', 'px-4');
                     messageInput.classList.add('bg-transparent', 'pl-1', 'md:pl-8');
@@ -523,12 +615,10 @@
                 });
             }
 
-            // FUNGSI UTAMA PANDUAN SUARA (OTOMATIS BERURUTAN)
             function getPanduanUtama() {
                 const judulSesi = "{{ $session->judul ?? 'Materi' }}";
                 const pesanDosen = document.getElementById("text-pengumuman").innerText.trim();
                 
-                // --- PERUBAHAN DI SINI: "Halaman Pertemuan" bukan "Halaman Diskusi" ---
                 let teks = `Halaman Pertemuan ${judulSesi}. Pesan dosen: ${pesanDosen}. `;
                 
                 let isAdaMateri = false;
@@ -541,10 +631,8 @@
                     @foreach($session->materis as $materi)
                         @php
                             $type = $materi->type ?? 'file';
-                            $voiceNum = 2; 
-                            if($type === 'video' || $type === 'link') $voiceNum = 3;
-                            if($type === 'voice') $voiceNum = 4;
-                            $jenis = $type === 'file' ? 'PDF' : ($type === 'voice' ? 'Audio' : 'Video');
+                            $voiceNum = 1 + $loop->iteration; 
+                            $jenis = $type === 'file' ? 'PDF' : (($type === 'voice' || $type === 'audio') ? 'Audio' : 'Video');
                         @endphp
                         teks += "Berbentuk {{ $jenis }} dengan judul {{ addslashes($materi->judul) }}, sebutkan {{ $voiceNum }} untuk membuka. ";
                     @endforeach
@@ -552,7 +640,7 @@
                     teks += "Belum ada materi terlampir di pertemuan ini. ";
                 }
 
-                teks += "Untuk diskusi dengan dosen: sebutkan angka lima untuk mendikte pesan. Enam untuk upload gambar. Tujuh rekam suara diskusi. Delapan kirim pesan. Sembilan dengarkan riwayat chat. Nol kembali. Katakan Ulang, kapanpun Anda butuh panduan.";
+                teks += "Untuk diskusi dengan dosen: sebutkan angka {{ $cmdKetik }} untuk mendikte pesan. {{ $cmdGambar }} untuk upload gambar. {{ $cmdRekam }} rekam suara diskusi. {{ $cmdKirim }} kirim pesan. {{ $cmdBaca }} dengarkan riwayat chat. Nol kembali. Katakan Ulang, kapanpun Anda butuh panduan.";
                 return teks;
             }
 
@@ -565,47 +653,46 @@
                     teks = "Kembali ke Menu Utama.";
                 } else if (nomor === 1) {
                     teks = "Pesan Dosen: " + document.getElementById("text-pengumuman").innerText;
-                } else if (nomor === 2) {
-                    let pdfEl = document.getElementById("materi-2");
-                    if(pdfEl) {
-                        let url = pdfEl.getAttribute("data-url");
-                        readerBox.classList.remove("hidden");
-                        readerText.innerText = "Mengekstrak teks asli PDF, mohon tunggu sebentar...";
-                        bicara("Mengekstrak isi file PDF, mohon tunggu.");
-                        
-                        readPDFText(url).then(extractedText => {
-                            readerText.innerText = extractedText.substring(0, 300) + "..."; 
-                            bicara("Membacakan PDF: " + extractedText, () => { 
-                                arahkanSingkat("Selesai membaca materi PDF"); 
+                } 
+                else if (nomor >= 2 && nomor < {{ 2 + $materiCount }}) {
+                    let el = document.getElementById("materi-" + nomor);
+                    if(el) {
+                        let type = el.getAttribute("data-materi-type");
+                        let url = el.getAttribute("data-url");
+                        let isYt = el.getAttribute("data-yt");
+                        let title = el.getAttribute("data-title");
+
+                        if (type === 'file') {
+                            readerBox.classList.remove("hidden");
+                            readerText.innerText = "Mengekstrak teks asli PDF, mohon tunggu sebentar...";
+                            bicara("Mengekstrak isi file PDF " + title + ", mohon tunggu.");
+                            readPDFText(url).then(extractedText => {
+                                readerText.innerText = extractedText.substring(0, 300) + "..."; 
+                                bicara("Membacakan PDF: " + extractedText, () => { 
+                                    arahkanSingkat("Selesai membaca materi PDF " + title); 
+                                });
                             });
-                        });
-                        return;
-                    } else { teks = "Materi PDF kosong."; }
-                } else if (nomor === 3) {
-                    let videoEl = document.getElementById("materi-3");
-                    if(videoEl) {
-                        let url = videoEl.getAttribute("data-url");
-                        let isYt = videoEl.getAttribute("data-yt");
-                        let title = videoEl.getAttribute("data-title");
-                        teks = "Membuka dan memutar video.";
-                        bicara(teks, () => { openVideoPlayer(url, isYt, title); mulaiMendengar(); });
-                        return;
-                    } else { teks = "Materi Video kosong."; }
-                } else if (nomor === 4) {
-                    let audioEl = document.getElementById("materi-4");
-                    if(audioEl) {
-                        let url = audioEl.getAttribute("data-url");
-                        teks = "Memutar audio pembelajaran.";
-                        bicara(teks, () => {
-                            let player = document.getElementById('globalAudioPlayer');
-                            player.src = url; 
-                            player.play(); 
-                            player.onended = () => { arahkanSingkat("Pemutaran audio selesai"); };
-                            mulaiMendengar();
-                        });
-                        return;
-                    } else { teks = "Materi Audio kosong."; }
-                } else if (nomor === 5) {
+                            return;
+                        } else if (type === 'video' || type === 'link') {
+                            teks = "Membuka dan memutar video " + title + ".";
+                            bicara(teks, () => { openVideoPlayer(url, isYt, title); mulaiMendengar(); });
+                            return;
+                        } else if (type === 'voice' || type === 'audio') {
+                            teks = "Memutar audio " + title + ".";
+                            bicara(teks, () => {
+                                let player = document.getElementById('globalAudioPlayer');
+                                player.src = url; 
+                                player.play(); 
+                                player.onended = () => { arahkanSingkat("Pemutaran audio selesai"); };
+                                mulaiMendengar();
+                            });
+                            return;
+                        }
+                    } else {
+                        teks = "Materi tidak ditemukan.";
+                    }
+                } 
+                else if (nomor === {{ $cmdKetik }}) {
                     modeKetikSuara = true; menungguKonfirmasiKirim = false;
                     document.getElementById('normalInputWrapper').classList.add('dictating-active');
                     document.getElementById('normalInputWrapper').classList.remove('confirming-active');
@@ -613,19 +700,19 @@
                     document.getElementById("messageInput").value = "";
                     document.getElementById("messageInput").placeholder = "Mendengarkan teks...";
                     teks = "Silakan berbicara untuk mendikte pesan diskusi.";
-                } else if (nomor === 6) {
-                    teks = "Membuka galeri. Pilih gambar, lalu sebutkan delapan untuk mengirim.";
+                } else if (nomor === {{ $cmdGambar }}) {
+                    teks = "Membuka galeri. Pilih gambar, lalu sebutkan {{ $cmdKirim }} untuk mengirim.";
                     bicara(teks, () => { document.getElementById('imageInput').click(); mulaiMendengar(); });
                     return;
-                } else if (nomor === 7) {
+                } else if (nomor === {{ $cmdRekam }}) {
                     if (!recordBtn.classList.contains('text-white')) {
                         teks = "Merekam pesan diskusi. Bicara setelah bip. Sebut Selesai untuk berhenti.";
                         bicara(teks, () => { recordBtn.click(); });
                         return;
                     } else {
-                        recordBtn.click(); teks = "Suara disimpan. Sebut delapan untuk mengirim.";
+                        recordBtn.click(); teks = "Suara disimpan. Sebut {{ $cmdKirim }} untuk mengirim.";
                     }
-                } else if (nomor === 8) {
+                } else if (nomor === {{ $cmdKirim }}) {
                     modeKetikSuara = false; menungguKonfirmasiKirim = false; clearTimeout(jedaKetikTimer);
                     document.getElementById('normalInputWrapper').classList.remove('dictating-active', 'confirming-active');
                     document.getElementById('cancelVoiceToTextBtn').classList.add('hidden');
@@ -637,7 +724,7 @@
                     if (textVal !== "" || imgVal > 0 || voiceVal > 0) {
                         document.getElementById("sendChatBtn").click(); return; 
                     } else { teks = "Maaf, pesan masih kosong."; }
-                } else if (nomor === 9) {
+                } else if (nomor === {{ $cmdBaca }}) {
                     let chats = document.querySelectorAll('#chatContainer .chat-bubble-new');
                     if(chats.length === 0) {
                         teks = "Belum ada diskusi di ruang ini.";
@@ -646,9 +733,7 @@
                         chats.forEach(chat => {
                             let sender = "Seseorang";
                             let senderEl = chat.querySelector('.flex-col > p.font-bold');
-                            if(senderEl) {
-                                sender = senderEl.innerText.replace('Dosen', '').trim();
-                            }
+                            if(senderEl) sender = senderEl.innerText.replace('Dosen', '').trim();
                             
                             let msgElement = chat.querySelector('.whitespace-pre-wrap');
                             let msg = msgElement ? msgElement.innerText.trim() : "Mengirim media lampiran";
@@ -672,18 +757,30 @@
                     rec.onresult = (event) => {
                         const hasil = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
 
+                        // ---- FITUR KUNCI MIKROFON SAAT VIDEO MAIN ----
+                        if (isVideoPlaying) {
+                            if (hasil.includes("stop") || hasil.includes("berhenti") || hasil.includes("tutup") || hasil.includes("kembali")) {
+                                stopBicara();
+                                arahkanSingkat("Video ditutup");
+                            }
+                            return; // ABAIKAN SEMUA KATA LAIN JIKA VIDEO SEDANG MAIN
+                        }
+                        // ----------------------------------------------
+
                         if (hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan") || hasil.includes("tolong")) {
                             bicara(getPanduanUtama(), () => { mulaiMendengar(); });
                             return;
                         }
 
                         if (menungguKonfirmasiKirim) {
-                            if (hasil.includes("kirim") || hasil.includes("delapan") || hasil.includes("ya")) { navigasiKe(8); return; }
+                            if (hasil.includes("kirim") || hasil.includes("ya")) { navigasiKe({{ $cmdKirim }}); return; }
                             if (hasil.includes("batal") || hasil.includes("tidak") || hasil.includes("engga")) { 
                                 window.batalKetikSuara(); 
                                 arahkanSingkat("Pesan dibatalkan"); 
                                 return; 
                             }
+                            const angka = hasil.match(/\d+/);
+                            if (angka && parseInt(angka[0]) === {{ $cmdKirim }}) { navigasiKe({{ $cmdKirim }}); return; }
                             return; 
                         }
 
@@ -708,28 +805,41 @@
                         if (recordBtn && recordBtn.classList.contains('text-white')) {
                             if (hasil.includes("selesai")) {
                                 recordBtn.click();
-                                bicara("Suara telah disimpan. Sebutkan delapan untuk mengirim pesan.", () => { mulaiMendengar(); });
+                                bicara("Suara telah disimpan. Sebutkan {{ $cmdKirim }} untuk mengirim pesan.", () => { mulaiMendengar(); });
                             }
                             return; 
                         }
 
                         if (hasil.includes("nol") || hasil.includes("kembali")) navigasiKe(0);
                         else if (hasil.includes("satu") || hasil.includes("pesan") || hasil.includes("instruksi")) navigasiKe(1);
-                        else if (hasil.includes("dua") || hasil.includes("baca pdf")) navigasiKe(2);
-                        else if (hasil.includes("tiga") || hasil.includes("video") || hasil.includes("youtube")) navigasiKe(3);
-                        else if (hasil.includes("empat") || hasil.includes("audio")) navigasiKe(4);
-                        else if (hasil.includes("lima") || hasil.includes("ketik") || hasil.includes("dikte")) navigasiKe(5);
-                        else if (hasil.includes("enam") || hasil.includes("lampiran") || hasil.includes("gambar")) navigasiKe(6);
-                        else if (hasil.includes("tujuh") || hasil.includes("rekam") || hasil.includes("suara")) navigasiKe(7);
-                        else if (hasil.includes("delapan") || hasil.includes("kirim")) navigasiKe(8);
-                        else if (hasil.includes("sembilan") || (hasil.includes("baca") && (hasil.includes("diskusi") || hasil.includes("chat")))) navigasiKe(9);
+                        else if (hasil.includes("ketik") || hasil.includes("dikte")) navigasiKe({{ $cmdKetik }});
+                        else if (hasil.includes("lampiran") || hasil.includes("gambar")) navigasiKe({{ $cmdGambar }});
+                        else if (hasil.includes("rekam") || hasil.includes("suara")) navigasiKe({{ $cmdRekam }});
+                        else if (hasil.includes("kirim")) navigasiKe({{ $cmdKirim }});
+                        else if (hasil.includes("baca") && (hasil.includes("diskusi") || hasil.includes("chat"))) navigasiKe({{ $cmdBaca }});
                         else if (hasil.includes("stop") || hasil.includes("berhenti")) {
                             stopBicara();
                             arahkanSingkat("Pembacaan dihentikan");
                         }
                         else {
                             const angka = hasil.match(/\d+/);
-                            if (angka) navigasiKe(parseInt(angka[0]));
+                            if (angka) {
+                                navigasiKe(parseInt(angka[0]));
+                            } else {
+                                const mapAngka = { "nol":0, "satu":1, "dua":2, "tiga":3, "empat":4, "lima":5, "enam":6, "tujuh":7, "delapan":8, "sembilan":9, "sepuluh":10, "sebelas":11, "dua belas":12, "tiga belas":13, "empat belas":14, "lima belas":15 };
+                                let found = false;
+                                for (let word of hasil.split(" ")) {
+                                    if (mapAngka[word] !== undefined) {
+                                        navigasiKe(mapAngka[word]);
+                                        found = true; break;
+                                    }
+                                }
+                                if (!found) {
+                                    for (const [key, val] of Object.entries(mapAngka)) {
+                                        if (hasil.includes(key)) { navigasiKe(val); break; }
+                                    }
+                                }
+                            }
                         }
                     };
                     rec.onend = () => { rec.start(); };
@@ -743,9 +853,6 @@
                 }, 800);
             };
 
-            /* =========================================
-               SUBMIT CHAT (AJAX) - MENGALIR TANPA REFRESH
-            ========================================= */
             const sessionId = {{ $session->id }};
             const chatForm = document.getElementById("chatForm");
             const chatContainer = document.getElementById("chatContainer");
@@ -786,7 +893,7 @@
                         this.reset(); window.cancelImage();
                         
                         if(voiceInput) voiceInput.value = '';
-                        messageInput.placeholder = "Sebutkan 5 untuk ketik suara..."; 
+                        messageInput.placeholder = "Sebutkan {{ $cmdKetik }} untuk ketik suara..."; 
                         messageInput.disabled = false;
                         messageInput.classList.remove('font-bold', 'text-blue-600', 'bg-blue-100/50', 'rounded-xl', 'px-4');
                         messageInput.classList.add('bg-transparent', 'pl-1', 'md:pl-8');
