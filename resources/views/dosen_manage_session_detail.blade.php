@@ -110,13 +110,22 @@
             <div class="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 md:p-10 border border-slate-200 shadow-sm" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
                 <h3 class="text-base sm:text-lg font-black text-slate-900 uppercase tracking-tight mb-6">Materi Pertemuan</h3>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-8">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
                     <button type="button" onclick="openModal('materiModal')" class="p-4 sm:p-5 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center gap-2 hover:bg-blue-50 hover:border-blue-400 transition-all group text-center cursor-pointer">
                         <svg class="w-6 h-6 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                         </svg>
                         <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest group-hover:text-blue-600 transition-colors">
-                            + Tambah Materi
+                            + File / Link
+                        </span>
+                    </button>
+
+                    <button type="button" onclick="openModal('textModal')" class="p-4 sm:p-5 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center gap-2 hover:bg-emerald-50 hover:border-emerald-400 transition-all group text-center cursor-pointer">
+                        <svg class="w-6 h-6 text-slate-400 group-hover:text-emerald-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest group-hover:text-emerald-600 transition-colors">
+                            + Tulis Teks
                         </span>
                     </button>
 
@@ -125,7 +134,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
                         </svg>
                         <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest group-hover:text-purple-600 transition-colors">
-                            + Tambah Voice
+                            + Voice Note
                         </span>
                     </button>
 
@@ -134,7 +143,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 00-2 2z"/>
                         </svg>
                         <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest group-hover:text-red-600 transition-colors">
-                            + Tambah Video
+                            + Video
                         </span>
                     </button>
                 </div>
@@ -149,6 +158,8 @@
                             <div class="w-11 h-11 bg-white text-blue-600 rounded-xl flex items-center justify-center border border-slate-200 shadow-sm group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shrink-0">
                                 @if($materi->type == 'file')
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                @elseif($materi->type == 'text')
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
                                 @elseif($materi->type == 'link')
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.828a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
                                 @elseif($materi->type == 'voice')
@@ -371,14 +382,43 @@
         </div>
     </div>
 
+    <div id="textModal" class="fixed inset-0 flex items-center justify-center z-[70] opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+        <div class="bg-white rounded-[2rem] p-6 sm:p-8 w-full max-w-[500px] shadow-2xl transform scale-95 transition-transform duration-300 modal-box">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-black text-slate-800 tracking-tight">Tulis Materi Teks</h3>
+                <button type="button" onclick="closeModal('textModal')" class="text-slate-400 hover:text-red-500 bg-slate-50 hover:bg-red-50 w-8 h-8 rounded-full flex items-center justify-center transition-colors">✕</button>
+            </div>
+            
+            <form method="POST" action="{{ route('dosen.materi.store', $session->id) }}" class="space-y-4 block">
+                @csrf
+                <input type="hidden" name="type" value="text">
+                <div>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1.5 ml-1">Judul Materi Teks</label>
+                    <input type="text" name="judul" placeholder="Contoh: Rangkuman Bab 1" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all" required>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1.5 ml-1">Isi Materi</label>
+                    <textarea name="link" rows="5" placeholder="Ketik materi di sini..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all resize-none custom-scrollbar" required></textarea>
+                    <p class="text-[9px] text-slate-400 mt-1 ml-1">*Teks akan langsung ditampilkan saat mahasiswa klik 'Buka'</p>
+                </div>
+                <button type="submit" class="w-full bg-emerald-600 text-white py-3.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest shadow-lg shadow-emerald-600/30 hover:bg-emerald-700 hover:-translate-y-0.5 transition-all mt-4">Simpan Teks Materi</button>
+            </form>
+        </div>
+    </div>
+
     <div id="voiceModal" class="fixed inset-0 flex items-center justify-center z-[70] opacity-0 pointer-events-none transition-opacity duration-300 p-4">
         <div class="bg-white rounded-[2rem] p-6 sm:p-8 w-full max-w-[400px] shadow-2xl transform scale-95 transition-transform duration-300 modal-box">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-lg font-black text-slate-900 tracking-tight">Upload Rekaman</h3>
+                <h3 class="text-lg font-black text-slate-900 tracking-tight">Tambah Voice Note</h3>
                 <button type="button" onclick="closeModal('voiceModal')" class="text-slate-400 hover:text-red-500 bg-slate-50 hover:bg-red-50 w-8 h-8 rounded-full flex items-center justify-center transition-colors">✕</button>
             </div>
             
-            <form method="POST" action="{{ route('dosen.materi.store', $session->id) }}" enctype="multipart/form-data" class="space-y-5">
+            <div class="flex gap-2 mb-6 bg-slate-100 p-1.5 rounded-xl border border-slate-200/60">
+                <button type="button" onclick="switchVoiceTab('upload')" id="btnTabVoiceUpload" class="flex-1 bg-white text-purple-700 py-2.5 rounded-lg text-[10px] sm:text-[11px] font-black uppercase tracking-widest shadow-sm transition-all">Upload File</button>
+                <button type="button" onclick="switchVoiceTab('record')" id="btnTabVoiceRecord" class="flex-1 text-slate-500 hover:text-slate-700 py-2.5 rounded-lg text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all">Rekam Langsung</button>
+            </div>
+
+            <form id="formVoiceUpload" method="POST" action="{{ route('dosen.materi.store', $session->id) }}" enctype="multipart/form-data" class="space-y-5 block">
                 @csrf
                 <input type="hidden" name="type" value="voice">
                 <div>
@@ -390,6 +430,25 @@
                     <input type="file" name="file" accept="audio/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 sm:file:px-5 file:rounded-xl file:border-0 file:text-[9px] sm:file:text-[10px] file:font-black file:uppercase file:tracking-widest file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 cursor-pointer border border-dashed border-slate-200 p-2 rounded-xl bg-slate-50" required>
                 </div>
                 <button type="submit" class="w-full bg-purple-600 text-white py-3.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest shadow-lg shadow-purple-600/30 hover:bg-purple-700 hover:-translate-y-0.5 transition-all mt-4">Simpan Audio</button>
+            </form>
+
+            <form id="formVoiceRecord" method="POST" action="{{ route('dosen.materi.store', $session->id) }}" enctype="multipart/form-data" class="space-y-5 hidden">
+                @csrf
+                <input type="hidden" name="type" value="voice">
+                <input type="file" name="file" id="recordedVoiceMateri" class="hidden">
+                <div>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1.5 ml-1">Keterangan Suara</label>
+                    <input type="text" name="judul" placeholder="Contoh: Rekaman Instruksi Praktikum" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all" required>
+                </div>
+                
+                <div class="text-center py-6 border-2 border-dashed border-purple-200 rounded-xl bg-purple-50/30">
+                    <button type="button" id="btnRecordMateriStart" class="w-16 h-16 rounded-full bg-white border border-purple-200 text-purple-500 flex items-center justify-center mx-auto hover:scale-110 transition-all shadow-sm">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+                    </button>
+                    <p id="recordMateriTimer" class="mt-3 text-xs font-bold text-slate-500 tracking-widest font-mono">Ketuk untuk merekam</p>
+                </div>
+                
+                <button type="submit" id="btnSubmitMateriRecord" disabled class="w-full bg-purple-600 text-white py-3.5 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest shadow-lg shadow-purple-600/30 hover:bg-purple-700 hover:-translate-y-0.5 transition-all mt-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0">Kirim & Simpan</button>
             </form>
         </div>
     </div>
@@ -465,10 +524,6 @@
             setTimeout(() => { modal.classList.remove('modal-active'); }, 300);
         }
 
-        function openMateriModal() { openModal('materiModal'); }
-        function openVoiceModal() { openModal('voiceModal'); }
-        function openVideoModal() { openModal('videoModal'); }
-
         function switchMateriTab(type) {
             const isFile = type === 'file';
             document.getElementById('formFile').style.display = isFile ? 'block' : 'none';
@@ -476,6 +531,15 @@
             
             document.getElementById('btnTabFile').className = isFile ? 'flex-1 bg-white text-blue-700 py-2.5 rounded-lg text-[10px] sm:text-[11px] font-black uppercase tracking-widest shadow-sm transition-all' : 'flex-1 text-slate-500 hover:text-slate-700 py-2.5 rounded-lg text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all';
             document.getElementById('btnTabLink').className = isFile ? 'flex-1 text-slate-500 hover:text-slate-700 py-2.5 rounded-lg text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all' : 'flex-1 bg-white text-purple-700 py-2.5 rounded-lg text-[10px] sm:text-[11px] font-black uppercase tracking-widest shadow-sm transition-all';
+        }
+
+        function switchVoiceTab(type) {
+            const isUpload = type === 'upload';
+            document.getElementById('formVoiceUpload').style.display = isUpload ? 'block' : 'none';
+            document.getElementById('formVoiceRecord').style.display = isUpload ? 'none' : 'block';
+            
+            document.getElementById('btnTabVoiceUpload').className = isUpload ? 'flex-1 bg-white text-purple-700 py-2.5 rounded-lg text-[10px] sm:text-[11px] font-black uppercase tracking-widest shadow-sm transition-all' : 'flex-1 text-slate-500 hover:text-slate-700 py-2.5 rounded-lg text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all';
+            document.getElementById('btnTabVoiceRecord').className = isUpload ? 'flex-1 text-slate-500 hover:text-slate-700 py-2.5 rounded-lg text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all' : 'flex-1 bg-white text-purple-700 py-2.5 rounded-lg text-[10px] sm:text-[11px] font-black uppercase tracking-widest shadow-sm transition-all';
         }
 
         function switchVideoTab(type) {
@@ -488,7 +552,68 @@
         }
 
         // ==========================================
-        // 2. AUDIO WAVE LOGIC
+        // 2. LIVE RECORD UNTUK MATERI VOICE
+        // ==========================================
+        const btnRecordMateriStart = document.getElementById('btnRecordMateriStart');
+        const timerMateri = document.getElementById('recordMateriTimer');
+        const recordedVoiceMateri = document.getElementById('recordedVoiceMateri');
+        const btnSubmitMateriRecord = document.getElementById('btnSubmitMateriRecord');
+
+        let isRecordingMateri = false;
+        let materiMediaRecorder, materiAudioChunks = [], materiRecordInterval, materiRecordSeconds = 0;
+
+        btnRecordMateriStart.addEventListener('click', async () => {
+            if (!isRecordingMateri) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    materiMediaRecorder = new MediaRecorder(stream);
+                    materiMediaRecorder.start();
+                    isRecordingMateri = true;
+                    
+                    btnRecordMateriStart.classList.remove('text-purple-500', 'bg-white');
+                    btnRecordMateriStart.classList.add('bg-red-500', 'text-white', 'animate-pulse', 'border-red-500');
+                    
+                    materiRecordSeconds = 0;
+                    materiRecordInterval = setInterval(() => {
+                        materiRecordSeconds++;
+                        const m = String(Math.floor(materiRecordSeconds / 60)).padStart(2, '0');
+                        const s = String(materiRecordSeconds % 60).padStart(2, '0');
+                        timerMateri.innerText = `🔴 Merekam... ${m}:${s}`;
+                    }, 1000);
+
+                    materiAudioChunks = [];
+                    materiMediaRecorder.ondataavailable = e => materiAudioChunks.push(e.data);
+                } catch(err) {
+                    alert("Akses mikrofon ditolak atau tidak ditemukan!");
+                }
+            } else {
+                materiMediaRecorder.onstop = () => {
+                    const blob = new Blob(materiAudioChunks, { type: 'audio/webm' });
+                    const file = new File([blob], 'materi_voice.webm', { type: 'audio/webm' });
+                    
+                    const dt = new DataTransfer();
+                    dt.items.add(file);
+                    recordedVoiceMateri.files = dt.files;
+                    
+                    btnSubmitMateriRecord.disabled = false;
+                    timerMateri.innerText = "✅ Rekaman Selesai (" + timerMateri.innerText.split(' ')[2] + ")";
+                    timerMateri.classList.remove('text-slate-500');
+                    timerMateri.classList.add('text-green-600');
+                    
+                    btnRecordMateriStart.classList.remove('bg-red-500', 'text-white', 'animate-pulse', 'border-red-500');
+                    btnRecordMateriStart.classList.add('bg-green-100', 'text-green-600', 'border-green-200'); 
+                    btnRecordMateriStart.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+                    
+                    isRecordingMateri = false;
+                };
+                materiMediaRecorder.stop();
+                clearInterval(materiRecordInterval);
+            }
+        });
+
+
+        // ==========================================
+        // 3. AUDIO WAVE LOGIC (UNTUK CHAT)
         // ==========================================
         const wavesurfers = {};
         function initWaveSurfer(containerId, audioUrl, isMe) {
@@ -530,7 +655,7 @@
         });
 
         // ==========================================
-        // 3. CHAT LOGIC (Voice & Image)
+        // 4. CHAT LOGIC (Voice & Image)
         // ==========================================
         function previewImage(input) {
             if (input.files && input.files[0]) {
@@ -568,7 +693,7 @@
         const btnUploadImage = document.getElementById('btnUploadImage');
         const cancelVoiceBtn = document.getElementById('cancelVoiceBtn');
 
-        function updateTimer() {
+        function updateChatTimer() {
             recordSeconds++;
             const m = String(Math.floor(recordSeconds / 60)).padStart(2, '0');
             const s = String(recordSeconds % 60).padStart(2, '0');
@@ -592,7 +717,7 @@
                         
                         recordSeconds = 0;
                         timerText.innerText = "00:00";
-                        recordInterval = setInterval(updateTimer, 1000);
+                        recordInterval = setInterval(updateChatTimer, 1000);
 
                         audioChunks = [];
                         mediaRecorder.ondataavailable = event => { audioChunks.push(event.data); };
@@ -617,7 +742,6 @@
                         recordBtn.classList.add('hidden');
                         btnUploadImage.classList.add('hidden');
                         
-                        // MUNCULKAN TOMBOL BATAL & UBAH INPUT TEKS JADI INDIKATOR REKAMAN
                         messageInput.placeholder = "▶ ılıılı Voice Note siap dikirim...";
                         messageInput.disabled = true; 
                         messageInput.classList.add('font-bold', 'text-blue-600', 'bg-blue-50', 'rounded-xl', 'px-4');
@@ -630,7 +754,6 @@
                 }
             });
 
-            // TOMBOL BATAL SAAT PROSES MEREKAM
             cancelRecordBtn.addEventListener('click', () => {
                 if(mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
                 clearInterval(recordInterval);
@@ -652,11 +775,8 @@
                 messageInput.classList.add('bg-transparent');
             });
 
-            // TOMBOL BATAL SAAT REKAMAN SUDAH SIAP KIRIM (X Merah Kanan)
             cancelVoiceBtn.addEventListener('click', () => {
-                voiceInput.value = ''; // Hapus file rekaman
-                
-                // Kembalikan ke tampilan awal input teks
+                voiceInput.value = ''; 
                 messageInput.placeholder = "Tulis balasan Anda...";
                 messageInput.disabled = false;
                 messageInput.classList.remove('font-bold', 'text-blue-600', 'bg-blue-50', 'rounded-xl', 'px-4');
@@ -670,7 +790,7 @@
         }
 
         // ==========================================
-        // 4. AJAX SEND CHAT
+        // 5. AJAX SEND CHAT
         // ==========================================
         const myName = "{{ auth('dosen')->user()->nama ?? auth('dosen')->user()->name ?? 'Dosen' }}";
         const myPhotoDb = "{{ auth('dosen')->user()->foto ?? '' }}";
@@ -706,7 +826,6 @@
                         this.reset();
                         cancelImage(); 
                         
-                        // Reset Semua Input Voice ke semula
                         voiceInput.value = '';
                         messageInput.disabled = false;
                         messageInput.classList.remove('text-blue-600', 'font-bold', 'bg-blue-50', 'rounded-xl', 'px-4');

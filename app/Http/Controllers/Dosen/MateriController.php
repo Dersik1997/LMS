@@ -12,52 +12,55 @@ use App\Events\MateriCreated;
 class MateriController extends Controller
 {
     // =========================
-    // STORE MATERI (FILE / LINK / VOICE / VIDEO)
+    // STORE MATERI (FILE / LINK / VOICE / VIDEO / TEXT)
     // =========================
     public function store(Request $request, $sessionId)
-{
-    $request->validate([
-        'judul' => 'required|string|max:255',
-        'type'  => 'required|in:file,link,voice,video',
-        'file'  => 'nullable|file',
-        'link'  => 'nullable|url'
-    ]);
+    {
+        // Tambahkan validasi tipe 'text'
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'type'  => 'required|in:file,link,voice,video,text', 
+            'file'  => 'nullable|file',
+            // Hapus rule 'url' untuk link, karena kolom ini akan diisi teks biasa jika typenya text
+            'link'  => 'nullable|string' 
+        ]);
 
-    $session = CourseSession::where('id', $sessionId)
-        ->whereHas('kelas', function ($q) {
-            $q->where('dosen_id', auth('dosen')->id());
-        })
-        ->firstOrFail();
+        $session = CourseSession::where('id', $sessionId)
+            ->whereHas('kelas', function ($q) {
+                $q->where('dosen_id', auth('dosen')->id());
+            })
+            ->firstOrFail();
 
-    $data = [
-        'session_id' => $session->id,
-        'judul'      => $request->judul,
-        'type'       => $request->type,
-    ];
+        $data = [
+            'session_id' => $session->id,
+            'judul'      => $request->judul,
+            'type'       => $request->type,
+        ];
 
-    if ($request->hasFile('file')) {
+        // Jika materi berupa upload file (termasuk voice/video)
+        if ($request->hasFile('file')) {
+            $folder = match ($request->type) {
+                'voice' => 'materi/voice',
+                'video' => 'materi/video',
+                default => 'materi/file',
+            };
 
-        $folder = match ($request->type) {
-            'voice' => 'materi/voice',
-            'video' => 'materi/video',
-            default => 'materi/file',
-        };
+            $data['file'] = $request->file('file')->store($folder, 'public');
+        }
 
-        $data['file'] = $request->file('file')
-            ->store($folder, 'public');
+        // Jika materi berupa link atau TEKS ketikan langsung
+        // Kita simpan dua-duanya ke dalam kolom database 'link'
+        if (in_array($request->type, ['link', 'video', 'text']) && $request->link) {
+            $data['link'] = $request->link;
+        }
+
+        $materi = Materi::create($data);
+
+        // 🔥 Event untuk realtime update ke mahasiswa
+        event(new MateriCreated($materi, $materi->session_id));
+
+        return back()->with('success', 'Materi berhasil ditambahkan');
     }
-
-    if (in_array($request->type, ['link', 'video']) && $request->link) {
-        $data['link'] = $request->link;
-    }
-
-    $materi = Materi::create($data);
-
-    // 🔥 FIX DI SINI
-    event(new MateriCreated($materi, $materi->session_id));
-
-    return back()->with('success', 'Materi berhasil ditambahkan');
-}
 
     // =========================
     // HAPUS MATERI
@@ -70,6 +73,7 @@ class MateriController extends Controller
             })
             ->firstOrFail();
 
+        // Hapus file fisik dari storage jika ada
         if (in_array($materi->type, ['file', 'voice', 'video']) && $materi->file) {
             if (Storage::disk('public')->exists($materi->file)) {
                 Storage::disk('public')->delete($materi->file);

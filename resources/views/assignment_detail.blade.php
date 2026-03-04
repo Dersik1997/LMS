@@ -339,7 +339,7 @@
                         @endforelse
                     </div>
 
-                    <div class="p-3 sm:p-4 border-t border-slate-100 bg-white shrink-0 relative z-20 shadow-[0_-4px_10px_rgba(0,0,0,0.02)]">
+                    <div class="p-3 md:p-4 border-t border-slate-100 bg-white shrink-0 relative z-20 shadow-[0_-4px_10px_rgba(0,0,0,0.02)]">
                         <div id="imagePreviewContainer" class="hidden mb-3 relative p-2 bg-slate-50 border border-slate-200 rounded-2xl w-fit">
                             <img id="imagePreviewElement" src="" class="h-20 sm:h-24 w-auto object-cover rounded-xl shadow-sm border border-slate-200">
                             <button type="button" onclick="cancelImage()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center font-bold text-xs shadow-lg hover:bg-red-600 hover:scale-110 transition-transform">✕</button>
@@ -410,12 +410,27 @@
             let rec = null; let dikteChatRec = null; let dikteTugasRec = null;
             let isDictatingChat = false; let isDictatingTugas = false; 
             let isSubmitted = {{ $isSubmittedStatus ? 'true' : 'false' }};
-            let interval; let jedaKetikTimer = null; let menungguKonfirmasiKirim = false;
+            let interval; let jedaKetikTimer = null; 
+            let menungguKonfirmasiKirim = false;
+            let menungguKonfirmasiVoiceChat = false; 
 
             const dbFotoMahasiswa = "{{ Auth::guard('mahasiswa')->user()->foto_profil ?? Auth::guard('mahasiswa')->user()->foto ?? '' }}";
             const myRealName = "{{ Auth::guard('mahasiswa')->user()->nama ?? 'Anda' }}";
             const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(myRealName)}&background=2563eb&color=fff`;
             const myAvatarAJAX = dbFotoMahasiswa ? `/storage/${dbFotoMahasiswa}` : fallbackAvatar;
+
+            // FUNGSI PATH BANTUAN UNTUK URL AUDIO YANG TEPAT
+            const storageBaseUrl = "{{ asset('storage') }}";
+            function getMediaUrl(path) {
+                if (!path) return '';
+                if (path.startsWith('http') || path.startsWith('blob:')) return path;
+                let cleanPath = path.replace(/\\/g, '/');
+                if (cleanPath.startsWith('/')) cleanPath = cleanPath.substring(1);
+                if (cleanPath.startsWith('storage/')) cleanPath = cleanPath.substring(8);
+                if (cleanPath.startsWith('public/')) cleanPath = cleanPath.substring(7);
+                const base = storageBaseUrl.endsWith('/') ? storageBaseUrl.slice(0, -1) : storageBaseUrl;
+                return base + '/' + cleanPath;
+            }
 
             if (SpeechRec) {
                 rec = new SpeechRec(); rec.lang = "id-ID"; rec.continuous = true;
@@ -502,7 +517,6 @@
                 }
             }
 
-            // Dideklarasikan ke window agar bisa dipanggil dari HTML onclick
             window.cancelImage = function() {
                 document.getElementById('imageInput').value = '';
                 document.getElementById('imagePreviewContainer').classList.add('hidden');
@@ -618,6 +632,11 @@
                             cancelVoiceBtn.classList.remove('hidden');
                             document.getElementById('uploadImageContainer').classList.add('hidden');
                             recordBtn.classList.add('hidden');
+                            
+                            menungguKonfirmasiVoiceChat = true;
+                            setTimeout(() => {
+                                bicara("Suara disimpan. Sebutkan kirim atau batal.", () => { mulaiMendengar(); });
+                            }, 500);
                         };
                         chatMediaRecorder.stop(); clearInterval(chatRecordInterval);
                     }
@@ -650,6 +669,9 @@
                 cancelVoiceBtn.classList.add('hidden');
                 document.getElementById('uploadImageContainer').classList.remove('hidden');
                 recordBtn.classList.remove('hidden');
+                
+                menungguKonfirmasiVoiceChat = false;
+                bicara("Perekaman suara dibatalkan.", () => { mulaiMendengar(); });
             }
 
             function batalDikteTugas() {
@@ -658,6 +680,73 @@
                 document.getElementById("typing-indicator").classList.add("hidden");
                 document.getElementById("text-submission").placeholder = "Sebut 7 untuk mendikte jawaban...";
                 bicara("Dikte teks tugas dibatalkan.", () => rec.start());
+            }
+
+            async function bacaRiwayatChatAsync(chats) {
+                if(rec) { try { rec.abort(); } catch(e){} }
+
+                const speakAsync = (text) => new Promise(resolve => {
+                    synth.cancel();
+                    let utter = new SpeechSynthesisUtterance(text);
+                    utter.lang = "id-ID";
+                    utter.rate = parseFloat(localStorage.getItem("speechRate")) || 1.0;
+                    utter.onstart = () => { if (statusDesc) statusDesc.innerText = "BERBICARA..."; interval = setInterval(() => setWave(true), 150); };
+                    utter.onend = () => { clearInterval(interval); setWave(false); resolve(); };
+                    utter.onerror = () => { clearInterval(interval); setWave(false); resolve(); };
+                    synth.speak(utter);
+                });
+
+                const playAudioAsync = (waveId) => new Promise(resolve => {
+                    let ws = wavesurfers[waveId];
+                    if(ws) {
+                        const finishHandler = () => { resolve(); };
+                        ws.once('finish', finishHandler);
+                        ws.once('error', finishHandler);
+                        
+                        if(ws.getDuration() === 0) {
+                            ws.once('ready', () => {
+                                ws.play();
+                                document.getElementById('btn-' + waveId).innerHTML = '⏸';
+                            });
+                            setTimeout(resolve, 5000); 
+                        } else {
+                            ws.play();
+                            document.getElementById('btn-' + waveId).innerHTML = '⏸';
+                        }
+                    } else {
+                        resolve();
+                    }
+                });
+
+                await speakAsync("Membacakan riwayat pesan diskusi.");
+
+                for (let i = 0; i < chats.length; i++) {
+                    let chat = chats[i];
+                    let senderEl = chat.querySelector('.sender-name');
+                    let sender = senderEl ? senderEl.innerText.replace('Dosen', '').trim() : "Seseorang";
+                    
+                    let msgElement = chat.querySelector('.message-text');
+                    let msgText = msgElement ? msgElement.innerText.trim() : "";
+
+                    let waveEl = chat.querySelector('[id^="wave-"]');
+
+                    if (msgText) {
+                        await speakAsync(sender + " bilang, " + msgText);
+                    } else if (waveEl) {
+                        await speakAsync(sender + " mengirim pesan suara.");
+                    } else {
+                        await speakAsync(sender + " mengirim lampiran gambar.");
+                    }
+
+                    if (waveEl) {
+                        await playAudioAsync(waveEl.id);
+                    }
+                    
+                    await new Promise(r => setTimeout(r, 500));
+                }
+
+                await speakAsync("Selesai membacakan diskusi tugas.");
+                mulaiMendengar();
             }
 
             function navigasiKe(nomor) {
@@ -724,17 +813,16 @@
                         teks = "Merekam pesan chat. Bicara setelah bip. Sebut Selesai untuk berhenti.";
                         bicara(teks, () => { document.getElementById('recordBtn').click(); }); return;
                     } else {
-                        document.getElementById('recordBtn').click(); teks = "Suara chat disimpan. Sebut tiga belas untuk mengirim pesan.";
+                        document.getElementById('recordBtn').click(); 
+                        return;
                     }
                 }
                 else if (nomor === 13) {
                     window.batalKetikSuara();
-                    
                     const textVal = document.getElementById("messageInput").value.trim();
                     const imgVal = document.getElementById("imageInput").files.length;
                     const voiceVal = document.getElementById("voiceInput").files.length;
 
-                    // Mengirim voice note, biarpun pesannya bilang "Voice note siap dikirim."
                     if (textVal !== "" || imgVal > 0 || voiceVal > 0 || textVal === "Voice note siap dikirim.") {
                         document.getElementById("sendChatBtn").click(); return; 
                     } else { teks = "Pesan chat kosong."; }
@@ -743,16 +831,8 @@
                     let chats = document.querySelectorAll('#chatContainer .chat-bubble-new, #chatContainer .chat-bubble');
                     if(chats.length === 0) { teks = "Belum ada riwayat diskusi."; } 
                     else {
-                        let textToRead = "Membacakan riwayat pesan diskusi. ";
-                        chats.forEach(chat => {
-                            let senderEl = chat.querySelector('.sender-name');
-                            let sender = senderEl ? senderEl.innerText.replace('Dosen', '').trim() : "Seseorang";
-                            let msgElement = chat.querySelector('.message-text');
-                            let msg = msgElement ? msgElement.innerText.trim() : "Mengirim media lampiran";
-                            textToRead += sender + " bilang: " + msg + ". ";
-                        });
-                        teks = textToRead + " Selesai membacakan diskusi.";
-                        bicara(teks, () => { mulaiMendengar(); }); return;
+                        bacaRiwayatChatAsync(chats);
+                        return;
                     }
                 }
 
@@ -776,6 +856,35 @@
                             bicara(getPanduanUtama(), () => { mulaiMendengar(); }); return;
                         }
 
+                        // Cek Konfirmasi Voice Chat (Kirim/Batal)
+                        if (menungguKonfirmasiVoiceChat) {
+                            if (hasil.includes("kirim") || hasil.includes("ya") || hasil.includes("iya")) {
+                                menungguKonfirmasiVoiceChat = false;
+                                document.getElementById("sendChatBtn").click();
+                                return;
+                            }
+                            if (hasil.includes("batal") || hasil.includes("tidak")) {
+                                window.batalRekamChat();
+                                return;
+                            }
+                            return; 
+                        }
+
+                        // Cek Konfirmasi Teks Chat (Kirim/Batal)
+                        if (menungguKonfirmasiKirim) {
+                            if (hasil.includes("kirim") || hasil.includes("ya") || hasil.includes("iya")) {
+                                menungguKonfirmasiKirim = false;
+                                document.getElementById("sendChatBtn").click();
+                                return;
+                            }
+                            if (hasil.includes("batal") || hasil.includes("tidak") || hasil.includes("engga")) {
+                                window.batalKetikSuara();
+                                bicara("Pesan chat dibatalkan.", () => { mulaiMendengar(); });
+                                return;
+                            }
+                            return;
+                        }
+
                         const kataAngka = {
                             "nol": 0, "satu": 1, "dua": 2, "tiga": 3, "empat": 4, "lima": 5, 
                             "enam": 6, "tujuh": 7, "delapan": 8, "sembilan": 9, "sepuluh": 10,
@@ -790,8 +899,8 @@
 
                         if (terdeteksiAngka !== null) { navigasiKe(terdeteksiAngka); }
                         else if (hasil.includes("selesai")) {
-                            if(tugasMediaRecorder && tugasMediaRecorder.state !== "inactive") navigasiKe(10); // Stop tugas record
-                            if(chatMediaRecorder && chatMediaRecorder.state !== "inactive") navigasiKe(12); // Stop chat record
+                            if(tugasMediaRecorder && tugasMediaRecorder.state !== "inactive") navigasiKe(8); 
+                            if(chatMediaRecorder && chatMediaRecorder.state !== "inactive") navigasiKe(12); 
                         }
                     };
                     rec.onend = () => { if (!isDictatingChat && !isDictatingTugas) rec.start(); };
@@ -809,7 +918,7 @@
                             isDictatingChat = false; menungguKonfirmasiKirim = true;
                             document.getElementById('normalInputWrapper').classList.remove('dictating-active');
                             document.getElementById('normalInputWrapper').classList.add('confirming-active');
-                            bicara(`Pesan: ${inputChat.value}. Sebutkan tiga belas untuk kirim, atau batal.`, () => { rec.start(); });
+                            bicara(`Pesan: ${inputChat.value}. Sebutkan kirim, atau batal.`, () => { rec.start(); });
                         }, 2500); 
                     }
                 };
@@ -832,30 +941,37 @@
                 dikteTugasRec.onerror = () => { if (isDictatingTugas) batalDikteTugas(); };
             }
 
-            window.onload = () => {
-                document.body.addEventListener("click", () => {}, { once: true });
-                setTimeout(() => { bicara(getPanduanUtama(), () => { mulaiMendengar(); }); }, 800);
-            };
-
             const wavesurfers = {};
             function initWaveSurfer(id, url, isMe) {
+                const finalUrl = url.startsWith('blob:') ? url : getMediaUrl(url); 
                 wavesurfers[id] = WaveSurfer.create({
                     container: '#' + id, waveColor: isMe ? 'rgba(255,255,255,0.4)' : '#cbd5e1', progressColor: isMe ? '#fff' : '#2563eb',
-                    height: 16, barWidth: 2, barGap: 2, cursorWidth: 0, url: url
+                    height: 16, barWidth: 2, barGap: 2, cursorWidth: 0, url: finalUrl
                 });
                 wavesurfers[id].on('finish', () => document.getElementById('btn-'+id).innerHTML = '▶');
             }
+            
             function togglePlay(id) {
                 const ws = wavesurfers[id];
                 if(ws) { ws.playPause(); document.getElementById('btn-'+id).innerHTML = ws.isPlaying() ? '⏸' : '▶'; }
             }
 
+            // RENDER AUDIO YANG SUDAH ADA DI DATABASE
             document.addEventListener('DOMContentLoaded', () => {
-                document.querySelectorAll('[id^="wave-"]').forEach(el => {
-                    const isMe = el.parentElement.classList.contains('bg-white/20');
-                    initWaveSurfer(el.id, el.getAttribute('data-audio'), isMe);
+                document.querySelectorAll('[data-audio]').forEach(el => {
+                    const url = el.getAttribute('data-audio');
+                    if (url) {
+                        // Cek apakah background bubble chatnya itu warna biru/punya saya atau putih abu abu/punya dosen
+                        const isMe = el.parentElement.classList.contains('bg-white/20') || el.parentElement.classList.contains('bg-blue-600');
+                        initWaveSurfer(el.id, url, isMe);
+                    }
                 });
             });
+            
+            window.onload = () => {
+                document.body.addEventListener("click", () => {}, { once: true });
+                setTimeout(() => { bicara(getPanduanUtama(), () => { mulaiMendengar(); }); }, 800);
+            };
 
             // AJAX Chat Form
             const chatForm = document.getElementById('chatForm');
@@ -863,7 +979,6 @@
                 chatForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
                     
-                    // Allow text submission OR file submission
                     const msgVal = document.getElementById('messageInput').value.trim();
                     const imgFile = document.getElementById('imageInput').files.length;
                     const voiceFile = document.getElementById('voiceInput').files.length;
@@ -872,13 +987,11 @@
 
                     const formData = new FormData(this);
                     
-                    // Kalau pesannya cuma placeholder dari voice record, kosongin aja form datanya
                     if(msgVal === "Voice note siap dikirim.") {
                         formData.set("message", "");
                     }
 
                     const btn = document.getElementById('sendChatBtn');
-                    
                     document.getElementById('sendIcon').classList.add('hidden');
                     document.getElementById('sendLoading').classList.remove('hidden');
                     btn.disabled = true;
@@ -927,6 +1040,7 @@
                                 box.scrollTop = box.scrollHeight;
                                 if(d.voice) setTimeout(() => initWaveSurfer(uid, `/storage/${d.voice}`, true), 100);
                             }
+                            menungguKonfirmasiVoiceChat = false;
                             bicara("Pesan terkirim.", () => { rec.start(); });
                         } else {
                             alert(data.error || "Gagal mengirim pesan.");

@@ -20,6 +20,7 @@
     // VARIABEL UNTUK VOICE ASSISTANT (AGAR TIDAK UNDEFINED)
     $lastMsgVA = $messages->last();
     $hasVoice = ($lastMsgVA && $lastMsgVA->voice_path) ? 'true' : 'false';
+    $isLastMsgFromDosen = ($lastMsgVA && $lastMsgVA->sender_type == 'dosen') ? 'true' : 'false';
     $lastWaveId = ($lastMsgVA && $lastMsgVA->voice_path) ? 'wave-' . $lastMsgVA->id : '';
     $lastMsgTextVA = $lastMsgVA ? ($lastMsgVA->body ?: ($lastMsgVA->voice_path ? 'Pesan suara' : 'Mengirim gambar')) : 'Belum ada pesan';
     $senderNameVA = ($lastMsgVA && $lastMsgVA->sender_type == 'dosen') ? $displayName : 'Anda';
@@ -276,7 +277,8 @@
                                     
                                     <div id="uploadImageContainer" class="relative shrink-0 hidden md:block">
                                         <button type="button" onclick="document.getElementById('imageInput').click()" id="btnUploadImage" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-white transition-all cursor-pointer shadow-sm border border-transparent hover:border-blue-100">
-                                                                                             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        </button>
                                         <span class="absolute -top-1.5 -right-1.5 bg-slate-900 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border border-white">2</span>
                                     </div>
 
@@ -311,7 +313,6 @@
                                             <span id="sendIcon"><svg class="w-4 h-4 sm:w-5 sm:h-5 transform rotate-90 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg></span>
                                             <span id="sendLoading" class="hidden"><svg class="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg></span>
                                         </button>
-                                        <span class="absolute -top-1.5 -right-1.5 bg-slate-900 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border border-white z-10">4</span>
                                     </div>
                                 </div>
                             </form>
@@ -493,7 +494,7 @@
                     document.getElementById('imagePreviewContainer').classList.add('hidden');
                 }
 
-                let mediaRecorder, audioChunks = [], recordInterval, recordSeconds = 0;
+                let mediaRecorder, audioChunks = [], recordInterval, recordSeconds = 0, mediaStream = null;
                 function updateTimer() {
                     recordSeconds++;
                     document.getElementById('recordTimer').innerText = `${String(Math.floor(recordSeconds / 60)).padStart(2, '0')}:${String(recordSeconds % 60).padStart(2, '0')}`;
@@ -503,8 +504,8 @@
                     recordBtn.addEventListener('click', async () => {
                         if (!mediaRecorder || mediaRecorder.state === "inactive") {
                             try {
-                                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                                mediaRecorder = new MediaRecorder(stream);
+                                mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                                mediaRecorder = new MediaRecorder(mediaStream);
                                 mediaRecorder.start();
                                 
                                 normalInputWrapper.classList.add('hidden'); 
@@ -520,6 +521,11 @@
                             } catch(err) { alert("Mikrofon tidak diizinkan!"); }
                         } else {
                             mediaRecorder.onstop = () => {
+                                // TAMBAHAN 1: HENTIKAN AKSES MIKROFON
+                                if (mediaStream) {
+                                    mediaStream.getTracks().forEach(track => track.stop());
+                                }
+
                                 const file = new File([new Blob(audioChunks, { type: 'audio/webm' })], "voice.webm", { type: "audio/webm" });
                                 const dataTransfer = new DataTransfer(); dataTransfer.items.add(file); voiceInput.files = dataTransfer.files;
                                 
@@ -528,7 +534,7 @@
                                 
                                 if(recordBtnContainer) recordBtnContainer.classList.add('hidden');
                                 
-                                messageInput.placeholder = "▶ ılıılı Suara siap dikirim...";
+                                messageInput.placeholder = "Suara siap dikirim...";
                                 messageInput.disabled = true; 
                                 messageInput.classList.add('font-bold', 'text-blue-600', 'bg-blue-100/50', 'rounded-xl', 'px-4');
                                 messageInput.classList.remove('bg-transparent', 'pl-1', 'md:pl-8');
@@ -541,6 +547,7 @@
 
                     document.getElementById('cancelRecordBtn').addEventListener('click', () => {
                         if(mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
+                        if (mediaStream) { mediaStream.getTracks().forEach(track => track.stop()); }
                         clearInterval(recordInterval); audioChunks = []; voiceInput.value = '';
                         
                         recordingWrapper.classList.add('hidden'); recordingWrapper.classList.remove('flex');
@@ -616,7 +623,7 @@
                                 chatBox.insertAdjacentHTML('beforeend', html); scrollBottom();
                                 if(data.message.voice_path) setTimeout(() => initWaveSurfer(uniqueWaveId, `/storage/${data.message.voice_path}`, true), 100);
                                 
-                                bicara("Pesan berhasil terkirim. Apa selanjutnya? Sebutkan satu untuk membalas lagi, atau delapan untuk kembali ke daftar pesan.", () => { rec.start(); });
+                                bicara("Pesan berhasil terkirim.", () => { rec.start(); });
                             } else { alert("Gagal mengirim pesan."); }
                         } catch (err) { alert("Koneksi bermasalah."); } finally {
                             btnSubmit.disabled = false; document.getElementById('sendLoading').classList.add('hidden'); document.getElementById('sendIcon').classList.remove('hidden');
@@ -636,6 +643,7 @@
             
             let modeKetikSuara = false; 
             let menungguKonfirmasiKirim = false;
+            let menungguKonfirmasiVoice = false; // VARIABEL BARU
             let jedaKetikTimer = null;
 
             if (SpeechRec) { rec = new SpeechRec(); rec.lang = "id-ID"; rec.continuous = true; }
@@ -672,21 +680,25 @@
                     const isLastMsgVoice = {{ $hasVoice }};
                     sapaan = `Halaman obrolan dengan Dosen ${currentDosenName}. `;
                     
+                    // TAMBAHAN 2: PEMBACAAN DETAIL PESAN TERAKHIR
                     if (!isUlang) {
-                        if (isLastMsgVoice) {
-                            sapaan += "Pesan terakhir adalah suara. Memutar pesan sekarang. ";
-                        } else {
-                            if (lastMessageSender !== 'Anda') {
-                                sapaan += `Pesan terakhir dari dosen: ${lastMessageText}. `;
+                        if (lastMessageSender === 'Anda') {
+                            if (isLastMsgVoice) {
+                                sapaan += "Pesan terakhir dikirim oleh Anda berupa suara. ";
                             } else {
-                                sapaan += "Pesan terakhir dikirim oleh Anda. ";
+                                sapaan += `Pesan terakhir dari Anda: ${lastMessageText}. `;
+                            }
+                        } else {
+                            if (isLastMsgVoice) {
+                                sapaan += "Pesan terakhir dari dosen adalah pesan suara. Memutar pesan sekarang. ";
+                            } else {
+                                sapaan += `Pesan terakhir dari dosen: ${lastMessageText}. `;
                             }
                         }
                     }
                     
-                    sapaan += "Sebutkan angka satu untuk mengetik pesan, dua untuk upload gambar, atau tiga untuk merekam suara. Empat untuk mengirim. Sebutkan delapan untuk menutup chat dan kembali ke daftar pesan.";
+                    sapaan += "Sebutkan angka satu untuk mengetik pesan, dua untuk upload gambar, atau tiga untuk merekam suara. Delapan untuk menutup chat.";
                 }
-                sapaan += " Katakan Ulang, jika Anda butuh bantuan panduan lagi.";
                 return sapaan;
             }
 
@@ -723,8 +735,11 @@
                     document.getElementById("messageInput").placeholder = "Mendengarkan teks...";
                     teks = "Silakan berbicara.";
                 } else if (nomor === 2) {
-                    teks = "Membuka galeri. Pilih gambar, lalu sebutkan empat untuk mengirim.";
-                    bicara(teks, () => { document.getElementById('imageInput').click(); });
+                    teks = "Membuka galeri. Pilih gambar, lalu sebutkan kirim.";
+                    bicara(teks, () => { 
+                        document.getElementById('imageInput').click(); 
+                        menungguKonfirmasiVoice = true; // Set state untuk tunggu perintah "Kirim"
+                    });
                     return;
                 } else if (nomor === 3) {
                     const recordBtn = document.getElementById('recordBtn');
@@ -733,24 +748,9 @@
                         bicara(teks, () => { recordBtn.click(); });
                         return;
                     } else {
-                        recordBtn.click(); teks = "Suara disimpan. Sebutkan empat untuk mengirim.";
-                    }
-                } else if (nomor === 4) {
-                    modeKetikSuara = false; 
-                    menungguKonfirmasiKirim = false;
-                    clearTimeout(jedaKetikTimer);
-                    document.getElementById('normalInputWrapper').classList.remove('dictating-active', 'confirming-active');
-                    document.getElementById('cancelVoiceToTextBtn').classList.add('hidden');
-                    
-                    const textVal = document.getElementById("messageInput").value.trim();
-                    const imgVal = document.getElementById("imageInput").files.length;
-                    const voiceVal = document.getElementById("voiceInput").files.length;
-
-                    if (textVal !== "" || imgVal > 0 || voiceVal > 0) {
-                        document.getElementById("sendChatBtn").click(); 
-                        return; 
-                    } else {
-                        teks = "Maaf, pesan masih kosong.";
+                        recordBtn.click(); 
+                        menungguKonfirmasiVoice = true; // Set state agar tunggu perintah "Kirim"
+                        teks = "Suara disimpan. Sebutkan kirim, atau batal.";
                     }
                 } 
                 else if (nomor >= 15) {
@@ -768,14 +768,35 @@
                     rec.onresult = (event) => {
                         const hasil = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
                         
-                        // Fitur Ulangi / Panduan
                         if(hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan")) {
                             bicara(getPanduanUtama(true), () => { mulaiMendengar(); });
                             return;
                         }
 
+                        // TAMBAHAN 3: LOGIKA UNTUK MENANGKAP "KIRIM" ATAU "BATAL" SAAT REKAMAN/GAMBAR SELESAI
+                        if (menungguKonfirmasiVoice) {
+                            if (hasil.includes("kirim") || hasil.includes("ya") || hasil.includes("iya")) {
+                                menungguKonfirmasiVoice = false;
+                                document.getElementById("sendChatBtn").click(); // Trigger klik form submit
+                                return;
+                            }
+                            if (hasil.includes("batal") || hasil.includes("tidak")) {
+                                menungguKonfirmasiVoice = false;
+                                document.getElementById('cancelVoiceBtn').click(); 
+                                bicara("Dibatalkan. Silakan sebutkan angka satu, dua, atau tiga.", () => { mulaiMendengar(); });
+                                return;
+                            }
+                            return; // Tahan di sini selama belum bilang kirim/batal
+                        }
+
                         if (menungguKonfirmasiKirim) {
-                            if (hasil.includes("kirim") || hasil.includes("empat") || hasil.includes("ya")) { navigasiKe(4); return; }
+                            if (hasil.includes("kirim") || hasil.includes("ya")) { 
+                                modeKetikSuara = false; menungguKonfirmasiKirim = false; clearTimeout(jedaKetikTimer);
+                                document.getElementById('normalInputWrapper').classList.remove('dictating-active', 'confirming-active');
+                                document.getElementById('cancelVoiceToTextBtn').classList.add('hidden');
+                                document.getElementById("sendChatBtn").click(); 
+                                return; 
+                            }
                             if (hasil.includes("batal") || hasil.includes("tidak") || hasil.includes("engga")) { 
                                 window.batalKetikSuara(); bicara("Pesan dibatalkan. Sebutkan satu untuk mengulang."); return; 
                             }
@@ -803,7 +824,8 @@
                         if (recordBtn && recordBtn.classList.contains('text-white')) {
                             if (hasil.includes("selesai")) {
                                 recordBtn.click();
-                                bicara("Suara telah disimpan. Sebutkan empat untuk mengirim pesan suara ini.", () => { mulaiMendengar(); });
+                                menungguKonfirmasiVoice = true; // Tunggu konfirmasi kirim/batal
+                                bicara("Suara telah disimpan. Sebutkan kirim, atau batal.", () => { mulaiMendengar(); });
                             }
                             return; 
                         }
@@ -823,7 +845,6 @@
                         else if (hasil.includes("satu") || hasil.includes("ketik")) navigasiKe(1);
                         else if (hasil.includes("dua") || hasil.includes("gambar")) navigasiKe(2);
                         else if (hasil.includes("tiga") || hasil.includes("suara") || hasil.includes("voice")) navigasiKe(3);
-                        else if (hasil.includes("empat") || hasil.includes("kirim")) navigasiKe(4);
                         else if (hasil.includes("nol") || hasil.includes("keluar")) navigasiKe(0);
                     };
                     rec.onend = () => { rec.start(); };
@@ -838,7 +859,10 @@
                     
                     bicara(teksAwal, () => {
                         const isLastMsgVoice = {{ $hasVoice }};
-                        if (isActiveChat && isLastMsgVoice) {
+                        const isLastMsgFromDosen = {{ $isLastMsgFromDosen }}; // TAMBAHAN PENGECEKAN DOSEN
+
+                        // HANYA AUTO PLAY JIKA DARI DOSEN DAN BERUPA VOICE
+                        if (isActiveChat && isLastMsgVoice && isLastMsgFromDosen) {
                             isAutoPlaying = true; 
                             const waveId = "{{ $lastWaveId }}";
                             if (wavesurfers[waveId]) {

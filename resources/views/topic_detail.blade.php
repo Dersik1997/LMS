@@ -1,4 +1,30 @@
 <!DOCTYPE html>
+@php
+    $activeDosenId = $dosen ?? null;
+    $messages = $chatMessages ?? collect();
+    $listPercakapan = $conversations ?? []; 
+    
+    $mahasiswaId = Auth::guard('mahasiswa')->id() ?? 1; 
+    $unreadCount = \App\Models\Message::where('receiver_type', 'mahasiswa')
+                    ->where('receiver_id', $mahasiswaId)
+                    ->where('is_read', 0)
+                    ->count();
+
+    // DEFINISI NAMA DOSEN AKTIF
+    $displayName = 'Dosen';
+    if($activeDosenId) {
+        $currentDosen = \App\Models\Dosen::find($activeDosenId);
+        $displayName = $currentDosen->nama ?? 'Dosen';
+    }
+
+    // VARIABEL UNTUK VOICE ASSISTANT
+    $lastMsgVA = $messages->last();
+    $hasVoice = ($lastMsgVA && $lastMsgVA->voice_path) ? 'true' : 'false';
+    $isLastMsgFromDosen = ($lastMsgVA && $lastMsgVA->sender_type == 'dosen') ? 'true' : 'false';
+    $lastWaveId = ($lastMsgVA && $lastMsgVA->voice_path) ? 'wave-' . $lastMsgVA->id : '';
+    $lastMsgTextVA = $lastMsgVA ? ($lastMsgVA->body ?: ($lastMsgVA->voice_path ? 'Pesan suara' : 'Mengirim gambar')) : 'Belum ada pesan';
+    $senderNameVA = ($lastMsgVA && $lastMsgVA->sender_type == 'dosen') ? $displayName : 'Anda';
+@endphp
 <html lang="id" class="h-full">
     <head>
         <meta charset="UTF-8" />
@@ -49,14 +75,23 @@
         
         @php
             $materiCount = isset($session->materis) ? $session->materis->count() : 0;
-            // Angka fitur chat akan bergeser otomatis jika materinya banyak
-            $chatStart = max(5, 2 + $materiCount);
             
+            $chatStart = max(5, 2 + $materiCount);
             $cmdKetik  = $chatStart;
             $cmdGambar = $chatStart + 1;
             $cmdRekam  = $chatStart + 2;
             $cmdKirim  = $chatStart + 3;
             $cmdBaca   = $chatStart + 4;
+
+            $lastDiskusi = isset($session->discussions) ? $session->discussions->sortBy('created_at')->last() : null;
+            $hasVoiceDiskusi = ($lastDiskusi && $lastDiskusi->voice) ? 'true' : 'false';
+            $isLastDiskusiFromDosen = ($lastDiskusi && in_array($lastDiskusi->sender_type, ['dosen', 'App\Models\Dosen'])) ? 'true' : 'false';
+            $lastWaveIdDiskusi = ($lastDiskusi && $lastDiskusi->voice) ? 'wave-' . $lastDiskusi->id : '';
+            $lastMsgTextDiskusi = $lastDiskusi ? ($lastDiskusi->message ?: ($lastDiskusi->voice ? 'Pesan suara' : 'Mengirim gambar')) : 'Belum ada diskusi';
+            
+            $loggedInId = Auth::guard('mahasiswa')->id() ?? 0;
+            $isLastDiskusiMe = ($lastDiskusi && in_array($lastDiskusi->sender_type, ['mahasiswa', 'App\Models\Mahasiswa']) && $lastDiskusi->sender_id == $loggedInId);
+            $senderNameDiskusi = $isLastDiskusiMe ? 'Anda' : ($isLastDiskusiFromDosen == 'true' ? 'Dosen' : ($lastDiskusi->sender->nama ?? 'Mahasiswa Lain'));
         @endphp
 
         <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
@@ -121,65 +156,51 @@
                         @forelse($session->materis as $materi)
                             @php
                                 $type = $materi->type ?? 'file';
-                                
-                                // Penomoran Materi Dinamis menggunakan $loop->iteration agar selalu berurutan
                                 $voiceNum = 1 + $loop->iteration; 
 
-                                // PERBAIKAN: Menulis class Tailwind secara utuh agar tidak terhapus (purged)
+                                // Konfigurasi style berdasar tipe materi
                                 $config = [
                                     'file'  => [
                                         'label' => 'PDF', 
-                                        'bg' => 'bg-blue-50', 
-                                        'border' => 'border-blue-200', 
-                                        'text' => 'text-blue-600', 
-                                        'badge_bg' => 'bg-blue-500',
-                                        'hover_border' => 'hover:border-blue-300',
-                                        'hover_bg' => 'hover:bg-blue-50'
+                                        'bg' => 'bg-blue-50', 'border' => 'border-blue-200', 'text' => 'text-blue-600', 'badge_bg' => 'bg-blue-500',
+                                        'hover_border' => 'hover:border-blue-300', 'hover_bg' => 'hover:bg-blue-50'
+                                    ],
+                                    'text' => [
+                                        'label' => 'TEKS', 
+                                        'bg' => 'bg-emerald-50', 'border' => 'border-emerald-200', 'text' => 'text-emerald-600', 'badge_bg' => 'bg-emerald-500',
+                                        'hover_border' => 'hover:border-emerald-300', 'hover_bg' => 'hover:bg-emerald-50'
                                     ],
                                     'video' => [
                                         'label' => 'VIDEO', 
-                                        'bg' => 'bg-red-50', 
-                                        'border' => 'border-red-200', 
-                                        'text' => 'text-red-600', 
-                                        'badge_bg' => 'bg-red-500',
-                                        'hover_border' => 'hover:border-red-300',
-                                        'hover_bg' => 'hover:bg-red-50'
+                                        'bg' => 'bg-red-50', 'border' => 'border-red-200', 'text' => 'text-red-600', 'badge_bg' => 'bg-red-500',
+                                        'hover_border' => 'hover:border-red-300', 'hover_bg' => 'hover:bg-red-50'
                                     ],
                                     'link'  => [
                                         'label' => 'YOUTUBE', 
-                                        'bg' => 'bg-red-50', 
-                                        'border' => 'border-red-200', 
-                                        'text' => 'text-red-600', 
-                                        'badge_bg' => 'bg-red-500',
-                                        'hover_border' => 'hover:border-red-300',
-                                        'hover_bg' => 'hover:bg-red-50'
+                                        'bg' => 'bg-red-50', 'border' => 'border-red-200', 'text' => 'text-red-600', 'badge_bg' => 'bg-red-500',
+                                        'hover_border' => 'hover:border-red-300', 'hover_bg' => 'hover:bg-red-50'
                                     ],
                                     'voice' => [
                                         'label' => 'AUDIO', 
-                                        'bg' => 'bg-purple-50', 
-                                        'border' => 'border-purple-200', 
-                                        'text' => 'text-purple-600', 
-                                        'badge_bg' => 'bg-purple-500',
-                                        'hover_border' => 'hover:border-purple-300',
-                                        'hover_bg' => 'hover:bg-purple-50'
+                                        'bg' => 'bg-purple-50', 'border' => 'border-purple-200', 'text' => 'text-purple-600', 'badge_bg' => 'bg-purple-500',
+                                        'hover_border' => 'hover:border-purple-300', 'hover_bg' => 'hover:bg-purple-50'
                                     ],
-                                    'audio' => [ // Antisipasi kalau di database tipenya tertulis 'audio'
+                                    'audio' => [
                                         'label' => 'AUDIO', 
-                                        'bg' => 'bg-purple-50', 
-                                        'border' => 'border-purple-200', 
-                                        'text' => 'text-purple-600', 
-                                        'badge_bg' => 'bg-purple-500',
-                                        'hover_border' => 'hover:border-purple-300',
-                                        'hover_bg' => 'hover:bg-purple-50'
+                                        'bg' => 'bg-purple-50', 'border' => 'border-purple-200', 'text' => 'text-purple-600', 'badge_bg' => 'bg-purple-500',
+                                        'hover_border' => 'hover:border-purple-300', 'hover_bg' => 'hover:bg-purple-50'
                                     ],
                                 ];
                                 $ui = $config[$type] ?? $config['file'];
                                 
                                 $fileUrl = $materi->file ? asset('storage/'.$materi->file) : ($materi->link ? $materi->link : '#');
                                 $isYT = ($type === 'link' && (str_contains($materi->link, 'youtu') || str_contains($materi->link, 'youtube'))) ? 'true' : 'false';
+                                
+                                // Jika materi tipe teks, simpan teks aslinya di data attribute agar bisa dibaca JS
+                                $textContent = ($type === 'text') ? htmlspecialchars($materi->link ?? $materi->file ?? '') : '';
                             @endphp
 
-                            <div id="materi-{{ $voiceNum }}" data-url="{{ $fileUrl }}" data-materi-type="{{ $type }}" data-yt="{{ $isYT }}" data-title="{{ $materi->judul }}" onclick="navigasiKe({{ $voiceNum }})" class="group border border-slate-100 rounded-2xl p-4 md:p-5 {{ $ui['hover_border'] }} {{ $ui['hover_bg'] }} transition-all cursor-pointer relative active:scale-[0.98]">
+                            <div id="materi-{{ $voiceNum }}" data-url="{{ $fileUrl }}" data-materi-type="{{ $type }}" data-yt="{{ $isYT }}" data-title="{{ $materi->judul }}" data-text="{{ $textContent }}" onclick="navigasiKe({{ $voiceNum }})" class="group border border-slate-100 rounded-2xl p-4 md:p-5 {{ $ui['hover_border'] }} {{ $ui['hover_bg'] }} transition-all cursor-pointer relative active:scale-[0.98]">
                                 <div class="absolute right-4 top-4 w-6 h-6 {{ $ui['badge_bg'] }} text-white shadow-md rounded-lg flex items-center justify-center font-black text-[10px] transition-colors">
                                     {{ $voiceNum }}
                                 </div>
@@ -187,6 +208,8 @@
                                     <div class="w-12 h-14 {{ $ui['bg'] }} rounded-lg border {{ $ui['border'] }} flex items-center justify-center shrink-0 {{ $ui['text'] }}">
                                         @if($type === 'file')
                                             <span class="text-[9px] font-black uppercase">PDF</span>
+                                        @elseif($type === 'text')
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
                                         @elseif($type === 'video' || $type === 'link')
                                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" /></svg>
                                         @elseif($type === 'voice' || $type === 'audio')
@@ -211,11 +234,11 @@
                     <div id="module-reader" class="hidden mt-6 bg-slate-900 text-slate-200 p-6 rounded-2xl shadow-2xl animate-fade-in-up relative">
                         <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-4">
                             <h3 class="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
-                                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> Membacakan Modul...
+                                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> Sedang Membacakan...
                             </h3>
                             <button onclick="stopBicara()" class="text-[9px] font-bold uppercase bg-red-500/20 text-red-400 px-3 py-1 rounded-lg hover:bg-red-500 hover:text-white transition-all cursor-pointer active:scale-95">Stop</button>
                         </div>
-                        <p id="reader-text" class="text-sm leading-loose font-medium font-mono h-32 overflow-y-auto custom-scrollbar">Sedang mengekstrak isi PDF...</p>
+                        <p id="reader-text" class="text-sm leading-loose font-medium font-mono h-32 overflow-y-auto custom-scrollbar whitespace-pre-wrap">Memuat materi...</p>
                     </div>
                 </div>
 
@@ -370,6 +393,20 @@
             AOS.init({ once: true, easing: "ease-out-cubic" });
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
+            const storageBaseUrl = "{{ asset('storage') }}";
+            function getMediaUrl(path) {
+                if (!path) return '';
+                if (path.startsWith('http') || path.startsWith('blob:')) return path;
+                
+                let cleanPath = path.replace(/\\/g, '/');
+                if (cleanPath.startsWith('/')) cleanPath = cleanPath.substring(1);
+                if (cleanPath.startsWith('storage/')) cleanPath = cleanPath.substring(8);
+                if (cleanPath.startsWith('public/')) cleanPath = cleanPath.substring(7);
+                
+                const base = storageBaseUrl.endsWith('/') ? storageBaseUrl.slice(0, -1) : storageBaseUrl;
+                return base + '/' + cleanPath;
+            }
+
             const statusDesc = document.getElementById("status-desc");
             const waveBars = document.querySelectorAll(".wave-bar");
             const readerBox = document.getElementById("module-reader");
@@ -377,9 +414,15 @@
             const synth = window.speechSynthesis;
             const SpeechRec = window.webkitSpeechRecognition || window.SpeechRecognition;
 
-            // TAMBAHAN FLAG UNTUK MENGUNCI SUARA SAAT VIDEO MAIN
-            let rec = null; let interval; let modeKetikSuara = false; let menungguKonfirmasiKirim = false; let jedaKetikTimer = null;
+            let rec = null; 
+            let interval; 
+            let modeKetikSuara = false; 
+            let menungguKonfirmasiKirim = false; 
+            let menungguKonfirmasiVoice = false; 
+            let jedaKetikTimer = null;
             let isVideoPlaying = false; 
+            let ytPlayerInstance = null;
+            let isVoicePaused = false;
 
             if (SpeechRec) { rec = new SpeechRec(); rec.lang = "id-ID"; rec.continuous = true; }
 
@@ -390,12 +433,20 @@
             }
 
             function bicara(teks, callback) {
+                isVoicePaused = true;
+                if(rec) { try { rec.abort(); } catch(e){} }
+                
                 synth.cancel();
                 const utter = new SpeechSynthesisUtterance(teks);
                 utter.lang = "id-ID";
                 utter.rate = localStorage.getItem("speechRate") ? parseFloat(localStorage.getItem("speechRate")) : 1.0;
                 utter.onstart = () => { if (statusDesc) statusDesc.innerText = "BERBICARA..."; interval = setInterval(() => setWave(true), 150); };
-                utter.onend = () => { if (statusDesc) statusDesc.innerText = "MENDENGARKAN..."; clearInterval(interval); setWave(false); if (callback) callback(); };
+                utter.onend = () => { 
+                    if (statusDesc) statusDesc.innerText = "MENDENGARKAN..."; 
+                    clearInterval(interval); setWave(false); 
+                    isVoicePaused = false;
+                    if (callback) callback(); else mulaiMendengar(); 
+                };
                 synth.speak(utter);
             }
 
@@ -404,19 +455,17 @@
                 if(readerBox) readerBox.classList.add("hidden");
                 let globalAudio = document.getElementById('globalAudioPlayer');
                 if(globalAudio) { globalAudio.pause(); globalAudio.currentTime = 0; }
-                closeVideoPlayer();
             }
 
             function arahkanSingkat(pesanAwal) {
-                bicara(pesanAwal + ". Katakan Ulang, jika butuh bantuan panduan.", () => { mulaiMendengar(); });
+                bicara(pesanAwal + ". Katakan Ulang, jika butuh panduan.", () => { mulaiMendengar(); });
             }
 
             async function readPDFText(url) {
                 try {
                     let pdf = await pdfjsLib.getDocument(url).promise;
                     let fullText = "";
-                    let maxPages = Math.min(pdf.numPages, 2); 
-                    for(let i = 1; i <= maxPages; i++) {
+                    for(let i = 1; i <= pdf.numPages; i++) {
                         let page = await pdf.getPage(i);
                         let textContent = await page.getTextContent();
                         fullText += textContent.items.map(s => s.str).join(" ") + " ";
@@ -428,7 +477,8 @@
             }
 
             function openVideoPlayer(url, isYoutube, title) {
-                isVideoPlaying = true; // KUNCI MIKROFON AKTIF
+                isVideoPlaying = true; 
+                ytPlayerInstance = null; 
                 
                 document.getElementById('videoPlayerTitle').innerText = title || "Video Player";
                 const container = document.getElementById('videoPlayerContainer');
@@ -446,11 +496,9 @@
                     
                     setTimeout(() => {
                         if (window.YT && window.YT.Player) {
-                            new YT.Player('ytVideoIframe', {
+                            ytPlayerInstance = new YT.Player('ytVideoIframe', {
                                 events: {
-                                    'onReady': function(event) {
-                                        event.target.playVideo(); 
-                                    },
+                                    'onReady': function(event) { event.target.playVideo(); },
                                     'onStateChange': function(event) {
                                         if (event.data === YT.PlayerState.ENDED) {
                                             closeVideoPlayer();
@@ -485,7 +533,8 @@
             }
 
             function closeVideoPlayer() {
-                isVideoPlaying = false; // KUNCI MIKROFON DIBUKA
+                isVideoPlaying = false; 
+                ytPlayerInstance = null;
                 
                 const modal = document.getElementById('videoPlayerModal');
                 const box = modal.querySelector('.modal-box');
@@ -534,7 +583,9 @@
                 document.getElementById('imagePreviewContainer').classList.add('hidden');
             }
 
-            let mediaRecorder, audioChunks = [], recordInterval, recordSeconds = 0;
+            let mediaRecorder, audioChunks = [], recordInterval, recordSeconds = 0, mediaStream = null;
+            let isCancellingRecord = false;
+
             function updateTimer() {
                 recordSeconds++;
                 document.getElementById('recordTimer').innerText = `${String(Math.floor(recordSeconds / 60)).padStart(2, '0')}:${String(recordSeconds % 60).padStart(2, '0')}`;
@@ -544,8 +595,8 @@
                 recordBtn.addEventListener('click', async () => {
                     if (!mediaRecorder || mediaRecorder.state === "inactive") {
                         try {
-                            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                            mediaRecorder = new MediaRecorder(stream);
+                            mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                            mediaRecorder = new MediaRecorder(mediaStream);
                             mediaRecorder.start();
                             
                             normalInputWrapper.classList.add('hidden'); 
@@ -558,30 +609,45 @@
                             recordSeconds = 0; document.getElementById('recordTimer').innerText = "00:00";
                             recordInterval = setInterval(updateTimer, 1000);
                             audioChunks = []; mediaRecorder.ondataavailable = event => { audioChunks.push(event.data); };
+                            isCancellingRecord = false;
                         } catch(err) { alert("Mikrofon tidak diizinkan!"); }
                     } else {
                         mediaRecorder.onstop = () => {
-                            const file = new File([new Blob(audioChunks, { type: 'audio/webm' })], "voice.webm", { type: "audio/webm" });
-                            const dataTransfer = new DataTransfer(); dataTransfer.items.add(file); voiceInput.files = dataTransfer.files;
+                            if (mediaStream) { mediaStream.getTracks().forEach(track => track.stop()); }
                             
                             recordingWrapper.classList.add('hidden'); recordingWrapper.classList.remove('flex');
                             normalInputWrapper.classList.remove('hidden');
-                            
                             if(recordBtnContainer) recordBtnContainer.classList.add('hidden');
+
+                            if(isCancellingRecord) {
+                                isCancellingRecord = false;
+                                return;
+                            }
+
+                            const file = new File([new Blob(audioChunks, { type: 'audio/webm' })], "voice.webm", { type: "audio/webm" });
+                            const dataTransfer = new DataTransfer(); dataTransfer.items.add(file); voiceInput.files = dataTransfer.files;
                             
-                            messageInput.placeholder = "▶ ılıılı Voice Note siap dikirim...";
+                            messageInput.placeholder = "Suara siap dikirim...";
                             messageInput.disabled = true; 
                             messageInput.classList.add('font-bold', 'text-blue-600', 'bg-blue-100/50', 'rounded-xl', 'px-4');
                             messageInput.classList.remove('bg-transparent', 'pl-1', 'md:pl-8');
                             
                             cancelVoiceBtn.classList.remove('hidden');
+
+                            menungguKonfirmasiVoice = true;
+                            setTimeout(() => {
+                                bicara("Suara disimpan. Sebutkan kirim atau batal.", () => { mulaiMendengar(); });
+                            }, 500);
                         };
                         mediaRecorder.stop(); clearInterval(recordInterval);
                     }
                 });
 
                 document.getElementById('cancelRecordBtn').addEventListener('click', () => {
+                    isCancellingRecord = true;
                     if(mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
+                    if (mediaStream) { mediaStream.getTracks().forEach(track => track.stop()); }
+
                     clearInterval(recordInterval); audioChunks = []; voiceInput.value = '';
                     
                     recordingWrapper.classList.add('hidden'); recordingWrapper.classList.remove('flex');
@@ -615,7 +681,162 @@
                 });
             }
 
-            function getPanduanUtama() {
+            const chatForm = document.getElementById("chatForm");
+            const chatContainer = document.getElementById("chatContainer");
+            const actionUrl = chatForm.getAttribute("action");
+
+            chatForm.addEventListener("submit", async function(e){
+                e.preventDefault();
+                
+                if (!messageInput.value.trim() && (!imageInput || !imageInput.files.length) && (!voiceInput || !voiceInput.files.length)) return;
+
+                const btnSubmit = document.getElementById('sendChatBtn'); 
+                btnSubmit.disabled = true;
+                document.getElementById('sendIcon').classList.add('hidden'); 
+                document.getElementById('sendLoading').classList.remove('hidden');
+
+                isVoicePaused = true;
+                if(rec) { try { rec.abort(); } catch(e){} }
+
+                const formData = new FormData(this);
+
+                let localAudioUrl = null;
+                if (voiceInput && voiceInput.files.length > 0) {
+                    localAudioUrl = URL.createObjectURL(voiceInput.files[0]);
+                }
+                let localImageUrl = null;
+                if (imageInput && imageInput.files.length > 0) {
+                    const imgElement = document.getElementById('imagePreviewElement');
+                    localImageUrl = imgElement ? imgElement.src : null;
+                }
+
+                try {
+                    const response = await fetch(actionUrl, {
+                        method: "POST",
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                            "Accept": "application/json"
+                        },
+                        body: formData
+                    });
+
+                    if (response.status === 401 || response.status === 419) {
+                        alert("Sesi berakhir. Silakan login kembali.");
+                        window.location.reload(); 
+                        return;
+                    }
+
+                    const responseData = await response.json();
+
+                    if (response.ok && responseData.success) {
+                        this.reset(); window.cancelImage();
+                        
+                        if(voiceInput) voiceInput.value = '';
+                        messageInput.placeholder = "Sebutkan {{ $cmdKetik }} untuk ketik suara..."; 
+                        messageInput.disabled = false;
+                        messageInput.classList.remove('font-bold', 'text-blue-600', 'bg-blue-100/50', 'rounded-xl', 'px-4');
+                        messageInput.classList.add('bg-transparent', 'pl-1', 'md:pl-8');
+                        
+                        cancelVoiceBtn.classList.add('hidden');
+                        if(uploadImageContainer) uploadImageContainer.classList.remove('hidden');
+                        if(recordBtnContainer) recordBtnContainer.classList.remove('hidden');
+                        
+                        const recordBtn = document.getElementById('recordBtn');
+                        if(recordBtn) {
+                            recordBtn.classList.remove('hidden', 'text-white', 'bg-red-500', 'animate-pulse', 'border-red-600');
+                            recordBtn.classList.add('text-slate-400');
+                        }
+
+                        const d = responseData.diskusi || responseData.data || {};
+                        const myRealName = "{{ Auth::guard('mahasiswa')->user()->nama ?? 'Mahasiswa' }}";
+                        
+                        const myDbFoto = "{{ Auth::guard('mahasiswa')->user()->foto_profil ?? Auth::guard('mahasiswa')->user()->foto ?? '' }}";
+                        const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(myRealName)}&background=2563eb&color=fff`;
+                        const myAvatar = myDbFoto ? `/storage/${myDbFoto}` : fallbackAvatar;
+                        
+                        const uniqueWaveId = 'wave-new-' + Date.now();
+                        let mediaHtml = '';
+                        
+                        const finalImgToRender = localImageUrl || (d.image ? getMediaUrl(d.image) : null);
+                        if (finalImgToRender) { 
+                            mediaHtml += `<img src="${finalImgToRender}" class="mt-2 rounded-xl max-w-full border border-white/20 shadow">`; 
+                        }
+                        
+                        const finalAudioToRender = localAudioUrl || (d.voice ? getMediaUrl(d.voice) : null);
+                        if (finalAudioToRender) { 
+                            mediaHtml += `
+                            <div class="mt-2 flex items-center gap-3 bg-white/20 p-2 rounded-xl backdrop-blur-sm border border-white/30 w-[200px] sm:w-[240px]">
+                                <button type="button" onclick="togglePlay('${uniqueWaveId}')" id="btn-${uniqueWaveId}" class="w-7 h-7 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center rounded-full bg-white text-blue-600 shadow hover:scale-105 transition-transform text-[10px] sm:text-xs">▶</button>
+                                <div id="${uniqueWaveId}" class="flex-1 h-4" data-audio="${finalAudioToRender}"></div>
+                            </div>`; 
+                        }
+
+                        let msgText = messageInput.value.trim() || d.message || '';
+                        let msgHtml = msgText ? `<p class="text-xs md:text-[13px] leading-relaxed font-medium whitespace-pre-wrap break-words">${msgText}</p>` : '';
+                        let timeStr = d.time || new Date().getHours().toString().padStart(2,"0") + ":" + new Date().getMinutes().toString().padStart(2,"0");
+
+                        const chatHtml = `
+                        <div class="flex justify-end chat-bubble-new safe-fade-in">
+                            <div class="flex gap-2 md:gap-3 items-end max-w-[90%] md:max-w-[70%] flex-row-reverse">
+                                <img src="${myAvatar}" onerror="this.src='${fallbackAvatar}'" class="w-8 h-8 md:w-9 md:h-9 rounded-full shrink-0 shadow-sm object-cover border border-slate-100" />
+                                <div class="flex flex-col items-end">
+                                    <p class="text-[9px] md:text-[10px] font-bold mb-1 px-1 text-slate-400">Anda</p>
+                                    <div class="p-3 md:p-4 rounded-2xl shadow-sm border bg-blue-600 text-white rounded-tr-none border-blue-700">
+                                        ${msgHtml}
+                                        ${mediaHtml}
+                                    </div>
+                                    <p class="text-[8px] md:text-[9px] mt-1.5 px-1 font-bold text-slate-400">${timeStr}</p>
+                                </div>
+                            </div>
+                        </div>`;
+
+                        let emptyChatEl = document.getElementById("emptyChat");
+                        if(emptyChatEl) emptyChatEl.remove();
+
+                        chatContainer.insertAdjacentHTML("beforeend", chatHtml);
+                        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                        if(finalAudioToRender) { 
+                            setTimeout(() => initWaveSurfer(uniqueWaveId, finalAudioToRender, true), 100); 
+                        }
+                        
+                        bicara("Pesan berhasil terkirim.", () => { mulaiMendengar(); });
+                        
+                    } else {
+                        bicara("Maaf, pesan gagal dikirim.", () => { mulaiMendengar(); });
+                    }
+                } catch (error) {
+                    bicara("Gagal mengirim pesan.", () => { mulaiMendengar(); });
+                } finally {
+                    btnSubmit.disabled = false; 
+                    document.getElementById('sendLoading').classList.add('hidden'); 
+                    document.getElementById('sendIcon').classList.remove('hidden');
+                }
+            });
+
+            const wavesurfers = {};
+            function initWaveSurfer(containerId, audioUrl, isMe) {
+                const finalUrl = audioUrl.startsWith('blob:') ? audioUrl : getMediaUrl(audioUrl); 
+                const ws = WaveSurfer.create({
+                    container: '#' + containerId,
+                    waveColor: isMe ? 'rgba(255, 255, 255, 0.4)' : '#cbd5e1',
+                    progressColor: isMe ? '#ffffff' : '#2563eb',
+                    height: 20, barWidth: 2, barGap: 2, barRadius: 2, cursorWidth: 0, url: finalUrl
+                });
+                wavesurfers[containerId] = ws;
+                ws.on('finish', () => { 
+                    document.getElementById('btn-' + containerId).innerHTML = '▶'; 
+                });
+            }
+            
+            function togglePlay(containerId) {
+                const ws = wavesurfers[containerId];
+                const btn = document.getElementById('btn-' + containerId);
+                if(ws) { ws.playPause(); btn.innerHTML = ws.isPlaying() ? '⏸' : '▶'; }
+            }
+
+            function getPanduanUtama(isUlang = false) {
                 const judulSesi = "{{ $session->judul ?? 'Materi' }}";
                 const pesanDosen = document.getElementById("text-pengumuman").innerText.trim();
                 
@@ -632,7 +853,7 @@
                         @php
                             $type = $materi->type ?? 'file';
                             $voiceNum = 1 + $loop->iteration; 
-                            $jenis = $type === 'file' ? 'PDF' : (($type === 'voice' || $type === 'audio') ? 'Audio' : 'Video');
+                            $jenis = $type === 'file' ? 'PDF' : ($type === 'text' ? 'Teks' : (($type === 'voice' || $type === 'audio') ? 'Audio' : 'Video'));
                         @endphp
                         teks += "Berbentuk {{ $jenis }} dengan judul {{ addslashes($materi->judul) }}, sebutkan {{ $voiceNum }} untuk membuka. ";
                     @endforeach
@@ -640,8 +861,95 @@
                     teks += "Belum ada materi terlampir di pertemuan ini. ";
                 }
 
-                teks += "Untuk diskusi dengan dosen: sebutkan angka {{ $cmdKetik }} untuk mendikte pesan. {{ $cmdGambar }} untuk upload gambar. {{ $cmdRekam }} rekam suara diskusi. {{ $cmdKirim }} kirim pesan. {{ $cmdBaca }} dengarkan riwayat chat. Nol kembali. Katakan Ulang, kapanpun Anda butuh panduan.";
+                if (!isUlang) {
+                    const senderNameDiskusi = "{{ $senderNameDiskusi }}";
+                    const lastMsgTextDiskusi = "{{ addslashes($lastMsgTextDiskusi) }}";
+                    const isLastDiskusiFromDosen = {{ $isLastDiskusiFromDosen }};
+                    const hasVoiceDiskusi = {{ $hasVoiceDiskusi }};
+
+                    if (senderNameDiskusi !== "Belum ada diskusi") {
+                        if (senderNameDiskusi === 'Anda') {
+                            if (hasVoiceDiskusi) { teks += "Diskusi terakhir dari Anda berupa suara. "; } 
+                            else { teks += `Diskusi terakhir dari Anda: ${lastMsgTextDiskusi}. `; }
+                        } else {
+                            if (hasVoiceDiskusi) { teks += `Diskusi terakhir dari ${senderNameDiskusi} berupa suara. Memutar pesan sekarang. `; } 
+                            else { teks += `Diskusi terakhir dari ${senderNameDiskusi}: ${lastMsgTextDiskusi}. `; }
+                        }
+                    }
+                }
+
+                teks += "Sebutkan {{ $cmdKetik }} untuk mendikte pesan diskusi. {{ $cmdGambar }} untuk upload gambar. {{ $cmdRekam }} rekam suara. {{ $cmdBaca }} dengarkan riwayat chat. Nol kembali.";
                 return teks;
+            }
+
+            async function bacaRiwayatChatAsync(chats) {
+                isVoicePaused = true;
+                if(rec) { try { rec.abort(); } catch(e){} }
+
+                const speakAsync = (text) => new Promise(resolve => {
+                    synth.cancel();
+                    let utter = new SpeechSynthesisUtterance(text);
+                    utter.lang = "id-ID";
+                    utter.rate = localStorage.getItem("speechRate") ? parseFloat(localStorage.getItem("speechRate")) : 1.0;
+                    utter.onstart = () => { if (statusDesc) statusDesc.innerText = "BERBICARA..."; interval = setInterval(() => setWave(true), 150); };
+                    utter.onend = () => { clearInterval(interval); setWave(false); resolve(); };
+                    utter.onerror = () => { clearInterval(interval); setWave(false); resolve(); };
+                    synth.speak(utter);
+                });
+
+                const playAudioAsync = (waveId) => new Promise(resolve => {
+                    let ws = wavesurfers[waveId];
+                    if(ws) {
+                        const finishHandler = () => { resolve(); };
+                        ws.once('finish', finishHandler);
+                        ws.once('error', finishHandler);
+                        
+                        if(ws.getDuration() === 0) {
+                            ws.once('ready', () => {
+                                ws.play();
+                                document.getElementById('btn-' + waveId).innerHTML = '⏸';
+                            });
+                            setTimeout(resolve, 5000);
+                        } else {
+                            ws.play();
+                            document.getElementById('btn-' + waveId).innerHTML = '⏸';
+                        }
+                    } else {
+                        resolve();
+                    }
+                });
+
+                await speakAsync("Membacakan riwayat pesan diskusi.");
+
+                for (let i = 0; i < chats.length; i++) {
+                    let chat = chats[i];
+                    let senderEl = chat.querySelector('.flex-col > p.font-bold');
+                    let sender = senderEl ? senderEl.innerText.replace('Dosen', '').trim() : "Seseorang";
+                    
+                    let msgElement = chat.querySelector('.whitespace-pre-wrap');
+                    let msgText = msgElement ? msgElement.innerText.trim() : "";
+
+                    let waveEl = chat.querySelector('[id^="wave-"]');
+
+                    if (msgText) {
+                        await speakAsync(sender + " bilang, " + msgText);
+                    } else if (waveEl) {
+                        await speakAsync(sender + " mengirim pesan suara.");
+                    } else {
+                        await speakAsync(sender + " mengirim lampiran gambar.");
+                    }
+
+                    if (waveEl) {
+                        await playAudioAsync(waveEl.id);
+                    }
+                    
+                    await new Promise(r => setTimeout(r, 500));
+                }
+
+                await speakAsync("Selesai membacakan diskusi kelas.");
+                
+                isVoicePaused = false;
+                mulaiMendengar();
             }
 
             function navigasiKe(nomor) {
@@ -661,20 +969,30 @@
                         let url = el.getAttribute("data-url");
                         let isYt = el.getAttribute("data-yt");
                         let title = el.getAttribute("data-title");
+                        let textContent = el.getAttribute("data-text");
 
                         if (type === 'file') {
                             readerBox.classList.remove("hidden");
                             readerText.innerText = "Mengekstrak teks asli PDF, mohon tunggu sebentar...";
-                            bicara("Mengekstrak isi file PDF " + title + ", mohon tunggu.");
-                            readPDFText(url).then(extractedText => {
-                                readerText.innerText = extractedText.substring(0, 300) + "..."; 
-                                bicara("Membacakan PDF: " + extractedText, () => { 
-                                    arahkanSingkat("Selesai membaca materi PDF " + title); 
+                            bicara("Mengekstrak isi file PDF " + title + ", mohon tunggu.", () => {
+                                readPDFText(url).then(extractedText => {
+                                    readerText.innerText = extractedText; 
+                                    bicara(extractedText, () => { 
+                                        arahkanSingkat("Selesai membaca materi PDF " + title); 
+                                    });
                                 });
                             });
                             return;
+                        } else if (type === 'text') {
+                            readerBox.classList.remove("hidden");
+                            readerText.innerText = textContent;
+                            // Sistem akan membacakan teks 100% persis seperti ketikan dosen
+                            bicara("Membacakan materi teks " + title + ". " + textContent, () => {
+                                arahkanSingkat("Selesai membaca materi teks " + title);
+                            });
+                            return;
                         } else if (type === 'video' || type === 'link') {
-                            teks = "Membuka dan memutar video " + title + ".";
+                            teks = "Membuka video " + title + ". Sebutkan stop untuk jeda, lanjut untuk memutar, atau selesai untuk menutup.";
                             bicara(teks, () => { openVideoPlayer(url, isYt, title); mulaiMendengar(); });
                             return;
                         } else if (type === 'voice' || type === 'audio') {
@@ -701,47 +1019,34 @@
                     document.getElementById("messageInput").placeholder = "Mendengarkan teks...";
                     teks = "Silakan berbicara untuk mendikte pesan diskusi.";
                 } else if (nomor === {{ $cmdGambar }}) {
-                    teks = "Membuka galeri. Pilih gambar, lalu sebutkan {{ $cmdKirim }} untuk mengirim.";
-                    bicara(teks, () => { document.getElementById('imageInput').click(); mulaiMendengar(); });
+                    teks = "Membuka galeri. Pilih gambar, lalu sebutkan kirim.";
+                    bicara(teks, () => { 
+                        document.getElementById('imageInput').click(); 
+                        menungguKonfirmasiVoice = true; 
+                    });
                     return;
                 } else if (nomor === {{ $cmdRekam }}) {
+                    const recordBtn = document.getElementById('recordBtn');
                     if (!recordBtn.classList.contains('text-white')) {
-                        teks = "Merekam pesan diskusi. Bicara setelah bip. Sebut Selesai untuk berhenti.";
-                        bicara(teks, () => { recordBtn.click(); });
+                        teks = "Merekam suara. Silakan bicara setelah bip. Sebutkan Selesai jika sudah beres.";
+                        bicara(teks, () => { 
+                            recordBtn.click(); 
+                            setTimeout(() => { mulaiMendengar(); }, 500);
+                        });
                         return;
                     } else {
-                        recordBtn.click(); teks = "Suara disimpan. Sebut {{ $cmdKirim }} untuk mengirim.";
+                        try { rec.stop(); } catch(e){}
+                        recordBtn.click(); 
+                        return;
                     }
-                } else if (nomor === {{ $cmdKirim }}) {
-                    modeKetikSuara = false; menungguKonfirmasiKirim = false; clearTimeout(jedaKetikTimer);
-                    document.getElementById('normalInputWrapper').classList.remove('dictating-active', 'confirming-active');
-                    document.getElementById('cancelVoiceToTextBtn').classList.add('hidden');
-                    
-                    const textVal = document.getElementById("messageInput").value.trim();
-                    const imgVal = document.getElementById("imageInput").files.length;
-                    const voiceVal = document.getElementById("voiceInput").files.length;
-
-                    if (textVal !== "" || imgVal > 0 || voiceVal > 0) {
-                        document.getElementById("sendChatBtn").click(); return; 
-                    } else { teks = "Maaf, pesan masih kosong."; }
                 } else if (nomor === {{ $cmdBaca }}) {
                     let chats = document.querySelectorAll('#chatContainer .chat-bubble-new');
                     if(chats.length === 0) {
-                        teks = "Belum ada diskusi di ruang ini.";
+                        bicara("Belum ada diskusi di ruang ini.", () => { mulaiMendengar(); });
                     } else {
-                        let textToRead = "Membacakan riwayat pesan diskusi. ";
-                        chats.forEach(chat => {
-                            let sender = "Seseorang";
-                            let senderEl = chat.querySelector('.flex-col > p.font-bold');
-                            if(senderEl) sender = senderEl.innerText.replace('Dosen', '').trim();
-                            
-                            let msgElement = chat.querySelector('.whitespace-pre-wrap');
-                            let msg = msgElement ? msgElement.innerText.trim() : "Mengirim media lampiran";
-                            
-                            textToRead += sender + " bilang, " + msg + ". ";
-                        });
-                        teks = textToRead + " Selesai membacakan diskusi kelas.";
+                        bacaRiwayatChatAsync(chats);
                     }
+                    return; 
                 }
 
                 if (teks !== "") bicara(teks, () => {
@@ -751,50 +1056,82 @@
             }
 
             function mulaiMendengar() {
-                if (!rec) return;
+                if (!rec || isVoicePaused) return;
                 try {
                     rec.start();
                     rec.onresult = (event) => {
                         const hasil = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
 
-                        // ---- FITUR KUNCI MIKROFON SAAT VIDEO MAIN ----
                         if (isVideoPlaying) {
-                            if (hasil.includes("stop") || hasil.includes("berhenti") || hasil.includes("tutup") || hasil.includes("kembali")) {
-                                stopBicara();
-                                arahkanSingkat("Video ditutup");
+                            if (hasil.includes("selesai") || hasil.includes("tutup") || hasil.includes("kembali")) {
+                                closeVideoPlayer();
+                                arahkanSingkat("Video berhasil ditutup");
+                            } 
+                            else if (hasil.includes("stop") || hasil.includes("berhenti") || hasil.includes("jeda") || hasil.includes("pause")) {
+                                if (ytPlayerInstance && typeof ytPlayerInstance.pauseVideo === 'function') {
+                                    ytPlayerInstance.pauseVideo();
+                                } else {
+                                    const localVid = document.getElementById("localVideo");
+                                    if(localVid) localVid.pause();
+                                }
+                                bicara("Video dihentikan sementara. Sebutkan lanjut untuk memutar kembali, atau selesai untuk menutup video.", () => { mulaiMendengar(); });
                             }
-                            return; // ABAIKAN SEMUA KATA LAIN JIKA VIDEO SEDANG MAIN
+                            else if (hasil.includes("lanjut") || hasil.includes("putar") || hasil.includes("mulai") || hasil.includes("play")) {
+                                if (ytPlayerInstance && typeof ytPlayerInstance.playVideo === 'function') {
+                                    ytPlayerInstance.playVideo();
+                                } else {
+                                    const localVid = document.getElementById("localVideo");
+                                    if(localVid) localVid.play();
+                                }
+                            }
+                            return; 
                         }
-                        // ----------------------------------------------
 
                         if (hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan") || hasil.includes("tolong")) {
-                            bicara(getPanduanUtama(), () => { mulaiMendengar(); });
+                            bicara(getPanduanUtama(true), () => { mulaiMendengar(); });
                             return;
                         }
 
+                        if (menungguKonfirmasiVoice) {
+                            if (hasil.includes("kirim") || hasil.includes("ya") || hasil.includes("iya")) {
+                                menungguKonfirmasiVoice = false;
+                                document.getElementById("sendChatBtn").click();
+                                return;
+                            }
+                            if (hasil.includes("batal") || hasil.includes("tidak")) {
+                                menungguKonfirmasiVoice = false;
+                                document.getElementById('cancelVoiceBtn').click(); 
+                                return;
+                            }
+                            return; 
+                        }
+
                         if (menungguKonfirmasiKirim) {
-                            if (hasil.includes("kirim") || hasil.includes("ya")) { navigasiKe({{ $cmdKirim }}); return; }
+                            if (hasil.includes("kirim") || hasil.includes("ya")) { 
+                                modeKetikSuara = false; menungguKonfirmasiKirim = false; clearTimeout(jedaKetikTimer);
+                                document.getElementById('normalInputWrapper').classList.remove('dictating-active', 'confirming-active');
+                                document.getElementById('cancelVoiceToTextBtn').classList.add('hidden');
+                                document.getElementById("sendChatBtn").click(); 
+                                return; 
+                            }
                             if (hasil.includes("batal") || hasil.includes("tidak") || hasil.includes("engga")) { 
                                 window.batalKetikSuara(); 
                                 arahkanSingkat("Pesan dibatalkan"); 
                                 return; 
                             }
-                            const angka = hasil.match(/\d+/);
-                            if (angka && parseInt(angka[0]) === {{ $cmdKirim }}) { navigasiKe({{ $cmdKirim }}); return; }
                             return; 
                         }
 
                         if (modeKetikSuara) {
-                            if (hasil === "batal") { 
-                                window.batalKetikSuara(); 
-                                arahkanSingkat("Pengetikan dibatalkan");
-                                return; 
-                            }
+                            if (hasil === "batal") { window.batalKetikSuara(); bicara("Dibatalkan."); return; }
+                            
                             let inputEl = document.getElementById("messageInput");
                             inputEl.value += (inputEl.value === "" ? "" : " ") + hasil;
+                            
                             clearTimeout(jedaKetikTimer);
                             jedaKetikTimer = setTimeout(() => {
-                                modeKetikSuara = false; menungguKonfirmasiKirim = true;
+                                modeKetikSuara = false;
+                                menungguKonfirmasiKirim = true;
                                 document.getElementById('normalInputWrapper').classList.remove('dictating-active');
                                 document.getElementById('normalInputWrapper').classList.add('confirming-active');
                                 bicara(`Pesan Anda adalah: ${inputEl.value}. Mau dikirim atau tidak? Sebutkan kirim, atau batal.`, () => { mulaiMendengar(); });
@@ -802,179 +1139,76 @@
                             return; 
                         }
 
+                        const recordBtn = document.getElementById('recordBtn');
                         if (recordBtn && recordBtn.classList.contains('text-white')) {
-                            if (hasil.includes("selesai")) {
+                            if (hasil.includes("selesai") || hasil.includes("berhenti")) {
+                                try { rec.stop(); } catch(e){}
                                 recordBtn.click();
-                                bicara("Suara telah disimpan. Sebutkan {{ $cmdKirim }} untuk mengirim pesan.", () => { mulaiMendengar(); });
                             }
                             return; 
                         }
 
-                        if (hasil.includes("nol") || hasil.includes("kembali")) navigasiKe(0);
-                        else if (hasil.includes("satu") || hasil.includes("pesan") || hasil.includes("instruksi")) navigasiKe(1);
-                        else if (hasil.includes("ketik") || hasil.includes("dikte")) navigasiKe({{ $cmdKetik }});
-                        else if (hasil.includes("lampiran") || hasil.includes("gambar")) navigasiKe({{ $cmdGambar }});
-                        else if (hasil.includes("rekam") || hasil.includes("suara")) navigasiKe({{ $cmdRekam }});
-                        else if (hasil.includes("kirim")) navigasiKe({{ $cmdKirim }});
-                        else if (hasil.includes("baca") && (hasil.includes("diskusi") || hasil.includes("chat"))) navigasiKe({{ $cmdBaca }});
-                        else if (hasil.includes("stop") || hasil.includes("berhenti")) {
-                            stopBicara();
-                            arahkanSingkat("Pembacaan dihentikan");
-                        }
-                        else {
-                            const angka = hasil.match(/\d+/);
-                            if (angka) {
-                                navigasiKe(parseInt(angka[0]));
-                            } else {
-                                const mapAngka = { "nol":0, "satu":1, "dua":2, "tiga":3, "empat":4, "lima":5, "enam":6, "tujuh":7, "delapan":8, "sembilan":9, "sepuluh":10, "sebelas":11, "dua belas":12, "tiga belas":13, "empat belas":14, "lima belas":15 };
-                                let found = false;
-                                for (let word of hasil.split(" ")) {
-                                    if (mapAngka[word] !== undefined) {
-                                        navigasiKe(mapAngka[word]);
-                                        found = true; break;
-                                    }
-                                }
-                                if (!found) {
-                                    for (const [key, val] of Object.entries(mapAngka)) {
-                                        if (hasil.includes(key)) { navigasiKe(val); break; }
-                                    }
-                                }
-                            }
+                        const angka = hasil.match(/\d+/);
+                        if (angka) {
+                            let val = parseInt(angka[0]);
+                            if(val >= 0 && val <= 15) navigasiKe(val);
+                        } else {
+                            if (hasil.includes("nol") || hasil.includes("kembali")) navigasiKe(0);
+                            else if (hasil.includes("satu") || hasil.includes("pesan") || hasil.includes("instruksi")) navigasiKe(1);
+                            else if (hasil.includes("ketik") || hasil.includes("dikte")) navigasiKe({{ $cmdKetik }});
+                            else if (hasil.includes("lampiran") || hasil.includes("gambar")) navigasiKe({{ $cmdGambar }});
+                            else if (hasil.includes("rekam") || hasil.includes("suara") || hasil.includes("voice")) navigasiKe({{ $cmdRekam }});
+                            else if (hasil.includes("kirim") || hasil.includes("send")) navigasiKe({{ $cmdKirim }});
+                            else if (hasil.includes("baca") && (hasil.includes("diskusi") || hasil.includes("chat"))) navigasiKe({{ $cmdBaca }});
                         }
                     };
-                    rec.onend = () => { rec.start(); };
+                    rec.onend = () => { 
+                        if(!isVoicePaused) { setTimeout(() => mulaiMendengar(), 300); }
+                    };
                 } catch (e) { console.error("Error recognition:", e); }
             }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('[data-audio]').forEach(el => {
+                    const url = el.getAttribute('data-audio');
+                    if (url) {
+                        const isMe = el.parentElement.classList.contains('border-white/30');
+                        initWaveSurfer(el.id, url, isMe);
+                    }
+                });
+            });
 
             window.onload = () => {
                 document.body.addEventListener("click", () => {}, { once: true });
                 setTimeout(() => { 
-                    bicara(getPanduanUtama(), () => { mulaiMendengar(); }); 
+                    function scrollBottom(){ if(chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight; }
+                    scrollBottom();
+                    
+                    bicara(getPanduanUtama(), () => {
+                        const hasVoiceDiskusi = {{ $hasVoiceDiskusi }};
+                        const isLastDiskusiFromDosen = {{ $isLastDiskusiFromDosen }}; 
+
+                        if (hasVoiceDiskusi && isLastDiskusiFromDosen) {
+                            isAutoPlaying = true; 
+                            const waveId = "{{ $lastWaveIdDiskusi }}";
+                            if (wavesurfers[waveId]) {
+                                let playPromise = wavesurfers[waveId].play();
+                                if (playPromise !== undefined) {
+                                    playPromise.then(_ => {
+                                        document.getElementById('btn-' + waveId).innerHTML = '⏸';
+                                    }).catch(error => {
+                                        bicara("Ketuk layar sekali untuk memutar suara.", () => { mulaiMendengar(); });
+                                    });
+                                }
+                            } else { mulaiMendengar(); }
+                        } else {
+                            mulaiMendengar(); 
+                        }
+                    }); 
                 }, 800);
             };
 
-            const sessionId = {{ $session->id }};
-            const chatForm = document.getElementById("chatForm");
-            const chatContainer = document.getElementById("chatContainer");
-            const actionUrl = chatForm.getAttribute("action");
-
-            chatForm.addEventListener("submit", async function(e){
-                e.preventDefault();
-                
-                if (!messageInput.value.trim() && (!imageInput || !imageInput.files.length) && (!voiceInput || !voiceInput.files.length)) return;
-
-                const btnSubmit = document.getElementById('sendChatBtn'); 
-                btnSubmit.disabled = true;
-                document.getElementById('sendIcon').classList.add('hidden'); 
-                document.getElementById('sendLoading').classList.remove('hidden');
-
-                const formData = new FormData(this);
-
-                try {
-                    const response = await fetch(actionUrl, {
-                        method: "POST",
-                        headers: {
-                            "X-Requested-With": "XMLHttpRequest",
-                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-                            "Accept": "application/json"
-                        },
-                        body: formData
-                    });
-
-                    if (response.status === 401 || response.status === 419) {
-                        alert("Sesi Anda telah berakhir. Silakan login kembali untuk melanjutkan diskusi.");
-                        window.location.reload(); 
-                        return;
-                    }
-
-                    const responseData = await response.json();
-
-                    if (response.ok && responseData.success) {
-                        this.reset(); window.cancelImage();
-                        
-                        if(voiceInput) voiceInput.value = '';
-                        messageInput.placeholder = "Sebutkan {{ $cmdKetik }} untuk ketik suara..."; 
-                        messageInput.disabled = false;
-                        messageInput.classList.remove('font-bold', 'text-blue-600', 'bg-blue-100/50', 'rounded-xl', 'px-4');
-                        messageInput.classList.add('bg-transparent', 'pl-1', 'md:pl-8');
-                        
-                        cancelVoiceBtn.classList.add('hidden');
-                        if(uploadImageContainer) uploadImageContainer.classList.remove('hidden');
-                        if(recordBtnContainer) recordBtnContainer.classList.remove('hidden');
-                        
-                        const recordBtn = document.getElementById('recordBtn');
-                        if(recordBtn) {
-                            recordBtn.classList.remove('hidden', 'text-white', 'bg-red-500', 'animate-pulse', 'border-red-600');
-                            recordBtn.classList.add('text-slate-400');
-                        }
-
-                        const d = responseData.diskusi;
-                        const myRealName = "{{ Auth::guard('mahasiswa')->user()->nama ?? 'Mahasiswa' }}";
-                        
-                        const myDbFoto = "{{ Auth::guard('mahasiswa')->user()->foto_profil ?? Auth::guard('mahasiswa')->user()->foto ?? '' }}";
-                        const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(myRealName)}&background=2563eb&color=fff`;
-                        const myAvatar = myDbFoto ? `/storage/${myDbFoto}` : fallbackAvatar;
-                        
-                        const uniqueWaveId = 'wave-new-' + Date.now();
-                        let mediaHtml = '';
-                        
-                        if (d.image) { 
-                            mediaHtml += `<img src="${d.image}" class="mt-2 rounded-xl max-w-full border border-white/20 shadow">`; 
-                        }
-                        if (d.voice) { 
-                            mediaHtml += `
-                            <div class="mt-2 flex items-center gap-3 bg-white/20 p-2 rounded-xl backdrop-blur-sm border border-white/30 w-[200px] sm:w-[240px]">
-                                <button type="button" onclick="togglePlay('${uniqueWaveId}')" id="btn-${uniqueWaveId}" class="w-7 h-7 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center rounded-full bg-white text-blue-600 shadow hover:scale-105 transition-transform text-[10px] sm:text-xs">▶</button>
-                                <div id="${uniqueWaveId}" class="flex-1" data-audio="${d.voice}"></div>
-                            </div>`; 
-                        }
-
-                        let msgHtml = d.message ? `<p class="text-xs md:text-[13px] leading-relaxed font-medium whitespace-pre-wrap break-words">${d.message}</p>` : '';
-
-                        const chatHtml = `
-                        <div class="flex justify-end chat-bubble-new safe-fade-in">
-                            <div class="flex gap-2 md:gap-3 items-end max-w-[90%] md:max-w-[70%] flex-row-reverse">
-                                <img src="${myAvatar}" onerror="this.src='${fallbackAvatar}'" class="w-8 h-8 md:w-9 md:h-9 rounded-full shrink-0 shadow-sm object-cover border border-slate-100" />
-                                <div class="flex flex-col items-end">
-                                    <p class="text-[9px] md:text-[10px] font-bold mb-1 px-1 text-slate-400">Anda</p>
-                                    <div class="p-3 md:p-4 rounded-2xl shadow-sm border bg-blue-600 text-white rounded-tr-none border-blue-700">
-                                        ${msgHtml}
-                                        ${mediaHtml}
-                                    </div>
-                                    <p class="text-[8px] md:text-[9px] mt-1.5 px-1 font-bold text-slate-400">${d.time}</p>
-                                </div>
-                            </div>
-                        </div>`;
-
-                        let emptyChatEl = document.getElementById("emptyChat");
-                        if(emptyChatEl) emptyChatEl.remove();
-
-                        chatContainer.insertAdjacentHTML("beforeend", chatHtml);
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-
-                        if(d.voice) { setTimeout(() => initWaveSurfer(uniqueWaveId, d.voice, true), 100); }
-                        
-                        arahkanSingkat("Pesan berhasil terkirim ke ruang diskusi");
-                        
-                    } else {
-                        const pesanError = responseData.error || responseData.message || "Terjadi kesalahan sistem.";
-                        alert("Gagal mengirim: " + pesanError);
-                        arahkanSingkat("Maaf, pesan gagal dikirim.");
-                    }
-                } catch (error) {
-                    alert("Koneksi bermasalah atau sesi telah berakhir.");
-                    arahkanSingkat("Gagal mengirim pesan.");
-                } finally {
-                    btnSubmit.disabled = false; 
-                    document.getElementById('sendLoading').classList.add('hidden'); 
-                    document.getElementById('sendIcon').classList.remove('hidden');
-                }
-            });
-
             document.addEventListener("DOMContentLoaded", function () {
-                function scrollBottom() { if(chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight; }
-                scrollBottom();
-
                 if (!window.Echo) { return; }
 
                 window.Echo.private(`session.${sessionId}`)
@@ -992,7 +1226,7 @@
                         const avatarBg = isDosen ? 'f59e0b' : '64748b'; 
                         
                         const fallbackAvatarIn = `https://ui-avatars.com/api/?name=${encodeURIComponent(senderNameLengkap)}&background=${avatarBg}&color=fff`;
-                        const senderAvatarUrl = d.sender_avatar ? d.sender_avatar : fallbackAvatarIn;
+                        const senderAvatarUrl = d.sender_avatar ? getMediaUrl(d.sender_avatar) : fallbackAvatarIn;
 
                         const labelColor = isDosen ? 'text-orange-500' : 'text-slate-400';
                         const badgeHtml = isDosen ? `<span class="bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded ml-1 text-[8px] uppercase">Dosen</span>` : '';
@@ -1000,12 +1234,13 @@
                         let media = '';
                         const uniqueWaveId = 'wave-new-' + Date.now();
                         
-                        if (d.image) { media += `<img src="${d.image}" class="rounded-lg mt-2 max-w-xs shadow">`; }
+                        if (d.image) { media += `<img src="${getMediaUrl(d.image)}" class="rounded-lg mt-2 max-w-xs shadow">`; }
                         if (d.voice) { 
+                            const finalAudioPath = getMediaUrl(d.voice);
                             media += `
                             <div class="mt-2 flex items-center gap-3 bg-white/20 p-2 rounded-xl backdrop-blur-sm border border-slate-300 w-[200px] sm:w-[240px]">
                                 <button type="button" onclick="togglePlay('${uniqueWaveId}')" id="btn-${uniqueWaveId}" class="w-7 h-7 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center rounded-full bg-blue-600 text-white shadow hover:scale-105 transition-transform text-[10px] sm:text-xs">▶</button>
-                                <div id="${uniqueWaveId}" class="flex-1" data-audio="${d.voice}"></div>
+                                <div id="${uniqueWaveId}" class="flex-1" data-audio="${finalAudioPath}"></div>
                             </div>`; 
                         }
 
@@ -1033,9 +1268,9 @@
                         if(emptyChatEl) emptyChatEl.remove();
 
                         chatContainer.insertAdjacentHTML("beforeend", html);
-                        scrollBottom();
+                        if(chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
 
-                        if(d.voice) { setTimeout(() => initWaveSurfer(uniqueWaveId, d.voice, false), 100); }
+                        if(d.voice) { setTimeout(() => initWaveSurfer(uniqueWaveId, getMediaUrl(d.voice), false), 100); }
                     });
             });
         </script>
