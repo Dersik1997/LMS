@@ -259,12 +259,12 @@
                 const newRate = hitungRate(parseInt(this.value));
                 currentStep = 2;
                 instructionText.innerHTML =
-                    "Sebutkan <strong class='text-blue-600'>Satu</strong> untuk Lanjut, atau <strong class='text-red-600'>Dua</strong> untuk Ulang.";
+                    "Sebutkan <strong class='text-blue-600'>Lanjut</strong> atau <strong class='text-red-600'>Ulang</strong>.";
 
                 bicara(
                     "Kecepatan diatur ke " +
                         this.value +
-                        ". Sebutkan satu untuk lanjut, atau dua untuk ulang.",
+                        ". Sebutkan lanjut atau ulang.",
                     newRate,
                     () => {
                         mulaiMendengar();
@@ -383,13 +383,13 @@
                         const newRate = hitungRate(nilaiAngka);
 
                         instructionText.innerHTML =
-                            "Sebutkan <strong class='text-blue-600'>Satu</strong> untuk Lanjut, atau <strong class='text-red-600'>Dua</strong> untuk Ulang.";
+                            "Sebutkan <strong class='text-blue-600'>Lanjut</strong> atau <strong class='text-red-600'>Ulang</strong>.";
                         currentStep = 2;
 
                         const teksKonfirmasi =
                             "Kecepatan diatur ke " +
                             nilaiAngka +
-                            ". Ini adalah contoh kecepatan suara Anda. Sebutkan SATU untuk melanjutkan ke halaman login, atau sebutkan DUA untuk mengatur ulang kecepatan.";
+                            ". Ini adalah contoh kecepatan suara Anda. Sebutkan LANJUT untuk melanjutkan, atau sebutkan ULANG untuk mengatur ulang.";
                         bicara(teksKonfirmasi, newRate, () => {
                             mulaiMendengar();
                         });
@@ -401,11 +401,7 @@
                         );
                     }
                 } else if (currentStep === 2) {
-                    if (
-                        nilaiAngka === 1 ||
-                        hasil.includes("lanjut") ||
-                        hasil.includes("satu")
-                    ) {
+                    if (hasil.includes("lanjut")) {
                         bicara(
                             "Pengaturan disimpan. Mengalihkan ke halaman login.",
                             hitungRate(parseInt(slider.value)),
@@ -413,11 +409,7 @@
                                 simpanDanLanjut();
                             },
                         );
-                    } else if (
-                        nilaiAngka === 2 ||
-                        hasil.includes("ulang") ||
-                        hasil.includes("dua")
-                    ) {
+                    } else if (hasil.includes("ulang")) {
                         currentStep = 1;
                         slider.value = 50;
                         display.innerText = "50";
@@ -430,7 +422,7 @@
                         );
                     } else {
                         bicara(
-                            "Maaf, sebutkan SATU untuk lanjut, atau DUA untuk mengulang.",
+                            "Maaf, sebutkan LANJUT atau ULANG.",
                             hitungRate(parseInt(slider.value)),
                             () => mulaiMendengar(),
                         );
