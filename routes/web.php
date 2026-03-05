@@ -47,57 +47,219 @@ use App\Http\Controllers\Dosen\DosenNotificationController;
 
 /*
 |==========================================================================
-| 1. PUBLIC & AUTHENTICATION (Bisa diakses tanpa login)
+| 1. AREA DOSEN (Khusus Subdomain: dosen.sinaronline.id)
 |==========================================================================
 */
-Route::get('/', function () { return view('choose_role'); })->name('choose_role');
-Route::get('/setup-voice', function () { return view('setup_voice'); })->name('setup.voice');
+Route::domain('dosen.sinaronline.id')->group(function () {
 
-// --- Auth Mahasiswa ---
-Route::get('/login', function () { return view('login'); })->name('login');
-Route::post('/login-process', [AuthController::class, 'loginMahasiswa'])->name('login.post');
-Route::post('/login/mahasiswa', [MahasiswaAuthController::class, 'login'])->name('login.mahasiswa.post');
+    // --- Halaman Utama Subdomain (Otomatis ke Login Dosen) ---
+    Route::get('/', function () { 
+        if (Auth::guard('dosen')->check()) {
+            return redirect()->route('dosen.dashboard');
+        }
+        return view('dosen_login'); 
+    })->name('login.dosen');
 
-// [PERBAIKAN LOGOUT] Smart Logout
-Route::get('/logout', function () {
-    // Cek jika yang logout adalah Dosen
-    if (Auth::guard('dosen')->check()) {
+    // --- Auth Dosen ---
+    Route::post('/login/dosen', [DosenAuthController::class, 'login'])->name('login.dosen.post');
+    Route::get('/login/dosen/google', [DosenAuthController::class, 'redirectToGoogle'])->name('login.dosen.google');
+    Route::get('/login/dosen/google/callback', [DosenAuthController::class, 'handleGoogleCallback']);
+
+    // --- Logout Dosen ---
+    Route::get('/logout', function () {
         Auth::guard('dosen')->logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
-        // Redirect ke Login Dosen
         return redirect()->route('login.dosen');
-    }
+    })->name('logout.dosen');
 
-    // Jika yang logout adalah Mahasiswa
-    Auth::guard('mahasiswa')->logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    // Redirect ke Setup Voice
-    return redirect()->route('setup.voice');
-})->name('logout');
 
-// --- Auth Dosen ---
-Route::get('/login-dosen', function () { return view('dosen_login'); })->name('login.dosen');
-Route::post('/login/dosen', [DosenAuthController::class, 'login'])->name('login.dosen.post');
+    // --- Route Khusus Dosen (Wajib Login) ---
+    Route::middleware('auth:dosen')->group(function () {
 
-// Auth Dosen via Google
-Route::get('/login/dosen/google', [DosenAuthController::class, 'redirectToGoogle'])->name('login.dosen.google');
-Route::get('/login/dosen/google/callback', [DosenAuthController::class, 'handleGoogleCallback']);
+        // --- Dashboard & Jadwal ---
+        Route::controller(DashboardController::class)->group(function () {
+            Route::get('/dashboard', 'index')->name('dosen.dashboard');
+            Route::get('/jadwal', 'schedule')->name('dosen.schedule');
+            Route::get('/jadwal/pdf', [DashboardController::class, 'exportSchedulePdf'])->name('dosen.schedule.pdf');
+        });
 
-Route::get('/logout-dosen', function () {
-    Auth::guard('dosen')->logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return redirect()->route('login.dosen');
-})->name('logout.dosen');
+        // --- Notifikasi Dosen ---
+        Route::controller(DosenNotificationController::class)->group(function () {
+            Route::get('/pemberitahuan', 'index')->name('dosen.notifications');
+            Route::get('/pemberitahuan/{id}', 'read')->name('dosen.notifications.read.single');
+            Route::post('/pemberitahuan/read-all', 'markAllRead')->name('dosen.notifications.read');
+        });
+
+        // --- Profil Dosen ---
+        Route::controller(ProfilDosenController::class)->group(function () {
+            Route::get('/profile', 'index')->name('dosen.profile');
+            Route::get('/profile/edit', 'edit')->name('dosen.profile.edit');
+            Route::put('/profile', 'update')->name('dosen.profile.update');
+            Route::put('/profile/password', 'updatePassword')->name('dosen.profile.password');
+        });
+
+        // --- Manajemen Kelas (CRUD) ---
+        Route::controller(KelasController::class)->group(function () {
+            Route::get('/kelas', 'index')->name('dosen.kelas.index');
+            Route::post('/kelas', 'store')->name('dosen.kelas.store');
+            Route::put('/kelas/{id}', 'update')->name('dosen.kelas.update'); 
+            Route::delete('/kelas/{id}', 'destroy')->name('dosen.kelas.destroy');
+        });
+
+        // --- Manajemen Mata Kuliah ---
+        Route::controller(CourseController::class)->group(function () {
+            Route::get('/mata-kuliah', 'index')->name('dosen.courses');
+            Route::get('/mata-kuliah/{id}', 'manage')->name('dosen.course.manage');
+            Route::put('/course/{kelas}/deskripsi', 'updateDeskripsi')->name('dosen.course.updateDeskripsi');
+            Route::post('/course/{kelas}/sampul', 'updateSampul')->name('dosen.course.updateSampul');
+            Route::get('/mata-kuliah/{kelas}/students', 'students')->name('dosen.course.students');
+            Route::post('/kelas/{kelas}/add-student', 'addStudent')->name('dosen.course.addStudent');
+            Route::delete('/kelas/{kelas}/remove-student/{mahasiswa}', 'removeStudent')->name('dosen.course.removeStudent');
+            Route::post('/course/{kelas}/session', 'storeSession')->name('dosen.course.session.store');
+            Route::delete('/course/{kelas}/session/{session}', 'destroySession')->name('dosen.course.session.destroy');
+        });
+
+        // --- Manajemen Sesi & Materi ---
+        Route::controller(CourseSessionController::class)->group(function () {
+            Route::get('/mata-kuliah/{kelas}/session/{session}', 'detail')->name('dosen.course.session.detail');
+            Route::post('/session/{id}/diskusi', 'storeDiskusi')->name('session.diskusi.store');
+        });
+
+        Route::post('/discussion-dosen/{session}', [DiscussionController::class, 'store'])->name('dosen.discussion.store');
+        Route::get('/session/{id}', [SessionController::class, 'show'])->name('session.show');
+        
+        Route::controller(MateriController::class)->group(function () {
+            Route::put('/session/{id}/update-instruksi', 'updateInstruksi')->name('dosen.session.updateInstruksi');
+            Route::post('/session/{id}/materi', 'store')->name('dosen.materi.store');
+            Route::delete('/materi/{id}', 'destroy')->name('dosen.materi.destroy');
+        });
+
+        // API Realtime Sesi
+        Route::get('/session/{session}/realtime', function ($sessionId) {
+            $session = \App\Models\CourseSession::findOrFail($sessionId);
+            return response()->json([
+                'description' => $session->description,
+                'materis'     => $session->materis()->latest()->get(),
+                'messages'    => $session->messages()->latest()->take(20)->get(),
+            ]);
+        });
+
+        // --- Manajemen Presensi ---
+        Route::controller(AttendanceController::class)->group(function () {
+            Route::get('/kelas/{kelas}/absensi', 'index')->name('dosen.attendance.index');
+            Route::get('/attendance/history/{session}', 'history')->name('dosen.attendance.history');
+            Route::get('/attendance/{session}/manual', 'manual')->name('dosen.attendance.manual');
+            Route::post('/attendance/{session}/manual', 'storeManual')->name('dosen.attendance.storeManual');
+            Route::post('/attendance/{session}/save', 'save')->name('dosen.attendance.save');
+            Route::delete('/attendance/{session}/reset', 'reset')->name('dosen.attendance.reset');
+        });
+
+        // --- Manajemen Penugasan ---
+        Route::controller(AssignmentController::class)->group(function () {
+            Route::get('/mata-kuliah/{kelas}/penugasan', 'index')->name('dosen.course.assignments');
+            Route::get('/mata-kuliah/{kelas}/penugasan/create', 'create')->name('dosen.assignment.create');
+            Route::post('/mata-kuliah/{kelas}/penugasan', 'store')->name('dosen.course.assignments.store');
+            Route::get('/mata-kuliah/{kelas}/penugasan/{assignment}/edit', 'edit')->name('dosen.assignment.edit');
+            Route::put('/mata-kuliah/{kelas}/penugasan/{assignment}', 'update')->name('dosen.assignment.update');
+            Route::delete('/kelas/{kelas}/assignment/{assignment}', 'destroy')->name('dosen.assignment.destroy');
+            Route::put('/kelas/{kelas}/assignment/{assignment}/publish', 'publish')->name('dosen.assignment.publish');
+            Route::get('/kelas/{kelas}/assignment-recap', 'recap')->name('dosen.assignment.recap');
+            Route::get('/kelas/{kelas}/assignment-recap/pdf', 'exportPdf')->name('dosen.assignment.recap.pdf');
+        });
+        
+        // --- Penilaian & Feedback Tugas ---
+        Route::controller(AssignmentGradeController::class)->group(function () {
+            Route::get('/mata-kuliah/{kelas}/assignment/{assignment}/grade/{mahasiswa?}', 'show')->name('dosen.assignment.grade');
+            Route::post('/mata-kuliah/{kelas}/assignment/{assignment}/grade/{mahasiswa?}', 'store')->name('dosen.assignment.grade.store');
+            Route::post('/assignment/{assignment}/message/{mahasiswa}', 'storeMessage')->name('dosen.assignment.message.store');
+            Route::post('/submission/{submission}/message', 'sendMessage')->name('dosen.assignment.message');
+        });
+
+        // --- Rekap Nilai Akhir ---
+        Route::controller(RekapNilaiController::class)->group(function () {
+            Route::get('/penilaian', 'globalInput')->name('dosen.grading');
+            Route::post('/penilaian/{kelas}', 'globalStore')->name('dosen.grading.store');
+            Route::get('/kelas/{kelas}/rekap-nilai', 'index')->name('dosen.grades.recap');
+            Route::put('/kelas/{kelas}/rekap-nilai/edit/{mahasiswa}', 'update')->name('dosen.grades.update');
+            Route::post('/kelas/{kelas}/grades/settings', 'updateSettings')->name('dosen.grades.settings.update');
+            Route::post('/kelas/{kelas}/input-nilai/import', 'importExcel')->name('dosen.grades.import');
+            Route::get('/kelas/{kelas}/rekap-nilai/export', 'exportExcel')->name('dosen.grades.export');
+        });
+
+        // --- Manajemen Ujian ---
+        Route::controller(ExamController::class)->group(function () {
+            Route::get('/ujian', 'index')->name('dosen.exams');
+            Route::post('/ujian', 'store')->name('dosen.exams.store');
+            Route::post('/ujian/{exam}/publish', 'publish')->name('dosen.exams.publish');
+            Route::get('/ujian/{exam}/soal', 'questions')->name('dosen.exams.questions');
+            Route::post('/ujian/{exam}/soal', 'storeQuestions')->name('dosen.exams.questions.store');
+            Route::get('/ujian/{exam}/pantau', 'monitor')->name('dosen.exams.monitor');
+            Route::get('/ujian/{exam}/hasil', 'results')->name('dosen.exams.results');
+            Route::post('/ujian/{exam}/stop', 'stop')->name('dosen.exams.stop');
+            Route::delete('/ujian/{exam}', 'destroy')->name('dosen.exams.destroy');
+            Route::get('/ujian/{exam}/hasil/export', 'exportHasil')->name('dosen.exams.results.export');
+        });
+
+        // --- Pesan (Chat) Dosen ---
+        Route::controller(DosenMessageController::class)->group(function () {
+            Route::get('/messages', 'index')->name('dosen.messages');
+            Route::get('/messages-search', 'searchStudents')->name('dosen.messages.search');
+            Route::get('/messages/{mahasiswa}', 'show')->name('dosen.messages.show');
+            Route::post('/messages/send', 'send')->name('dosen.messages.send');
+            Route::get('/messages/fetch/{mahasiswa}', 'fetch')->name('dosen.messages.fetch');
+        });
+    });
+});
 
 
 /*
 |==========================================================================
-| 2. AREA MAHASISWA (Wajib login sebagai Mahasiswa)
+| 2. AREA MAHASISWA (Domain Utama / sinaronline.id)
 |==========================================================================
 */
+
+// --- Halaman Utama Web (Otomatis diarahkan ke Setup Voice) ---
+Route::get('/', function () { 
+    if (Auth::guard('mahasiswa')->check()) {
+        return redirect()->route('dashboard');
+    }
+    // Jika belum login, arahkan ke setup dulu
+    return redirect()->route('setup.voice');
+});
+
+// --- Halaman Setup Voice (Langkah 1) ---
+Route::get('/setup-voice', function () { 
+    if (Auth::guard('mahasiswa')->check()) {
+        return redirect()->route('dashboard');
+    }
+    return view('setup_voice'); 
+})->name('setup.voice');
+
+// --- Halaman Login (Langkah 2 - Setelah Setup) ---
+Route::get('/login', function () { 
+    if (Auth::guard('mahasiswa')->check()) {
+        return redirect()->route('dashboard');
+    }
+    return view('login'); 
+})->name('login');
+
+// --- Proses Login Mahasiswa ---
+Route::post('/login-process', [AuthController::class, 'loginMahasiswa'])->name('login.post');
+Route::post('/login/mahasiswa', [MahasiswaAuthController::class, 'login'])->name('login.mahasiswa.post');
+
+// --- Logout Mahasiswa ---
+Route::get('/logout', function () {
+    Auth::guard('mahasiswa')->logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    
+    // Setelah logout, kembalikan ke awal (setup-voice)
+    return redirect()->route('setup.voice');
+})->name('logout');
+
+
+// --- Route Khusus Mahasiswa (Wajib Login) ---
 Route::middleware('auth:mahasiswa')->group(function () {
     
     // --- Dashboard & Profil ---
@@ -173,147 +335,4 @@ Route::middleware('auth:mahasiswa')->group(function () {
         Route::get('/{id?}/kerjakan', 'play')->name('exam.play');
         Route::post('/{id?}/submit', 'submit')->name('exam.submit');
     });
-});
-
-
-/*
-|==========================================================================
-| 3. AREA DOSEN (Wajib login sebagai Dosen)
-|==========================================================================
-*/
-Route::prefix('dosen')->middleware('auth:dosen')->group(function () {
-
-    // --- Dashboard & Jadwal ---
-    Route::controller(DashboardController::class)->group(function () {
-        Route::get('/', 'index')->name('dosen.dashboard');
-        Route::get('/jadwal', 'schedule')->name('dosen.schedule');
-        Route::get('/jadwal/pdf', [DashboardController::class, 'exportSchedulePdf'])->name('dosen.schedule.pdf');
-    });
-
-    // --- Notifikasi Dosen ---
-    Route::controller(DosenNotificationController::class)->group(function () {
-        Route::get('/pemberitahuan', 'index')->name('dosen.notifications');
-        Route::get('/pemberitahuan/{id}', 'read')->name('dosen.notifications.read.single');
-        Route::post('/pemberitahuan/read-all', 'markAllRead')->name('dosen.notifications.read');
-    });
-
-    // --- Profil Dosen ---
-    Route::controller(ProfilDosenController::class)->group(function () {
-        Route::get('/profile', 'index')->name('dosen.profile');
-        Route::get('/profile/edit', 'edit')->name('dosen.profile.edit');
-        Route::put('/profile', 'update')->name('dosen.profile.update');
-        Route::put('/profile/password', 'updatePassword')->name('dosen.profile.password');
-    });
-
-    // --- Manajemen Kelas (CRUD) ---
-    Route::controller(KelasController::class)->group(function () {
-        Route::get('/kelas', 'index')->name('dosen.kelas.index');
-        Route::post('/kelas', 'store')->name('dosen.kelas.store');
-        Route::put('/kelas/{id}', 'update')->name('dosen.kelas.update'); 
-        Route::delete('/kelas/{id}', 'destroy')->name('dosen.kelas.destroy');
-    });
-
-    // --- Manajemen Mata Kuliah ---
-    Route::controller(CourseController::class)->group(function () {
-        Route::get('/mata-kuliah', 'index')->name('dosen.courses');
-        Route::get('/mata-kuliah/{id}', 'manage')->name('dosen.course.manage');
-        Route::put('/course/{kelas}/deskripsi', 'updateDeskripsi')->name('dosen.course.updateDeskripsi');
-        Route::post('/course/{kelas}/sampul', 'updateSampul')->name('dosen.course.updateSampul');
-        Route::get('/mata-kuliah/{kelas}/students', 'students')->name('dosen.course.students');
-        Route::post('/kelas/{kelas}/add-student', 'addStudent')->name('dosen.course.addStudent');
-        Route::delete('/kelas/{kelas}/remove-student/{mahasiswa}', 'removeStudent')->name('dosen.course.removeStudent');
-        Route::post('/course/{kelas}/session', 'storeSession')->name('dosen.course.session.store');
-        Route::delete('/course/{kelas}/session/{session}', 'destroySession')->name('dosen.course.session.destroy');
-    });
-
-    // --- Manajemen Sesi & Materi ---
-    Route::controller(CourseSessionController::class)->group(function () {
-        Route::get('/mata-kuliah/{kelas}/session/{session}', 'detail')->name('dosen.course.session.detail');
-        Route::post('/session/{id}/diskusi', 'storeDiskusi')->name('session.diskusi.store');
-    });
-
-    Route::post('/discussion-dosen/{session}', [DiscussionController::class, 'store'])->name('dosen.discussion.store');
-    Route::get('/session/{id}', [SessionController::class, 'show'])->name('session.show');
-    
-    Route::controller(MateriController::class)->group(function () {
-        Route::put('/session/{id}/update-instruksi', 'updateInstruksi')->name('dosen.session.updateInstruksi');
-        Route::post('/session/{id}/materi', 'store')->name('dosen.materi.store');
-        Route::delete('/materi/{id}', 'destroy')->name('dosen.materi.destroy');
-    });
-
-    // API Realtime Sesi
-    Route::get('/session/{session}/realtime', function ($sessionId) {
-        $session = \App\Models\CourseSession::findOrFail($sessionId);
-        return response()->json([
-            'description' => $session->description,
-            'materis'     => $session->materis()->latest()->get(),
-            'messages'    => $session->messages()->latest()->take(20)->get(),
-        ]);
-    });
-
-    // --- Manajemen Presensi ---
-    Route::controller(AttendanceController::class)->group(function () {
-        Route::get('/kelas/{kelas}/absensi', 'index')->name('dosen.attendance.index');
-        Route::get('/attendance/history/{session}', 'history')->name('dosen.attendance.history');
-        Route::get('/attendance/{session}/manual', 'manual')->name('dosen.attendance.manual');
-        Route::post('/attendance/{session}/manual', 'storeManual')->name('dosen.attendance.storeManual');
-        Route::post('/attendance/{session}/save', 'save')->name('dosen.attendance.save');
-        Route::delete('/attendance/{session}/reset', 'reset')->name('dosen.attendance.reset');
-    });
-
-    // --- Manajemen Penugasan ---
-    Route::controller(AssignmentController::class)->group(function () {
-        Route::get('/mata-kuliah/{kelas}/penugasan', 'index')->name('dosen.course.assignments');
-        Route::get('/mata-kuliah/{kelas}/penugasan/create', 'create')->name('dosen.assignment.create');
-        Route::post('/mata-kuliah/{kelas}/penugasan', 'store')->name('dosen.course.assignments.store');
-        Route::get('/mata-kuliah/{kelas}/penugasan/{assignment}/edit', 'edit')->name('dosen.assignment.edit');
-        Route::put('/mata-kuliah/{kelas}/penugasan/{assignment}', 'update')->name('dosen.assignment.update');
-        Route::delete('/kelas/{kelas}/assignment/{assignment}', 'destroy')->name('dosen.assignment.destroy');
-        Route::put('/kelas/{kelas}/assignment/{assignment}/publish', 'publish')->name('dosen.assignment.publish');
-        Route::get('/kelas/{kelas}/assignment-recap', 'recap')->name('dosen.assignment.recap');
-        Route::get('/kelas/{kelas}/assignment-recap/pdf', 'exportPdf')->name('dosen.assignment.recap.pdf');
-    });
-    
-    // --- Penilaian & Feedback Tugas ---
-    Route::controller(AssignmentGradeController::class)->group(function () {
-        Route::get('/mata-kuliah/{kelas}/assignment/{assignment}/grade/{mahasiswa?}', 'show')->name('dosen.assignment.grade');
-        Route::post('/mata-kuliah/{kelas}/assignment/{assignment}/grade/{mahasiswa?}', 'store')->name('dosen.assignment.grade.store');
-        Route::post('/assignment/{assignment}/message/{mahasiswa}', 'storeMessage')->name('dosen.assignment.message.store');
-        Route::post('/submission/{submission}/message', 'sendMessage')->name('dosen.assignment.message');
-    });
-
-    // --- Rekap Nilai Akhir ---
-    Route::controller(RekapNilaiController::class)->group(function () {
-        Route::get('/penilaian', 'globalInput')->name('dosen.grading');
-        Route::post('/penilaian/{kelas}', 'globalStore')->name('dosen.grading.store');
-        Route::get('/kelas/{kelas}/rekap-nilai', 'index')->name('dosen.grades.recap');
-        Route::put('/kelas/{kelas}/rekap-nilai/edit/{mahasiswa}', 'update')->name('dosen.grades.update');
-        Route::post('/kelas/{kelas}/grades/settings', 'updateSettings')->name('dosen.grades.settings.update');
-        Route::post('/kelas/{kelas}/input-nilai/import', 'importExcel')->name('dosen.grades.import');
-        Route::get('/kelas/{kelas}/rekap-nilai/export', 'exportExcel')->name('dosen.grades.export');
-    });
-
-    // --- Manajemen Ujian ---
-    Route::controller(ExamController::class)->group(function () {
-        Route::get('/ujian', 'index')->name('dosen.exams');
-        Route::post('/ujian', 'store')->name('dosen.exams.store');
-        Route::post('/ujian/{exam}/publish', 'publish')->name('dosen.exams.publish');
-        Route::get('/ujian/{exam}/soal', 'questions')->name('dosen.exams.questions');
-        Route::post('/ujian/{exam}/soal', 'storeQuestions')->name('dosen.exams.questions.store');
-        Route::get('/ujian/{exam}/pantau', 'monitor')->name('dosen.exams.monitor');
-        Route::get('/ujian/{exam}/hasil', 'results')->name('dosen.exams.results');
-        Route::post('/ujian/{exam}/stop', 'stop')->name('dosen.exams.stop');
-        Route::delete('/ujian/{exam}', 'destroy')->name('dosen.exams.destroy');
-        Route::get('/ujian/{exam}/hasil/export', 'exportHasil')->name('dosen.exams.results.export');
-    });
-
-    // --- Pesan (Chat) Dosen ---
-    Route::controller(DosenMessageController::class)->group(function () {
-        Route::get('/messages', 'index')->name('dosen.messages');
-        Route::get('/messages-search', 'searchStudents')->name('dosen.messages.search');
-        Route::get('/messages/{mahasiswa}', 'show')->name('dosen.messages.show');
-        Route::post('/messages/send', 'send')->name('dosen.messages.send');
-        Route::get('/messages/fetch/{mahasiswa}', 'fetch')->name('dosen.messages.fetch');
-    });
-
 });
