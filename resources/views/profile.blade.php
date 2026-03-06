@@ -18,7 +18,7 @@
         </style>
     </head>
 
-    <body class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] min-h-screen flex flex-col lg:flex-row border-box text-slate-800">
+    <body class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] h-[100dvh] flex flex-col lg:flex-row border-box text-slate-800 overflow-hidden">
         @php
             if (!isset($mahasiswa)) {
                 abort(403, 'Profil harus diakses melalui controller MahasiswaProfileController');
@@ -28,15 +28,15 @@
         <div id="mobileBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden transition-opacity"></div>
 
         {{-- SIDEBAR --}}
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-screen transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-[100dvh] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shrink-0">
             <div class="p-8 border-b border-slate-100 flex items-center gap-4 shrink-0">
                 <img src="{{ asset('images/logo-ummi.png') }}" class="w-10 h-10 object-contain" alt="Logo" onerror="this.src = 'https://via.placeholder.com/40'" />
                 <div>
                     <h1 class="text-lg font-black text-slate-900 tracking-tight leading-none">LMS Inklusi</h1>
                     <p class="text-[9px] font-bold text-blue-600 uppercase tracking-widest mt-1">Portal Mahasiswa</p>
                 </div>
-                <button onclick="toggleSidebar()" class="lg:hidden ml-auto text-slate-400 hover:text-slate-600 cursor-pointer">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <button onclick="toggleSidebar()" class="lg:hidden ml-auto text-slate-400 hover:text-slate-600 cursor-pointer p-2 bg-slate-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
 
@@ -94,10 +94,10 @@
         </aside>
 
         {{-- MAIN CONTENT --}}
-        <main class="flex-1 min-h-screen flex flex-col relative lg:ml-80 transition-all duration-300 custom-scrollbar">
+        <main class="flex-1 flex flex-col h-[100dvh] overflow-y-auto relative lg:ml-80 transition-all duration-300 custom-scrollbar">
             <div class="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-blue-50 to-transparent -z-10"></div>
 
-            <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 sticky top-0 z-30">
+            <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 sticky top-0 z-30 shrink-0">
                 <div class="max-w-7xl mx-auto flex items-center justify-between h-10 sm:h-14">
                     <div class="flex items-center gap-2 sm:gap-4">
                         <button onclick="toggleSidebar()" class="lg:hidden p-1.5 sm:p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer">
@@ -119,13 +119,13 @@
                             </button>
                         </div>
                         
-                        <div class="flex items-center gap-1.5 sm:gap-3 pl-1 sm:pl-4">
-                            <div id="wave-container" class="flex items-center gap-[2px] h-4 w-6 sm:w-10 justify-center">
+                        <div class="flex items-center gap-1.5 sm:gap-3 pl-1 sm:pl-2 w-[90px] sm:w-[130px] justify-start shrink-0">
+                            <div class="flex items-center gap-[2px] h-4 w-4 sm:w-6 justify-center shrink-0" id="wave-container">
                                 <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
                                 <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
                                 <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
                             </div>
-                            <span id="status-desc" class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest">Siap</span>
+                            <span id="status-desc" class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest text-left w-16 sm:w-24 truncate">Siap</span>
                         </div>
                     </div>
                 </div>
@@ -133,7 +133,7 @@
 
             <div class="p-4 sm:p-6 lg:p-10 max-w-6xl mx-auto w-full space-y-6 sm:space-y-8">
                 
-                {{-- Session Notification --}}
+                {{-- Session Notification (Jika Berhasil Update) --}}
                 @if(session('success'))
                     <div class="p-3 sm:p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm safe-fade-in flex items-center gap-2 sm:gap-3 shadow-sm">
                         <div class="p-1 sm:p-1.5 bg-emerald-100 rounded-md sm:rounded-lg">

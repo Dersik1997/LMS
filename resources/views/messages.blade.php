@@ -81,7 +81,7 @@
     <body class="m-0 font-['Plus_Jakarta_Sans'] bg-slate-50 text-slate-800 antialiased h-[100dvh] flex overflow-hidden">
         <div id="mobileBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden transition-opacity"></div>
 
-        <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-full transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shrink-0 shadow-2xl lg:shadow-none">
+        <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-[100dvh] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shrink-0 shadow-2xl lg:shadow-none">
             <div class="p-8 border-b border-slate-100 flex items-center gap-4 shrink-0">
                 <img src="{{ asset('images/logo-ummi.png') }}" class="w-10 h-10 object-contain" alt="Logo UMMI" onerror="this.src = 'https://via.placeholder.com/40'" />
                 <div>
@@ -146,11 +146,12 @@
             </div>
         </aside>
 
-        <main class="flex-1 flex flex-col h-full relative min-w-0 bg-[#f8fafc] overflow-hidden">
+        <main class="flex-1 flex flex-col h-[100dvh] relative min-w-0 bg-[#f8fafc] overflow-hidden">
+            
             <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 shrink-0 z-20">
                 <div class="max-w-7xl mx-auto flex items-center justify-between h-10 sm:h-14">
                     <div class="flex items-center gap-2 sm:gap-4">
-                        <button onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 rounded-lg transition-all focus:outline-none cursor-pointer">
+                        <button onclick="toggleSidebar()" class="lg:hidden p-1.5 sm:p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 rounded-lg transition-all focus:outline-none cursor-pointer">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                         </button>
                         <div>
@@ -160,7 +161,7 @@
                     </div>
 
                     <div class="flex items-center gap-2 sm:gap-4">
-                        <div class="flex items-center gap-1 sm:gap-3 pr-2 sm:pr-4 border-r border-slate-200">
+                        <div class="flex items-center gap-1 sm:gap-3">
                             <button onclick="navigasiKe(7)" class="relative p-1.5 sm:p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer">
                                 <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                                 @if($unreadCount > 0)<span class="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse border-2 border-white z-10"></span>@endif
@@ -170,26 +171,28 @@
                             </button>
                         </div>
                         
-                        <div class="flex items-center gap-1.5 sm:gap-3 pl-1 sm:pl-4">
-                            <div class="flex items-center gap-[2px] h-4 w-6 sm:w-10 justify-center">
+                        <div class="flex items-center gap-1.5 sm:gap-3 pl-2 sm:pl-4 w-[95px] sm:w-[130px] justify-start shrink-0 border-l border-slate-200">
+                            <div class="flex items-center gap-[2px] h-4 w-4 sm:w-6 justify-center shrink-0" id="wave-container">
                                 <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
                                 <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
                                 <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
                             </div>
-                            <span id="status-desc" class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest">Siap</span>
+                            <span id="status-desc" class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest text-left truncate flex-1">Siap</span>
                         </div>
                     </div>
                 </div>
             </header>
 
             <div class="flex-1 flex overflow-hidden max-w-7xl mx-auto w-full">
-                <div data-aos="fade-right" data-aos-duration="600" class="w-full md:w-80 bg-white border-r border-l border-slate-200 flex-col overflow-y-auto z-10 shrink-0 safe-fade-in {{ $activeDosenId ? 'hidden md:flex' : 'flex' }}">
-                    <div class="p-4 border-b border-slate-100 sticky top-0 bg-white/90 backdrop-blur-sm z-10">
-                        <input type="text" id="searchInput" placeholder="Cari Dosen..." class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400 pl-10" />
-                        <svg class="w-4 h-4 absolute left-7 top-7 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <div data-aos="fade-right" data-aos-duration="600" class="w-full md:w-80 bg-white border-r border-l border-slate-200 flex-col overflow-y-auto z-10 shrink-0 safe-fade-in custom-scrollbar {{ $activeDosenId ? 'hidden md:flex' : 'flex' }}">
+                    <div class="p-3 sm:p-4 border-b border-slate-100 sticky top-0 bg-white/90 backdrop-blur-sm z-10">
+                        <div class="relative">
+                            <input type="text" id="searchInput" placeholder="Cari Dosen..." class="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 sm:py-3 text-[10px] sm:text-xs font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400 pl-9 sm:pl-10" />
+                            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 absolute left-3.5 sm:left-4 top-3 sm:top-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
                     </div>
                     
-                    <div id="contactList" class="p-2 space-y-1 overflow-y-auto">
+                    <div id="contactList" class="p-2 space-y-1 overflow-y-auto custom-scrollbar">
                         @php $voiceIdCounter = 15; @endphp
                         @forelse($listPercakapan as $d_id => $msgs)
                             @php
@@ -199,20 +202,20 @@
                             @endphp
                             @if($dsn)
                             <a href="{{ url('/messages/'.$d_id) }}" data-voice-id="{{ $voiceIdCounter }}" class="block safe-fade-in contact-item relative mt-2">
-                                <div class="p-3 {{ $activeDosenId == $d_id ? 'bg-blue-50 border border-blue-100 shadow-sm' : 'hover:bg-slate-50 border border-transparent hover:border-slate-100' }} rounded-xl flex gap-3 cursor-pointer transition-all relative">
-                                    @if($isUnread) <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse border-2 border-white z-10"></span> @endif
+                                <div class="p-2.5 sm:p-3 {{ $activeDosenId == $d_id ? 'bg-blue-50 border border-blue-100 shadow-sm' : 'hover:bg-slate-50 border border-transparent hover:border-slate-100' }} rounded-xl flex gap-2 sm:gap-3 cursor-pointer transition-all relative">
+                                    @if($isUnread) <span class="absolute top-2 right-2 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-red-500 rounded-full animate-pulse border-2 border-white z-10"></span> @endif
                                     
-                                    <div class="absolute -left-1 -top-1 bg-black text-white text-[10px] font-black px-1.5 py-0.5 rounded-md shadow-sm z-10">{{ $voiceIdCounter }}</div>
+                                    <div class="absolute -left-1 -top-1 bg-black text-white text-[8px] sm:text-[10px] font-black px-1.5 py-0.5 rounded-md shadow-sm z-10">{{ $voiceIdCounter }}</div>
 
-                                    <div class="w-10 h-10 rounded-xl bg-slate-200 shrink-0 overflow-hidden border border-slate-100 flex items-center justify-center ml-1">
+                                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-slate-200 shrink-0 overflow-hidden border border-slate-100 flex items-center justify-center ml-1">
                                         <img src="https://ui-avatars.com/api/?name={{ urlencode($dsn->nama) }}&background=0D8ABC&color=fff" class="w-full h-full object-cover" />
                                     </div>
                                     <div class="flex-1 overflow-hidden">
                                         <div class="flex justify-between items-center mb-0.5">
-                                            <h4 class="font-bold {{ $isUnread ? 'text-slate-900' : 'text-slate-700' }} text-xs truncate">{{ $dsn->nama }}</h4>
-                                            <span class="text-[9px] font-bold {{ $isUnread ? 'text-blue-600' : 'text-slate-400' }} shrink-0 ml-2">{{ $last ? $last->created_at->format('H:i') : '' }}</span>
+                                            <h4 class="font-bold {{ $isUnread ? 'text-slate-900' : 'text-slate-700' }} text-[10px] sm:text-xs truncate">{{ $dsn->nama }}</h4>
+                                            <span class="text-[8px] sm:text-[9px] font-bold {{ $isUnread ? 'text-blue-600' : 'text-slate-400' }} shrink-0 ml-2">{{ $last ? $last->created_at->format('H:i') : '' }}</span>
                                         </div>
-                                        <p class="text-[10px] {{ $isUnread ? 'text-slate-800 font-bold' : 'text-slate-500 font-medium' }} truncate">
+                                        <p class="text-[9px] sm:text-[10px] {{ $isUnread ? 'text-slate-800 font-bold' : 'text-slate-500 font-medium' }} truncate">
                                             {{ $last && $last->body ? $last->body : ($last && $last->voice_path ? '[Voice Note]' : ($last && $last->image_path ? '[Gambar]' : 'Belum ada pesan')) }}
                                         </p>
                                     </div>
@@ -221,7 +224,7 @@
                             @php $voiceIdCounter++; @endphp
                             @endif
                         @empty
-                            <div class="p-6 text-center"><p class="text-xs text-slate-400 font-bold">Belum ada riwayat obrolan.</p></div>
+                            <div class="p-6 text-center"><p class="text-[10px] sm:text-xs text-slate-400 font-bold">Belum ada riwayat obrolan.</p></div>
                         @endforelse
                     </div>
                 </div>
@@ -245,39 +248,39 @@
                             </div>
                         </div>
 
-                        <div class="flex-1 p-3 sm:p-6 overflow-y-auto space-y-4 sm:space-y-6 custom-scrollbar bg-white" id="chatBox">
+                        <div class="flex-1 p-3 sm:p-4 md:p-6 overflow-y-auto space-y-4 sm:space-y-6 custom-scrollbar bg-white" id="chatBox">
                             @forelse($messages as $msg)
                                 @php $isMe = $msg->sender_type === 'mahasiswa'; @endphp
                                 <div id="msg-{{ $msg->id }}" class="flex {{ $isMe ? 'justify-end' : 'justify-start' }} safe-fade-in chat-bubble-new">
                                     <div class="flex flex-col {{ $isMe ? 'items-end' : 'items-start' }} max-w-[85%] md:max-w-[70%]">
-                                        <div class="p-3 sm:p-4 rounded-2xl shadow-sm border {{ $isMe ? 'bg-blue-600 text-white rounded-tr-none border-blue-700' : 'bg-slate-50 text-slate-800 rounded-tl-none border-slate-200' }}">
-                                            @if($msg->body)<p class="text-xs sm:text-[13px] leading-relaxed font-medium whitespace-pre-wrap break-words">{{ $msg->body }}</p>@endif
-                                            @if($msg->image_path)<img src="{{ asset('storage/'.$msg->image_path) }}" class="mt-2 rounded-xl max-w-full border {{ $isMe ? 'border-white/20' : 'border-slate-200' }}">@endif
+                                        <div class="p-2.5 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl shadow-sm border {{ $isMe ? 'bg-blue-600 text-white rounded-tr-none border-blue-700' : 'bg-slate-50 text-slate-800 rounded-tl-none border-slate-200' }}">
+                                            @if($msg->body)<p class="text-[11px] sm:text-xs md:text-[13px] leading-relaxed font-medium whitespace-pre-wrap break-words">{{ $msg->body }}</p>@endif
+                                            @if($msg->image_path)<img src="{{ asset('storage/'.$msg->image_path) }}" class="mt-1.5 sm:mt-2 rounded-lg sm:rounded-xl max-w-full md:max-w-xs border {{ $isMe ? 'border-white/20' : 'border-slate-200' }}">@endif
                                             @if(isset($msg->voice_path) && $msg->voice_path)
-                                                <div class="mt-2 flex items-center gap-2 sm:gap-3 bg-white/20 p-2 rounded-xl backdrop-blur-sm border {{ $isMe ? 'border-white/30' : 'border-slate-300 bg-white' }} w-[180px] sm:w-[240px]">
-                                                    <button type="button" onclick="togglePlay('wave-{{ $msg->id }}')" id="btn-wave-{{ $msg->id }}" class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center rounded-full {{ $isMe ? 'bg-white text-blue-600' : 'bg-blue-600 text-white' }} shadow hover:scale-105 transition-transform text-[10px] sm:text-xs">▶</button>
-                                                    <div id="wave-{{ $msg->id }}" class="flex-1" data-audio="{{ asset('storage/' . $msg->voice_path) }}"></div>
+                                                <div class="mt-1.5 sm:mt-2 flex items-center gap-2 sm:gap-3 bg-white/20 p-1.5 sm:p-2 rounded-lg sm:rounded-xl backdrop-blur-sm border {{ $isMe ? 'border-white/30' : 'border-slate-300 bg-white' }} w-[160px] sm:w-[180px] md:w-[240px]">
+                                                    <button type="button" onclick="togglePlay('wave-{{ $msg->id }}')" id="btn-wave-{{ $msg->id }}" class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 shrink-0 flex items-center justify-center rounded-full {{ $isMe ? 'bg-white text-blue-600' : 'bg-blue-600 text-white' }} shadow hover:scale-105 transition-transform text-[8px] sm:text-[10px] md:text-xs">▶</button>
+                                                    <div id="wave-{{ $msg->id }}" class="flex-1 h-3 sm:h-4 md:h-4" data-audio="{{ asset('storage/' . $msg->voice_path) }}"></div>
                                                 </div>
                                             @endif
                                         </div>
-                                        <span class="text-[8px] sm:text-[9px] font-bold text-slate-400 mt-1 {{ $isMe ? 'mr-1' : 'ml-1' }}">{{ $msg->created_at->format('H:i') }}</span>
+                                        <span class="text-[7px] sm:text-[8px] md:text-[9px] font-bold text-slate-400 mt-1 {{ $isMe ? 'mr-1' : 'ml-1' }}">{{ $msg->created_at->format('H:i') }}</span>
                                     </div>
                                 </div>
                             @empty
                                 <div id="emptyChat" class="h-full flex flex-col items-center justify-center text-center opacity-70">
-                                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-blue-50 text-blue-400 rounded-full flex items-center justify-center mb-4 border border-blue-100">
-                                        <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                                    <div class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-blue-50 text-blue-400 rounded-full flex items-center justify-center mb-3 sm:mb-4 border border-blue-100">
+                                        <svg class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                                     </div>
-                                    <p class="text-xs sm:text-sm text-slate-600 font-bold">Belum ada percakapan.</p>
-                                    <p class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-widest mt-1">Sapa Dosen Anda!</p>
+                                    <p class="text-xs sm:text-sm md:text-base text-slate-600 font-bold">Belum ada percakapan.</p>
+                                    <p class="text-[8px] sm:text-[9px] md:text-[10px] text-slate-400 uppercase tracking-widest mt-1">Sapa Dosen Anda!</p>
                                 </div>
                             @endforelse
                         </div>
 
-                        <div class="p-2 sm:p-4 border-t border-slate-100 bg-white shrink-0 shadow-[0_-4px_10px_rgba(0,0,0,0.02)] relative z-20 pb-4 sm:pb-4">
-                            <div id="imagePreviewContainer" class="hidden mb-2 relative p-2 bg-slate-50 border border-slate-200 rounded-2xl w-fit">
-                                <img id="imagePreviewElement" src="" class="h-16 sm:h-24 w-auto object-cover rounded-xl shadow-sm border border-slate-200">
-                                <button type="button" onclick="cancelImage()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center font-bold text-xs shadow-lg hover:bg-red-600 hover:scale-110 transition-transform">✕</button>
+                        <div class="p-2 sm:p-3 md:p-4 border-t border-slate-100 bg-white shrink-0 shadow-[0_-4px_10px_rgba(0,0,0,0.02)] relative z-20 pb-4 sm:pb-4">
+                            <div id="imagePreviewContainer" class="hidden mb-2 relative p-2 bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl w-fit">
+                                <img id="imagePreviewElement" src="" class="h-16 sm:h-20 md:h-24 w-auto object-cover rounded-lg sm:rounded-xl shadow-sm border border-slate-200">
+                                <button type="button" onclick="cancelImage()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center font-bold text-[10px] sm:text-xs shadow-lg hover:bg-red-600 hover:scale-110 transition-transform">✕</button>
                             </div>
 
                             <form id="chatForm" method="POST" action="{{ url('/messages/send') }}" enctype="multipart/form-data">
@@ -286,55 +289,56 @@
                                 <input type="file" name="image" id="imageInput" accept="image/*" class="hidden" onchange="previewImage(this)">
                                 <input type="file" name="voice" id="voiceInput" accept="audio/webm" class="hidden">
 
-                                <div class="relative flex items-center gap-1.5 sm:gap-3 bg-slate-50 p-1.5 sm:p-3 rounded-2xl sm:rounded-[1.25rem] border border-slate-200 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100 transition-all shadow-sm w-full">
+                                <div class="relative flex items-center gap-1.5 sm:gap-2 md:gap-3 bg-slate-50 p-1.5 sm:p-2 md:p-3 rounded-2xl sm:rounded-[1.25rem] md:rounded-2xl border border-slate-200 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100 transition-all shadow-sm w-full">
                                     
                                     <div id="uploadImageContainer" class="relative shrink-0 flex items-center">
-                                        <button type="button" onclick="document.getElementById('imageInput').click()" id="btnUploadImage" class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-white transition-all cursor-pointer shadow-sm border border-transparent hover:border-blue-100 bg-white sm:bg-transparent">
-                                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        <button type="button" onclick="document.getElementById('imageInput').click()" id="btnUploadImage" class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-white transition-all cursor-pointer shadow-sm border border-transparent hover:border-blue-100 bg-white sm:bg-transparent">
+                                            <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                         </button>
-                                        <span class="absolute -top-1.5 -right-1.5 bg-slate-900 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border border-white">2</span>
+                                        <span class="absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 bg-slate-900 text-white text-[7px] sm:text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border border-white">2</span>
                                     </div>
 
-                                    <div id="normalInputWrapper" class="flex-1 min-w-0 relative flex items-center bg-white sm:bg-transparent rounded-xl sm:rounded-none px-2 sm:px-0 shadow-sm sm:shadow-none py-1 sm:py-0">
+                                    <div id="normalInputWrapper" class="flex-1 min-w-0 relative flex items-center bg-white sm:bg-transparent rounded-xl sm:rounded-none px-2 sm:px-0 shadow-sm sm:shadow-none py-0.5 sm:py-0">
                                         <div class="absolute left-2 text-[8px] sm:text-[10px] font-black text-white bg-slate-900 px-1.5 py-0.5 rounded-md shadow-sm z-10 hidden sm:block">1</div>
-                                        <input type="text" name="body" id="messageInput" placeholder="Sebut 1 untuk ketik..." autocomplete="off" class="w-full bg-transparent text-xs sm:text-sm font-medium text-slate-700 placeholder-slate-400 focus:outline-none transition-all py-1 pl-1 sm:pl-8" />
+                                        <input type="text" name="body" id="messageInput" placeholder="Sebut 1 untuk ketik..." autocomplete="off" class="w-full bg-transparent text-[10px] sm:text-xs md:text-sm font-medium text-slate-700 placeholder-slate-400 focus:outline-none transition-all py-1 sm:py-1.5 pl-1 sm:pl-8" />
                                         
-                                        <button type="button" id="cancelVoiceToTextBtn" onclick="batalKetikSuara()" class="hidden absolute right-1 sm:right-2 text-[9px] sm:text-[10px] font-black uppercase text-white bg-red-500 hover:bg-red-600 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg shadow-sm transition-all cursor-pointer z-20">Batal ✕</button>
-                                        <button type="button" id="cancelVoiceBtn" class="hidden absolute right-1 sm:right-2 text-[9px] sm:text-[10px] font-black uppercase text-white bg-red-500 hover:bg-red-600 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg shadow-sm transition-all cursor-pointer z-20">Batal ✕</button>
+                                        <button type="button" id="cancelVoiceToTextBtn" onclick="batalKetikSuara()" class="hidden absolute right-1 sm:right-2 text-[8px] sm:text-[10px] font-black uppercase text-white bg-red-500 hover:bg-red-600 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-md sm:rounded-lg shadow-sm transition-all cursor-pointer z-20">Batal ✕</button>
+                                        <button type="button" id="cancelVoiceBtn" onclick="batalRekamChat()" class="hidden absolute right-1 sm:right-2 text-[8px] sm:text-[10px] font-black uppercase text-white bg-red-500 hover:bg-red-600 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-md sm:rounded-lg shadow-sm transition-all cursor-pointer z-20">Batal ✕</button>
                                     </div>
 
                                     <div id="recordingWrapper" class="hidden flex-1 items-center justify-between px-2 bg-red-50 rounded-lg py-1 sm:py-0 sm:bg-transparent border border-red-100 sm:border-none">
                                         <div class="flex items-center gap-1.5 sm:gap-2">
                                             <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
-                                            <span class="text-[10px] sm:text-xs font-bold text-red-500 font-mono tracking-wider" id="recordTimer">00:00</span>
-                                            <div class="recording-wave flex items-center gap-0.5 sm:gap-1 h-4 sm:h-5 ml-1 sm:ml-2">
-                                                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                                            <span class="text-[9px] sm:text-[10px] font-bold text-red-500 font-mono tracking-wider" id="recordTimer">00:00</span>
+                                            <div class="recording-wave flex items-center gap-0.5 sm:gap-1 h-3 sm:h-5 ml-1 sm:ml-2">
+                                                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
                                             </div>
                                         </div>
-                                        <button type="button" id="cancelRecordBtn" class="text-[9px] sm:text-[10px] font-black uppercase text-slate-500 hover:text-red-500 px-1 sm:px-2 transition-colors cursor-pointer bg-white sm:bg-transparent rounded-md py-0.5 sm:py-0 shadow-sm sm:shadow-none">Batal</button>
+                                        <button type="button" id="cancelRecordBtn" onclick="batalRekamChat()" class="text-[8px] sm:text-[9px] font-black uppercase text-slate-400 hover:text-red-500 px-1 sm:px-2 transition-colors cursor-pointer bg-white sm:bg-transparent rounded py-0.5 sm:py-0 shadow-sm sm:shadow-none">Batal</button>
                                     </div>
 
                                     <div id="recordBtnContainer" class="relative shrink-0 flex items-center">
-                                        <button type="button" id="recordBtn" class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all cursor-pointer border border-transparent hover:border-red-100 shadow-sm bg-white sm:bg-transparent">
-                                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"></path></svg>
+                                        <button type="button" id="recordBtn" class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all cursor-pointer border border-transparent hover:border-red-100 shadow-sm bg-white sm:bg-transparent">
+                                            <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"></path></svg>
                                         </button>
-                                        <span class="absolute -top-1.5 -right-1.5 bg-slate-900 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border border-white">3</span>
+                                        <span class="absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 bg-slate-900 text-white text-[7px] sm:text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border border-white">3</span>
                                     </div>
 
-                                    <div class="relative shrink-0 flex items-center ml-0.5 sm:ml-2">
-                                        <button type="submit" id="sendChatBtn" class="w-9 h-8 sm:w-12 sm:h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-transform transform hover:scale-105 active:scale-95 shadow-md shadow-blue-200 cursor-pointer">
-                                            <span id="sendIcon"><svg class="w-4 h-4 sm:w-5 sm:h-5 transform rotate-90 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg></span>
-                                            <span id="sendLoading" class="hidden"><svg class="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg></span>
+                                    <div class="relative shrink-0 flex items-center ml-0.5 sm:ml-1 md:ml-0">
+                                        <button type="submit" id="sendChatBtn" class="w-9 h-8 sm:w-10 sm:h-9 md:w-12 md:h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-transform transform hover:scale-105 active:scale-95 shadow-md shadow-blue-200 cursor-pointer">
+                                            <span id="sendIcon"><svg class="w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5 transform rotate-90 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg></span>
+                                            <span id="sendLoading" class="hidden"><svg class="w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg></span>
                                         </button>
+                                        <span class="absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 bg-slate-900 text-white text-[7px] sm:text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border border-white z-10">4</span>
                                     </div>
                                 </div>
                             </form>
                         </div>
                     @else
-                        <div class="flex-1 flex flex-col items-center justify-center text-center p-6 safe-fade-in">
-                            <div class="w-20 h-20 bg-blue-50 text-blue-300 rounded-full flex items-center justify-center mb-4"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div>
-                            <h3 class="text-xl font-black text-slate-700">Pesan Inklusi</h3>
-                            <p class="text-sm text-slate-500 mt-2 max-w-xs">Pilih kontak Dosen atau ucapkan "Cari [Nama]" untuk memulai obrolan.</p>
+                        <div class="flex-1 flex flex-col items-center justify-center text-center p-6 safe-fade-in h-full">
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 text-blue-300 rounded-full flex items-center justify-center mb-4"><svg class="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></div>
+                            <h3 class="text-base sm:text-lg md:text-xl font-black text-slate-700">Pesan Inklusi</h3>
+                            <p class="text-[10px] sm:text-xs md:text-sm text-slate-500 mt-2 max-w-xs">Pilih kontak Dosen atau ucapkan "Cari [Nama]" untuk memulai obrolan.</p>
                         </div>
                     @endif
                 </div>
@@ -342,8 +346,8 @@
         </main>
 
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
         <script>
+            // SCRIPT IDENTIK DENGAN PESAN SEBELUMNYA 100% (LOGIKA VOICE, RECORDER, WAVESURFER, AJAX)
             const listDosenVA = [
                 @php $vId = 15; @endphp
                 @foreach($listPercakapan as $d_id => $msgs)
@@ -384,9 +388,7 @@
                     document.getElementById('btn-' + containerId).innerHTML = '▶'; 
                     if(isAutoPlaying) {
                         isAutoPlaying = false;
-                        setTimeout(() => { 
-                            bicara("Audio selesai. Selanjutnya mau apa? Sebutkan satu untuk ketik, dua untuk gambar, atau tiga untuk merekam suara. Delapan untuk kembali.", () => { mulaiMendengar(); }); 
-                        }, 800);
+                        setTimeout(() => { bicara("Audio selesai. Selanjutnya mau apa? Sebutkan satu untuk ketik, dua untuk gambar, atau tiga untuk merekam suara. Delapan untuk kembali.", () => { mulaiMendengar(); }); }, 800);
                     }
                 });
             }
@@ -402,23 +404,23 @@
                 scrollBottom();
 
                 document.querySelectorAll('[id^="wave-"]').forEach(el => {
-                    initWaveSurfer(el.id, el.getAttribute('data-audio'), el.parentElement.classList.contains('border-white/30'));
+                    initWaveSurfer(el.id, el.getAttribute('data-audio'), el.parentElement.classList.contains('border-white/30') || el.parentElement.classList.contains('bg-white/20'));
                 });
 
                 if(window.Echo && isActiveChat) {
                     window.Echo.private(`chat.mahasiswa.${mahasiswaId}`)
                         .listen('.message.sent', (e) => {
                             let mediaHtml = '';
-                            if (e.message.image_path) mediaHtml += `<img src="/storage/${e.message.image_path}" class="mt-2 rounded-xl max-w-xs border border-slate-200">`;
+                            if (e.message.image_path) mediaHtml += `<img src="/storage/${e.message.image_path}" class="mt-1.5 sm:mt-2 rounded-lg sm:rounded-xl max-w-full md:max-w-xs border border-slate-200">`;
                             
                             const uniqueWaveId = 'wave-incoming-' + Date.now();
                             if (e.message.voice_path) {
-                                mediaHtml += `<div class="mt-2 flex items-center gap-3 bg-white/20 p-2 rounded-xl backdrop-blur-sm border border-slate-300 bg-white w-[200px] sm:w-[240px]"><button type="button" onclick="togglePlay('${uniqueWaveId}')" id="btn-${uniqueWaveId}" class="w-7 h-7 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center rounded-full bg-blue-600 text-white shadow hover:scale-105 transition-transform text-[10px] sm:text-xs">▶</button><div id="${uniqueWaveId}" class="flex-1" data-audio="/storage/${e.message.voice_path}"></div></div>`;
+                                mediaHtml += `<div class="mt-1.5 sm:mt-2 flex items-center gap-2 sm:gap-3 bg-white/20 p-1.5 sm:p-2 rounded-lg sm:rounded-xl backdrop-blur-sm border border-slate-300 bg-white w-[160px] sm:w-[180px] md:w-[240px]"><button type="button" onclick="togglePlay('${uniqueWaveId}')" id="btn-${uniqueWaveId}" class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 shrink-0 flex items-center justify-center rounded-full bg-blue-600 text-white shadow hover:scale-105 transition-transform text-[8px] sm:text-[10px] md:text-xs">▶</button><div id="${uniqueWaveId}" class="flex-1 h-3 sm:h-4 md:h-4" data-audio="/storage/${e.message.voice_path}"></div></div>`;
                             }
                             
-                            let msgHtml = e.message.body ? `<p class="text-xs sm:text-[13px] leading-relaxed font-medium whitespace-pre-wrap break-words">${e.message.body}</p>` : '';
+                            let msgHtml = e.message.body ? `<p class="text-[11px] sm:text-xs md:text-[13px] leading-relaxed font-medium whitespace-pre-wrap break-words">${e.message.body}</p>` : '';
                             
-                            let html = `<div class="flex flex-col items-start max-w-[85%] md:max-w-[70%] safe-fade-in chat-bubble-new"><div class="bg-slate-50 text-slate-800 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm p-3 sm:p-4">${msgHtml}${mediaHtml}</div><span class="text-[9px] font-bold text-slate-400 mt-1 ml-1">${e.message.time}</span></div>`;
+                            let html = `<div class="flex flex-col items-start max-w-[90%] sm:max-w-[85%] md:max-w-[70%] safe-fade-in chat-bubble-new"><div class="bg-slate-50 text-slate-800 rounded-xl sm:rounded-2xl rounded-tl-none border border-slate-200 shadow-sm p-2.5 sm:p-3 md:p-4 w-fit max-w-full">${msgHtml}${mediaHtml}</div><span class="text-[7px] sm:text-[8px] md:text-[9px] font-bold text-slate-400 mt-1 sm:mt-1.5 ml-1">${e.message.time}</span></div>`;
 
                             let emptyNotice = document.getElementById('emptyChat');
                             if(emptyNotice) emptyNotice.remove();
@@ -450,13 +452,13 @@
                     if(!searchInput || !contactList) return;
                     if(keyword.length === 0) { contactList.innerHTML = originalContactHTML; return; }
                     
-                    contactList.innerHTML = `<div class="p-6 text-center"><p class="text-xs text-slate-400 font-bold animate-pulse">Mencari...</p></div>`;
+                    contactList.innerHTML = `<div class="p-6 text-center"><p class="text-[10px] sm:text-xs text-slate-400 font-bold animate-pulse">Mencari...</p></div>`;
                     
                     fetch(`{{ url('/messages/search') }}?q=${encodeURIComponent(keyword)}`)
                     .then(res => res.json())
                     .then(data => {
                         if(data.length === 0) { 
-                            contactList.innerHTML = `<div class="p-6 text-center"><p class="text-xs text-slate-400 font-bold">Tidak ditemukan.</p></div>`; 
+                            contactList.innerHTML = `<div class="p-6 text-center"><p class="text-[10px] sm:text-xs text-slate-400 font-bold">Tidak ditemukan.</p></div>`; 
                             bicara(`Tidak ditemukan dosen bernama ${keyword}.`); return; 
                         }
                         
@@ -464,14 +466,14 @@
                         data.forEach(dsn => {
                             html += `
                             <a href="{{ url('/messages') }}/${dsn.id}" data-voice-id="${searchVoiceId}" class="block safe-fade-in relative mt-2">
-                                <div class="p-3 hover:bg-slate-50 border border-transparent hover:border-slate-100 rounded-xl flex gap-3 cursor-pointer transition-all">
-                                    <div class="absolute -left-1 -top-1 bg-black text-white text-[10px] font-black px-1.5 py-0.5 rounded-md shadow-sm z-10">${searchVoiceId}</div>
-                                    <div class="w-10 h-10 rounded-xl bg-slate-200 shrink-0 overflow-hidden border border-slate-100 flex items-center justify-center ml-1">
+                                <div class="p-2.5 sm:p-3 hover:bg-slate-50 border border-transparent hover:border-slate-100 rounded-xl flex gap-2 sm:gap-3 cursor-pointer transition-all">
+                                    <div class="absolute -left-1 -top-1 bg-black text-white text-[8px] sm:text-[10px] font-black px-1.5 py-0.5 rounded-md shadow-sm z-10">${searchVoiceId}</div>
+                                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-slate-200 shrink-0 overflow-hidden border border-slate-100 flex items-center justify-center ml-1">
                                         <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(dsn.nama)}&background=0D8ABC&color=fff" class="w-full h-full object-cover" />
                                     </div>
                                     <div class="flex-1 flex flex-col justify-center overflow-hidden">
-                                        <h4 class="font-bold text-slate-900 text-xs truncate">${dsn.nama}</h4>
-                                        <p class="text-[10px] text-slate-500 truncate font-medium">Sebutkan ${searchVoiceId} untuk chat</p>
+                                        <h4 class="font-bold text-slate-900 text-[10px] sm:text-xs truncate">${dsn.nama}</h4>
+                                        <p class="text-[9px] sm:text-[10px] text-slate-500 truncate font-medium">Sebutkan ${searchVoiceId} untuk chat</p>
                                     </div>
                                 </div>
                             </a>`;
@@ -627,14 +629,14 @@
                                 recordBtn.classList.add('text-slate-400', 'bg-white', 'sm:bg-transparent');
                                 
                                 let mediaHtml = '';
-                                if (data.message.image_path) mediaHtml += `<img src="/storage/${data.message.image_path}" class="mt-2 rounded-xl max-w-full border border-white/20">`;
+                                if (data.message.image_path) mediaHtml += `<img src="/storage/${data.message.image_path}" class="mt-1.5 sm:mt-2 rounded-lg sm:rounded-xl max-w-full md:max-w-xs border border-white/20">`;
                                 const uniqueWaveId = 'wave-new-' + Date.now();
                                 if (data.message.voice_path) {
-                                    mediaHtml += `<div class="mt-2 flex items-center gap-3 bg-white/20 p-2 rounded-xl backdrop-blur-sm border border-white/30 w-[200px] sm:w-[240px]"><button type="button" onclick="togglePlay('${uniqueWaveId}')" id="btn-${uniqueWaveId}" class="w-7 h-7 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center rounded-full bg-white text-blue-600 shadow hover:scale-105 transition-transform text-[10px] sm:text-xs">▶</button><div id="${uniqueWaveId}" class="flex-1 h-4" data-audio="/storage/${data.message.voice_path}"></div></div>`;
+                                    mediaHtml += `<div class="mt-1.5 sm:mt-2 flex items-center gap-2 sm:gap-3 bg-white/20 p-1.5 sm:p-2 rounded-lg sm:rounded-xl backdrop-blur-sm border border-white/30 w-[160px] sm:w-[180px] md:w-[240px]"><button type="button" onclick="togglePlay('${uniqueWaveId}')" id="btn-${uniqueWaveId}" class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 shrink-0 flex items-center justify-center rounded-full bg-white text-blue-600 shadow hover:scale-105 transition-transform text-[8px] sm:text-[10px] md:text-xs">▶</button><div id="${uniqueWaveId}" class="flex-1 h-3 sm:h-4 md:h-4" data-audio="/storage/${data.message.voice_path}"></div></div>`;
                                 }
-                                let msgHtml = data.message.body ? `<p class="text-xs sm:text-[13px] leading-relaxed font-medium whitespace-pre-wrap break-words">${data.message.body}</p>` : '';
+                                let msgHtml = data.message.body ? `<p class="text-[11px] sm:text-xs md:text-[13px] leading-relaxed font-medium whitespace-pre-wrap break-words">${data.message.body}</p>` : '';
                                 
-                                let html = `<div class="flex flex-col items-end ml-auto max-w-[85%] md:max-w-[70%] safe-fade-in chat-bubble-new"><div class="bg-blue-600 text-white rounded-2xl rounded-tr-none border border-blue-700 shadow-sm p-3 sm:p-4">${msgHtml}${mediaHtml}</div><span class="text-[9px] font-bold text-slate-400 mt-1 mr-1">${data.message.time}</span></div>`;
+                                let html = `<div class="flex flex-col items-end ml-auto max-w-[90%] sm:max-w-[85%] md:max-w-[70%] safe-fade-in chat-bubble-new"><div class="bg-blue-600 text-white rounded-xl sm:rounded-2xl rounded-tr-none border border-blue-700 shadow-sm p-2.5 sm:p-3 md:p-4 w-fit max-w-full">${msgHtml}${mediaHtml}</div><span class="text-[7px] sm:text-[8px] md:text-[9px] font-bold text-slate-400 mt-1 sm:mt-1.5 mr-1">${data.message.time}</span></div>`;
 
                                 let emptyNotice = document.getElementById('emptyChat'); if(emptyNotice) emptyNotice.remove();
                                 chatBox.insertAdjacentHTML('beforeend', html); scrollBottom();
@@ -674,7 +676,6 @@
                 synth.cancel();
                 const utter = new SpeechSynthesisUtterance(teks); utter.lang = "id-ID";
                 utter.rate = localStorage.getItem("speechRate") ? parseFloat(localStorage.getItem("speechRate")) : 1.0;
-
                 utter.onstart = () => { if (statusDesc) statusDesc.innerText = "BERBICARA..."; interval = setInterval(() => setWave(true), 150); };
                 utter.onend = () => { if (statusDesc) statusDesc.innerText = "MENDENGARKAN..."; clearInterval(interval); setWave(false); if (callback) callback(); };
                 synth.speak(utter);
@@ -683,7 +684,7 @@
             // LOGIKA PEMBACAAN PESAN TERAKHIR
             function getPanduanUtama(isUlang = false) {
                 let sapaan = "";
-                let navigasiTeks = "Sebutkan angka satu untuk mengetik pesan, dua untuk upload gambar, atau tiga untuk merekam suara. Delapan untuk menutup chat.";
+                let navigasiTeks = "Sebutkan angka satu untuk mengetik pesan, dua untuk upload gambar, atau tiga untuk merekam suara. Empat untuk kirim. Delapan untuk menutup chat.";
                 
                 if (!isActiveChat) {
                     sapaan = "Halo, Anda berada di halaman Pesan. ";
@@ -738,6 +739,7 @@
                 else if (nomor === 0) { tujuan = "{{ url('/logout') }}"; teks = "Keluar."; }
                 
                 else if (nomor === 1) {
+                    if (!isActiveChat) return;
                     modeKetikSuara = true;
                     menungguKonfirmasiKirim = false;
                     document.getElementById('normalInputWrapper').classList.add('dictating-active');
@@ -747,13 +749,15 @@
                     document.getElementById("messageInput").placeholder = "Mendengarkan teks...";
                     teks = "Mode ketik aktif. Silakan berbicara. Sistem akan menjeda dan bertanya jika Anda selesai.";
                 } else if (nomor === 2) {
-                    teks = "Membuka galeri. Pilih gambar, lalu sebutkan kirim.";
+                    if (!isActiveChat) return;
+                    teks = "Membuka galeri. Pilih gambar, lalu sebutkan kirim atau angka empat.";
                     bicara(teks, () => { 
                         document.getElementById('imageInput').click(); 
                         menungguKonfirmasiVoice = true;
                     });
                     return;
                 } else if (nomor === 3) {
+                    if (!isActiveChat) return;
                     const recordBtn = document.getElementById('recordBtn');
                     if (!recordBtn.classList.contains('text-white')) {
                         teks = "Merekam suara. Silakan bicara setelah suara bip. Untuk berhenti, sebutkan kata Selesai.";
@@ -764,7 +768,17 @@
                         menungguKonfirmasiVoice = true; 
                         teks = "Suara disimpan. Sebutkan kirim, atau batal.";
                     }
-                } 
+                } else if (nomor === 4) {
+                    if (!isActiveChat) return;
+                    window.batalKetikSuara();
+                    const textVal = document.getElementById("messageInput").value.trim();
+                    const imgVal = document.getElementById("imageInput").files.length;
+                    const voiceVal = document.getElementById("voiceInput").files.length;
+
+                    if (textVal !== "" || imgVal > 0 || voiceVal > 0 || textVal === "Voice note siap dikirim.") {
+                        document.getElementById("sendChatBtn").click(); return; 
+                    } else { teks = "Pesan chat kosong."; }
+                }
                 else if (nomor >= 15) {
                     let targetLink = document.querySelector(`a[data-voice-id="${nomor}"]`);
                     if (targetLink) { teks = "Membuka obrolan."; tujuan = targetLink.getAttribute("href"); }
@@ -780,7 +794,6 @@
                     rec.onresult = (event) => {
                         const hasil = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
                         
-                        // LOGIKA UNTUK MENANGKAP KONFIRMASI PENGIRIMAN DARI TEKS
                         if (menungguKonfirmasiKirim) {
                             if (hasil.includes("kirim") || hasil.includes("ya") || hasil.includes("iya")) { 
                                 menungguKonfirmasiKirim = false; 
@@ -797,7 +810,6 @@
                             return; 
                         }
 
-                        // LOGIKA KETIK (TIMER JEDA 3 DETIK)
                         if (modeKetikSuara) {
                             if (hasil === "batal" || hasil === "batalkan") { 
                                 window.batalKetikSuara(); 
@@ -815,9 +827,9 @@
                                 document.getElementById('normalInputWrapper').classList.remove('dictating-active');
                                 document.getElementById('normalInputWrapper').classList.add('confirming-active');
                                 bicara(`Pesan Anda adalah: ${inputEl.value}. Mau dikirim atau tidak? Sebutkan kirim, atau batal.`, () => { mulaiMendengar(); });
-                            }, 3000); // Trigger setelah 3 detik tidak ada suara
+                            }, 3000); 
                             
-                            return; // Mencegah navigasi berjalan
+                            return; 
                         }
 
                         if(hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan")) {
@@ -855,7 +867,6 @@
                             document.getElementById("searchInput").value = namaDosen; window.lakukanPencarian(namaDosen); return;
                         }
 
-                        // Navigasi Normal
                         const angka = hasil.match(/\d+/);
                         if (angka) navigasiKe(parseInt(angka[0]));
                         else if (hasil.includes("lima") || hasil.includes("beranda")) navigasiKe(5);
@@ -864,9 +875,10 @@
                         else if (hasil.includes("delapan") || hasil.includes("pesan")) navigasiKe(8);
                         else if (hasil.includes("sembilan")) navigasiKe(9);
                         else if (hasil.includes("satu") || hasil.includes("ketik")) navigasiKe(1);
-                        else if (hasil.includes("dua") || hasil.includes("gambar")) navigasiKe(2);
-                        else if (hasil.includes("tiga") || hasil.includes("suara") || hasil.includes("voice")) navigasiKe(3);
-                        else if (hasil.includes("nol") || hasil.includes("keluar")) navigasiKe(0);
+                        else if (hasil.includes("dua") || hasil.includes("gambar") || hasil.includes("lampiran")) navigasiKe(2);
+                        else if (hasil.includes("tiga") || hasil.includes("suara") || hasil.includes("voice") || hasil.includes("rekam")) navigasiKe(3);
+                        else if (hasil.includes("empat") || hasil.includes("kirim") || hasil.includes("send")) navigasiKe(4);
+                        else if (hasil.includes("nol") || hasil.includes("keluar") || hasil.includes("kembali")) navigasiKe(0);
                     };
                     rec.onend = () => { rec.start(); };
                 } catch (e) { console.error("Error recognition:", e); }

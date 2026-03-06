@@ -34,8 +34,9 @@
             }
         </style>
     </head>
+    
     <body
-        class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] min-h-[100dvh] text-slate-800 flex flex-col lg:flex-row border-box custom-scrollbar"
+        class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] h-[100dvh] flex flex-col lg:flex-row border-box text-slate-800 overflow-hidden"
     >
         <div
             id="mobileBackdrop"
@@ -45,7 +46,7 @@
 
         <aside
             id="sidebar"
-            class="fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-screen transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shrink-0"
+            class="fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-[100dvh] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shrink-0"
         >
             <div
                 class="p-8 border-b border-slate-100 flex items-center gap-4 shrink-0"
@@ -255,14 +256,14 @@
         </aside>
 
         <main
-            class="flex-1 min-h-[100dvh] flex flex-col relative lg:ml-80 transition-all duration-300 custom-scrollbar"
+            class="flex-1 flex flex-col h-[100dvh] overflow-y-auto relative lg:ml-80 transition-all duration-300 custom-scrollbar"
         >
             <div
                 class="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-blue-50 to-transparent -z-10"
             ></div>
 
             <header
-                class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 sticky top-0 z-30"
+                class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 sticky top-0 z-30 shrink-0"
             >
                 <div class="max-w-7xl mx-auto flex items-center justify-between h-10 sm:h-14">
                     <div class="flex items-center gap-2 sm:gap-4">
@@ -341,10 +342,10 @@
                             </button>
                         </div>
 
-                        <div class="flex items-center gap-1.5 sm:gap-3 pl-1 sm:pl-4">
+                        <div class="flex items-center gap-1.5 sm:gap-3 pl-1 sm:pl-2 w-[90px] sm:w-[130px] justify-start shrink-0">
                             <div
                                 id="wave-container"
-                                class="flex items-center gap-[2px] h-4 w-6 sm:w-10 justify-center"
+                                class="flex items-center gap-[2px] h-4 w-4 sm:w-6 justify-center shrink-0"
                             >
                                 <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
                                 <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
@@ -352,7 +353,7 @@
                             </div>
                             <span
                                 id="status-desc"
-                                class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest text-left w-12 sm:w-20"
+                                class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest text-left w-16 sm:w-24 truncate"
                                 >Siap</span
                             >
                         </div>
@@ -360,34 +361,36 @@
                 </div>
             </header>
 
-            <div class="p-4 sm:p-6 lg:p-10 w-full max-w-7xl mx-auto space-y-6 sm:space-y-8 shrink-0">
+            <div class="p-4 sm:p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-6 sm:space-y-8">
+                
                 <div
                     data-aos="fade-up"
-                    class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[1.5rem] sm:rounded-[2.5rem] p-6 sm:p-10 text-white shadow-xl shadow-blue-200 relative overflow-hidden"
+                    class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 text-white shadow-xl shadow-blue-200 relative overflow-hidden"
                 >
                     <div class="relative z-10 flex flex-col lg:flex-row gap-6 sm:gap-8 items-center">
                         <div class="w-full">
-                            <h3 class="text-xl sm:text-3xl font-black uppercase tracking-tighter mb-2 sm:mb-4 text-center lg:text-left">
+                            <h3 class="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tighter mb-2 sm:mb-4 text-center lg:text-left">
                                 Navigasi Suara
                             </h3>
-                            <p class="text-xs sm:text-base text-blue-100 font-medium mb-4 sm:mb-6 leading-relaxed text-center lg:text-left">
+                            <p class="text-xs sm:text-sm md:text-base text-blue-100 font-medium mb-4 sm:mb-6 leading-relaxed text-center lg:text-left">
                                 Sistem LMS Inklusi dikendalikan menggunakan perintah suara berbasis nomor. Cukup sebutkan angka menu untuk berpindah halaman secara instan.
                             </p>
+                            
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                                <div class="bg-white/10 p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
-                                    <span class="block text-lg sm:text-2xl font-black">5</span>
+                                <div class="bg-white/10 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
+                                    <span class="block text-xl sm:text-2xl font-black">5</span>
                                     <span class="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest opacity-80">Beranda</span>
                                 </div>
-                                <div class="bg-white/10 p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
-                                    <span class="block text-lg sm:text-2xl font-black">6</span>
+                                <div class="bg-white/10 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
+                                    <span class="block text-xl sm:text-2xl font-black">6</span>
                                     <span class="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest opacity-80">Profil</span>
                                 </div>
-                                <div class="bg-white/10 p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
-                                    <span class="block text-lg sm:text-2xl font-black">7</span>
+                                <div class="bg-white/10 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
+                                    <span class="block text-xl sm:text-2xl font-black">7</span>
                                     <span class="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest opacity-80">Notif</span>
                                 </div>
-                                <div class="bg-white/10 p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
-                                    <span class="block text-lg sm:text-2xl font-black">0</span>
+                                <div class="bg-white/10 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
+                                    <span class="block text-xl sm:text-2xl font-black">0</span>
                                     <span class="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest opacity-80">Keluar</span>
                                 </div>
                             </div>
@@ -407,7 +410,7 @@
                     <div
                         data-aos="fade-up"
                         data-aos-delay="100"
-                        class="bg-white p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
+                        class="bg-white p-5 sm:p-6 md:p-8 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
                     >
                         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-orange-50 text-orange-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -425,7 +428,7 @@
                     <div
                         data-aos="fade-up"
                         data-aos-delay="200"
-                        class="bg-white p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
+                        class="bg-white p-5 sm:p-6 md:p-8 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
                     >
                         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 text-blue-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -443,7 +446,7 @@
                     <div
                         data-aos="fade-up"
                         data-aos-delay="300"
-                        class="bg-white p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
+                        class="bg-white p-5 sm:p-6 md:p-8 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
                     >
                         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 text-slate-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -462,24 +465,24 @@
                 <div
                     data-aos="fade-up"
                     data-aos-delay="400"
-                    class="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-6 sm:p-8 border border-slate-100 flex flex-col md:flex-row items-center md:items-center justify-between gap-4 sm:gap-6 shadow-sm mb-10"
+                    class="bg-white rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] p-5 sm:p-6 md:p-8 border border-slate-100 flex flex-col md:flex-row items-center md:items-center justify-between gap-4 sm:gap-6 shadow-sm mb-10"
                 >
-                    <div class="flex flex-col md:flex-row items-center gap-4 sm:gap-6 text-center md:text-left">
-                        <div class="w-14 h-14 sm:w-16 sm:h-16 bg-slate-900 text-white rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-slate-200 shrink-0">
-                            <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="flex flex-col md:flex-row items-center gap-3 sm:gap-4 md:gap-6 text-center md:text-left">
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-slate-900 text-white rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-slate-200 shrink-0">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
                             </svg>
                         </div>
                         <div>
-                            <h4 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+                            <h4 class="text-base sm:text-lg md:text-xl font-black text-slate-900 tracking-tight">
                                 Butuh Bantuan Lebih?
                             </h4>
-                            <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+                            <p class="text-[10px] sm:text-xs md:text-sm text-slate-500 font-medium mt-0.5 sm:mt-1">
                                 Tim IT Inklusi UMMI siap membantu Anda.
                             </p>
                         </div>
                     </div>
-                    <button class="w-full md:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-blue-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 cursor-pointer">
+                    <button class="w-full md:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-blue-600 text-white rounded-lg sm:rounded-xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 cursor-pointer">
                         Hubungi Admin
                     </button>
                 </div>
@@ -500,24 +503,19 @@
             const statusDesc = document.getElementById("status-desc");
             const waveBars = document.querySelectorAll(".wave-bar");
             const synth = window.speechSynthesis;
-            const SpeechRec =
-                window.webkitSpeechRecognition || window.SpeechRecognition;
+            const SpeechRec = window.webkitSpeechRecognition || window.SpeechRecognition;
             let rec = null;
 
             if (SpeechRec) {
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
                 rec.continuous = true;
-            } else {
-                console.warn("Browser tidak mendukung Web Speech API");
             }
 
             function setWave(active) {
                 if (waveBars.length > 0) {
                     waveBars.forEach((bar) => {
-                        bar.style.height = active
-                            ? `${Math.floor(Math.random() * 12) + 4}px`
-                            : "4px";
+                        bar.style.height = active ? `${Math.floor(Math.random() * 12) + 4}px` : "4px";
                     });
                 }
             }
@@ -559,38 +557,21 @@
             }
 
             function navigasiKe(nomor) {
-                let tujuan = "";
-                let teks = "";
+                let tujuan = ""; let teks = "";
 
-                if (nomor === 5) {
-                    tujuan = "{{ route('dashboard') ?? '#' }}";
-                    teks = "Kembali ke Beranda.";
-                } else if (nomor === 6) {
-                    tujuan = "{{ route('profile') ?? '#' }}";
-                    teks = "Membuka Profil Saya.";
-                } else if (nomor === 7) {
-                    tujuan = "{{ route('notifications') ?? '#' }}";
-                    teks = "Membuka Pemberitahuan.";
-                } else if (nomor === 8) {
-                    tujuan = "{{ route('messages') ?? '#' }}";
-                    teks = "Membuka Pesan.";
-                } else if (nomor === 9) {
-                    teks = "Anda sudah berada di halaman Bantuan.";
-                } else if (nomor === 0) {
-                    tujuan = "{{ route('logout') ?? '#' }}";
-                    teks = "Keluar akun. Sampai jumpa.";
-                }
+                if (nomor === 5) { tujuan = "{{ route('dashboard') ?? '#' }}"; teks = "Kembali ke Beranda."; }
+                else if (nomor === 6) { tujuan = "{{ route('profile') ?? '#' }}"; teks = "Membuka Profil Saya."; }
+                else if (nomor === 7) { tujuan = "{{ route('notifications') ?? '#' }}"; teks = "Membuka Pemberitahuan."; }
+                else if (nomor === 8) { tujuan = "{{ route('messages') ?? '#' }}"; teks = "Membuka Pesan."; }
+                else if (nomor === 9) { teks = "Anda sudah berada di halaman Bantuan."; }
+                else if (nomor === 0) { tujuan = "{{ route('logout') ?? '#' }}"; teks = "Keluar akun. Sampai jumpa."; }
 
                 if (teks !== "") {
                     bicara(teks, () => {
                         if (tujuan !== "" && tujuan !== "#") {
-                            setTimeout(() => {
-                                window.location.href = tujuan;
-                            }, 1500);
+                            setTimeout(() => { window.location.href = tujuan; }, 1500);
                         } else {
-                            try {
-                                rec.start();
-                            } catch (e) {}
+                            try { rec.start(); } catch (e) {}
                         }
                     });
                 }
@@ -601,67 +582,33 @@
                 try {
                     rec.start();
                     rec.onresult = (event) => {
-                        const hasil = event.results[
-                            event.results.length - 1
-                        ][0].transcript
-                            .toLowerCase()
-                            .trim();
+                        const hasil = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
 
-                        if (
-                            hasil.includes("ulang") ||
-                            hasil.includes("panduan") ||
-                            hasil.includes("bantuan")
-                        ) {
-                            bicara(getPanduanUtama(), () => {
-                                mulaiMendengar();
-                            });
+                        if (hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan")) {
+                            rec.stop();
+                            bicara(getPanduanUtama(), () => { rec.start(); });
                             return;
                         }
 
                         const angka = hasil.match(/\d+/);
 
                         if (angka) navigasiKe(parseInt(angka[0]));
-                        else if (
-                            hasil.includes("lima") ||
-                            hasil.includes("beranda")
-                        )
-                            navigasiKe(5);
-                        else if (
-                            hasil.includes("enam") ||
-                            hasil.includes("profil")
-                        )
-                            navigasiKe(6);
-                        else if (
-                            hasil.includes("tujuh") ||
-                            hasil.includes("pemberitahuan")
-                        )
-                            navigasiKe(7);
-                        else if (
-                            hasil.includes("delapan") ||
-                            hasil.includes("pesan")
-                        )
-                            navigasiKe(8);
+                        else if (hasil.includes("lima") || hasil.includes("beranda")) navigasiKe(5);
+                        else if (hasil.includes("enam") || hasil.includes("profil")) navigasiKe(6);
+                        else if (hasil.includes("tujuh") || hasil.includes("pemberitahuan")) navigasiKe(7);
+                        else if (hasil.includes("delapan") || hasil.includes("pesan")) navigasiKe(8);
                         else if (hasil.includes("sembilan")) navigasiKe(9);
-                        else if (
-                            hasil.includes("nol") ||
-                            hasil.includes("keluar") ||
-                            hasil.includes("kembali")
-                        )
-                            navigasiKe(0);
+                        else if (hasil.includes("nol") || hasil.includes("keluar") || hasil.includes("kembali")) navigasiKe(0);
                     };
 
-                    rec.onend = () => {
-                        rec.start();
-                    };
+                    rec.onend = () => { rec.start(); };
                 } catch (e) {
                     console.error("Error recognition:", e);
                 }
             }
 
             window.onload = () => {
-                document.body.addEventListener("click", () => {}, {
-                    once: true,
-                });
+                document.body.addEventListener("click", () => {}, { once: true });
                 setTimeout(() => {
                     bicara(getPanduanUtama(), () => {
                         mulaiMendengar();
