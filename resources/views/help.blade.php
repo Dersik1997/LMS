@@ -35,7 +35,7 @@
         </style>
     </head>
     <body
-        class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] min-h-screen text-slate-800"
+        class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] min-h-[100dvh] text-slate-800 flex flex-col lg:flex-row border-box custom-scrollbar"
     >
         <div
             id="mobileBackdrop"
@@ -45,7 +45,7 @@
 
         <aside
             id="sidebar"
-            class="fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-screen transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"
+            class="fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-screen transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shrink-0"
         >
             <div
                 class="p-8 border-b border-slate-100 flex items-center gap-4 shrink-0"
@@ -255,20 +255,20 @@
         </aside>
 
         <main
-            class="flex-1 min-h-screen flex flex-col relative lg:ml-80 transition-all duration-300 custom-scrollbar"
+            class="flex-1 min-h-[100dvh] flex flex-col relative lg:ml-80 transition-all duration-300 custom-scrollbar"
         >
             <div
                 class="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-blue-50 to-transparent -z-10"
             ></div>
 
             <header
-                class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-6 md:px-8 py-6 sticky top-0 z-30 shrink-0"
+                class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 sticky top-0 z-30"
             >
-                <div class="w-full flex items-center justify-between h-14">
-                    <div class="flex items-center gap-4">
+                <div class="max-w-7xl mx-auto flex items-center justify-between h-10 sm:h-14">
+                    <div class="flex items-center gap-2 sm:gap-4">
                         <button
                             onclick="toggleSidebar()"
-                            class="lg:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer"
+                            class="lg:hidden p-1.5 sm:p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer"
                         >
                             <svg
                                 class="w-6 h-6"
@@ -286,26 +286,26 @@
                         </button>
                         <div>
                             <h2
-                                class="text-2xl font-extrabold text-slate-900 tracking-tight"
+                                class="text-lg sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-none"
                             >
                                 Pusat Bantuan
                             </h2>
-                            <p class="text-sm font-medium text-slate-500">
+                            <p class="text-[9px] sm:text-sm font-medium text-slate-500 mt-1">
                                 Panduan Penggunaan
                             </p>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2 sm:gap-4">
                         <div
-                            class="flex items-center gap-3 pr-4 border-r border-slate-200"
+                            class="flex items-center gap-1 sm:gap-3 pr-2 sm:pr-4 border-r border-slate-200"
                         >
                             <button
                                 onclick="navigasiKe(7)"
-                                class="relative p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer"
+                                class="relative p-1.5 sm:p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer"
                             >
                                 <svg
-                                    class="w-6 h-6"
+                                    class="w-5 h-5 sm:w-6 h-6"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -317,13 +317,16 @@
                                         d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
                                     ></path>
                                 </svg>
+                                @if(isset($unreadCount) && $unreadCount > 0)
+                                <span class="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                                @endif
                             </button>
                             <button
                                 onclick="navigasiKe(9)"
-                                class="p-2 text-blue-600 bg-blue-50 hover:text-blue-700 rounded-xl transition-all cursor-pointer"
+                                class="hidden sm:block p-1.5 sm:p-2 text-blue-600 bg-blue-50 hover:text-blue-700 rounded-xl transition-all cursor-pointer"
                             >
                                 <svg
-                                    class="w-6 h-6"
+                                    class="w-5 h-5 sm:w-6 h-6"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -338,24 +341,18 @@
                             </button>
                         </div>
 
-                        <div class="hidden md:flex items-center gap-3 pl-4">
+                        <div class="flex items-center gap-1.5 sm:gap-3 pl-1 sm:pl-4">
                             <div
                                 id="wave-container"
-                                class="flex items-center gap-[2px] h-4 w-10 justify-center"
+                                class="flex items-center gap-[2px] h-4 w-6 sm:w-10 justify-center"
                             >
-                                <div
-                                    class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"
-                                ></div>
-                                <div
-                                    class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"
-                                ></div>
-                                <div
-                                    class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"
-                                ></div>
+                                <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
+                                <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
+                                <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
                             </div>
                             <span
                                 id="status-desc"
-                                class="text-[9px] font-black text-slate-400 uppercase tracking-widest text-left w-20"
+                                class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest text-left w-12 sm:w-20"
                                 >Siap</span
                             >
                         </div>
@@ -363,195 +360,101 @@
                 </div>
             </header>
 
-            <div class="p-6 lg:p-10 w-full max-w-6xl space-y-8 shrink-0">
+            <div class="p-4 sm:p-6 lg:p-10 w-full max-w-7xl mx-auto space-y-6 sm:space-y-8 shrink-0">
                 <div
                     data-aos="fade-up"
-                    class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2.5rem] p-10 text-white shadow-xl shadow-blue-200 relative overflow-hidden"
+                    class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[1.5rem] sm:rounded-[2.5rem] p-6 sm:p-10 text-white shadow-xl shadow-blue-200 relative overflow-hidden"
                 >
-                    <div
-                        class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center"
-                    >
-                        <div>
-                            <h3
-                                class="text-3xl font-black uppercase tracking-tighter mb-4"
-                            >
+                    <div class="relative z-10 flex flex-col lg:flex-row gap-6 sm:gap-8 items-center">
+                        <div class="w-full">
+                            <h3 class="text-xl sm:text-3xl font-black uppercase tracking-tighter mb-2 sm:mb-4 text-center lg:text-left">
                                 Navigasi Suara
                             </h3>
-                            <p
-                                class="text-blue-100 font-medium mb-6 leading-relaxed"
-                            >
-                                Sistem LMS Inklusi dikendalikan menggunakan
-                                perintah suara berbasis nomor. Cukup sebutkan
-                                angka menu untuk berpindah halaman secara
-                                instan.
+                            <p class="text-xs sm:text-base text-blue-100 font-medium mb-4 sm:mb-6 leading-relaxed text-center lg:text-left">
+                                Sistem LMS Inklusi dikendalikan menggunakan perintah suara berbasis nomor. Cukup sebutkan angka menu untuk berpindah halaman secara instan.
                             </p>
-                            <div class="grid grid-cols-4 gap-4">
-                                <div
-                                    class="bg-white/10 p-3 rounded-2xl border border-white/20 text-center backdrop-blur-md"
-                                >
-                                    <span class="block text-2xl font-black"
-                                        >5</span
-                                    ><span
-                                        class="text-[9px] font-bold uppercase tracking-widest opacity-80"
-                                        >Beranda</span
-                                    >
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                                <div class="bg-white/10 p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
+                                    <span class="block text-lg sm:text-2xl font-black">5</span>
+                                    <span class="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest opacity-80">Beranda</span>
                                 </div>
-                                <div
-                                    class="bg-white/10 p-3 rounded-2xl border border-white/20 text-center backdrop-blur-md"
-                                >
-                                    <span class="block text-2xl font-black"
-                                        >6</span
-                                    ><span
-                                        class="text-[9px] font-bold uppercase tracking-widest opacity-80"
-                                        >Profil</span
-                                    >
+                                <div class="bg-white/10 p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
+                                    <span class="block text-lg sm:text-2xl font-black">6</span>
+                                    <span class="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest opacity-80">Profil</span>
                                 </div>
-                                <div
-                                    class="bg-white/10 p-3 rounded-2xl border border-white/20 text-center backdrop-blur-md"
-                                >
-                                    <span class="block text-2xl font-black"
-                                        >7</span
-                                    ><span
-                                        class="text-[9px] font-bold uppercase tracking-widest opacity-80"
-                                        >Notif</span
-                                    >
+                                <div class="bg-white/10 p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
+                                    <span class="block text-lg sm:text-2xl font-black">7</span>
+                                    <span class="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest opacity-80">Notif</span>
                                 </div>
-                                <div
-                                    class="bg-white/10 p-3 rounded-2xl border border-white/20 text-center backdrop-blur-md"
-                                >
-                                    <span class="block text-2xl font-black"
-                                        >0</span
-                                    ><span
-                                        class="text-[9px] font-bold uppercase tracking-widest opacity-80"
-                                        >Keluar</span
-                                    >
+                                <div class="bg-white/10 p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
+                                    <span class="block text-lg sm:text-2xl font-black">0</span>
+                                    <span class="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest opacity-80">Keluar</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="hidden lg:flex justify-center">
-                            <div
-                                class="w-64 h-64 bg-white/10 rounded-full flex items-center justify-center border-4 border-white/20 relative"
-                            >
-                                <svg
-                                    class="w-32 h-32 text-white opacity-80"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="1.5"
-                                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
-                                    ></path>
+                        <div class="hidden lg:flex justify-center shrink-0">
+                            <div class="w-48 h-48 xl:w-64 xl:h-64 bg-white/10 rounded-full flex items-center justify-center border-4 border-white/20 relative">
+                                <svg class="w-24 h-24 xl:w-32 xl:h-32 text-white opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
                                 </svg>
-                                <div
-                                    class="absolute inset-0 rounded-full border border-white/30 animate-ping"
-                                ></div>
+                                <div class="absolute inset-0 rounded-full border border-white/30 animate-ping"></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10"
-                >
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 pb-6 sm:pb-10">
                     <div
                         data-aos="fade-up"
                         data-aos-delay="100"
-                        class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
+                        class="bg-white p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
                     >
-                        <div
-                            class="w-12 h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
-                        >
-                            <svg
-                                class="w-6 h-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                ></path>
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-orange-50 text-orange-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
-                        <h4 class="font-black text-slate-900 mb-2">
+                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-1 sm:mb-2">
                             Suara Tidak Terdeteksi?
                         </h4>
-                        <p
-                            class="text-sm text-slate-500 font-medium leading-relaxed"
-                        >
-                            Pastikan Anda telah memberikan izin (Allow) pada
-                            browser untuk mengakses mikrofon.
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
+                            Pastikan Anda telah memberikan izin (Allow) pada browser untuk mengakses mikrofon.
                         </p>
                     </div>
 
                     <div
                         data-aos="fade-up"
                         data-aos-delay="200"
-                        class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
+                        class="bg-white p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
                     >
-                        <div
-                            class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
-                        >
-                            <svg
-                                class="w-6 h-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                ></path>
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 text-blue-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
                         </div>
-                        <h4 class="font-black text-slate-900 mb-2">
+                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-1 sm:mb-2">
                             Cara Kirim Tugas?
                         </h4>
-                        <p
-                            class="text-sm text-slate-500 font-medium leading-relaxed"
-                        >
-                            Masuk ke menu Penugasan, pilih tugas aktif, lalu
-                            ikuti instruksi yang diucapkan asisten suara.
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
+                            Masuk ke menu Penugasan, pilih tugas aktif, lalu ikuti instruksi yang diucapkan asisten suara.
                         </p>
                     </div>
 
                     <div
                         data-aos="fade-up"
                         data-aos-delay="300"
-                        class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
+                        class="bg-white p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
                     >
-                        <div
-                            class="w-12 h-12 bg-slate-100 text-slate-500 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
-                        >
-                            <svg
-                                class="w-6 h-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                                ></path>
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 text-slate-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                             </svg>
                         </div>
-                        <h4 class="font-black text-slate-900 mb-2">
+                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-1 sm:mb-2">
                             Lupa Password?
                         </h4>
-                        <p
-                            class="text-sm text-slate-500 font-medium leading-relaxed"
-                        >
-                            Hubungi Admin UPT TIK di Gedung A Lantai 2 untuk
-                            mereset password SIAK Anda.
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
+                            Hubungi Admin UPT TIK di Gedung A Lantai 2 untuk mereset password SIAK Anda.
                         </p>
                     </div>
                 </div>
@@ -559,40 +462,24 @@
                 <div
                     data-aos="fade-up"
                     data-aos-delay="400"
-                    class="bg-white rounded-[2.5rem] p-8 border border-slate-100 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm mb-10"
+                    class="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-6 sm:p-8 border border-slate-100 flex flex-col md:flex-row items-center md:items-center justify-between gap-4 sm:gap-6 shadow-sm mb-10"
                 >
-                    <div class="flex items-center gap-6">
-                        <div
-                            class="w-16 h-16 bg-slate-900 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-slate-200"
-                        >
-                            <svg
-                                class="w-8 h-8"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"
-                                ></path>
+                    <div class="flex flex-col md:flex-row items-center gap-4 sm:gap-6 text-center md:text-left">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 bg-slate-900 text-white rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-slate-200 shrink-0">
+                            <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
                             </svg>
                         </div>
                         <div>
-                            <h4
-                                class="text-xl font-black text-slate-900 tracking-tight"
-                            >
+                            <h4 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
                                 Butuh Bantuan Lebih?
                             </h4>
-                            <p class="text-sm text-slate-500 font-medium mt-1">
+                            <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
                                 Tim IT Inklusi UMMI siap membantu Anda.
                             </p>
                         </div>
                     </div>
-                    <button
-                        class="px-8 py-4 bg-blue-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 cursor-pointer"
-                    >
+                    <button class="w-full md:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-blue-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 cursor-pointer">
                         Hubungi Admin
                     </button>
                 </div>

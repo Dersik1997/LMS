@@ -9,6 +9,10 @@
         <title>Gabung Kelas | LMS Inklusi UMMI</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <link
+            href="https://unpkg.com/aos@2.3.1/dist/aos.css"
+            rel="stylesheet"
+        />
+        <link
             href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
             rel="stylesheet"
         />
@@ -33,32 +37,32 @@
             class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none"
         >
             <div
-                class="absolute top-[-10%] right-[-5%] w-[400px] h-[400px] bg-emerald-100/40 rounded-full blur-3xl opacity-50"
+                class="absolute top-[-10%] right-[-5%] w-64 md:w-[400px] h-64 md:h-[400px] bg-emerald-100/40 rounded-full blur-3xl opacity-50"
             ></div>
             <div
-                class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-blue-50/40 rounded-full blur-3xl opacity-50"
+                class="absolute bottom-[-10%] left-[-10%] w-64 md:w-[400px] h-64 md:h-[400px] bg-blue-50/40 rounded-full blur-3xl opacity-50"
             ></div>
         </div>
 
         <main
             class="flex-1 flex flex-col h-screen overflow-y-auto custom-scrollbar relative"
         >
-            {{-- NAVBAR --}}
+            {{-- NAVBAR MOBILE-FRIENDLY --}}
             <div
-                class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-4 md:px-8 py-4 shadow-sm transition-all w-full"
+                class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-3 sm:py-4 shadow-sm transition-all w-full"
             >
                 <div
-                    class="max-w-7xl mx-auto flex items-center justify-between relative"
+                    class="max-w-7xl mx-auto flex items-center justify-between relative h-10 sm:h-12 md:h-14"
                 >
                     <div
-                        class="flex items-center gap-4 relative z-10 md:w-auto w-full justify-start"
+                        class="flex items-center gap-2 sm:gap-4 relative z-10 w-auto justify-start"
                     >
                         <button
                             onclick="navigasiKe(0)"
-                            class="w-11 h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm shrink-0 group border border-slate-200 hover:border-blue-600 relative cursor-pointer"
+                            class="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm shrink-0 group border border-slate-200 hover:border-blue-600 relative cursor-pointer"
                         >
                             <svg
-                                class="w-5 h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform"
+                                class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -71,7 +75,7 @@
                                 ></path>
                             </svg>
                             <span
-                                class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white"
+                                class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[8px] md:text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white"
                                 >0</span
                             >
                         </button>
@@ -80,29 +84,29 @@
                             onclick="navigasiKe(0)"
                         >
                             <span
-                                class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest"
+                                class="block text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest"
                                 >Navigasi Suara</span
                             >
                             <span
-                                class="block text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors"
+                                class="block text-[10px] md:text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors"
                                 >0 - Kembali</span
                             >
                         </div>
                     </div>
 
                     <div
-                        class="text-center absolute left-1/2 transform -translate-x-1/2 w-full max-w-[60%] md:max-w-md mt-2 md:mt-0"
+                        class="text-center absolute left-1/2 transform -translate-x-1/2 w-[50%] sm:w-[60%] md:max-w-md mt-0 pointer-events-none"
                     >
                         <h1
-                            class="text-lg md:text-2xl font-black text-slate-900 tracking-tight leading-tight truncate"
+                            class="text-sm sm:text-lg md:text-2xl font-extrabold text-slate-900 tracking-tight leading-tight truncate pointer-events-auto"
                         >
                             Gabung Kelas Baru
                         </h1>
                         <div
-                            class="flex items-center justify-center gap-2 mt-1"
+                            class="flex items-center justify-center gap-1 sm:gap-2 mt-0.5 sm:mt-1 pointer-events-auto"
                         >
                             <span
-                                class="text-[9px] md:text-[10px] font-bold text-blue-600 uppercase tracking-widest bg-blue-100 px-2 py-0.5 rounded-md"
+                                class="text-[7px] sm:text-[9px] md:text-[10px] font-bold text-blue-600 uppercase tracking-widest bg-blue-100 px-1.5 sm:px-2 py-0.5 rounded-md"
                             >
                                 Mahasiswa
                             </span>
@@ -110,10 +114,10 @@
                     </div>
 
                     <div
-                        class="flex items-center gap-3 pl-6 border-l border-slate-200 relative z-10 justify-end"
+                        class="flex items-center gap-1.5 sm:gap-3 pl-2 sm:pl-6 border-l border-slate-200 relative z-10 justify-end"
                     >
                         <div
-                            class="flex items-center gap-[2px] h-4 w-10 justify-center"
+                            class="flex items-center gap-[2px] h-4 w-6 sm:w-10 justify-center"
                             id="wave-container"
                         >
                             <div
@@ -128,7 +132,7 @@
                         </div>
                         <span
                             id="status-desc"
-                            class="hidden md:block text-[9px] font-black text-slate-400 uppercase tracking-widest"
+                            class="hidden sm:block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest w-12 sm:w-20 text-left"
                             >Siap</span
                         >
                     </div>
@@ -137,23 +141,27 @@
 
             {{-- KONTEN UTAMA --}}
             <div
-                class="max-w-4xl mx-auto w-full p-6 flex flex-col items-center justify-center min-h-[80vh] pb-20"
+                class="max-w-4xl mx-auto w-full p-4 sm:p-6 flex flex-col items-center justify-center min-h-[80vh] pb-20"
             >
                 <div
-                    class="bg-white rounded-[3rem] shadow-xl shadow-slate-100 border border-slate-200 p-8 md:p-12 w-full relative overflow-hidden"
+                    class="bg-white rounded-[2rem] sm:rounded-[3rem] shadow-xl shadow-slate-100 border border-slate-200 p-6 sm:p-8 md:p-12 w-full relative overflow-hidden"
                 >
                     <div
-                        class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-bl-[100%] -mr-10 -mt-10 -z-0"
+                        class="absolute top-0 right-0 w-40 sm:w-64 h-40 sm:h-64 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-bl-[100%] -mr-5 -mt-5 sm:-mr-10 sm:-mt-10 -z-0"
                     ></div>
 
-                    <div class="relative z-10 text-center space-y-8">
+                    <div
+                        class="relative z-10 text-center space-y-6 sm:space-y-8"
+                    >
                         <div class="space-y-2">
                             <h2
-                                class="text-3xl font-black text-slate-900 tracking-tight"
+                                class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight"
                             >
                                 Punya Kode Kelas?
                             </h2>
-                            <p class="text-slate-500 font-medium">
+                            <p
+                                class="text-xs sm:text-sm text-slate-500 font-medium px-4 sm:px-0"
+                            >
                                 Masukkan kode yang diberikan dosen untuk
                                 bergabung.
                             </p>
@@ -162,7 +170,7 @@
                         <form
                             action="{{ route('mahasiswa.join.kelas') }}"
                             method="POST"
-                            class="max-w-md mx-auto space-y-6"
+                            class="max-w-md mx-auto space-y-4 sm:space-y-6"
                             id="join-form"
                         >
                             @csrf
@@ -171,7 +179,7 @@
                                 class="group cursor-text"
                             >
                                 <label
-                                    class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3"
+                                    class="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 sm:mb-3"
                                     >Kode Akses (1)</label
                                 >
                                 <input
@@ -179,7 +187,7 @@
                                     id="class-code"
                                     name="code"
                                     placeholder="Contoh: X7Y-99"
-                                    class="w-full text-center text-3xl font-black uppercase tracking-[0.2em] py-5 border-b-4 border-slate-200 bg-transparent text-slate-800 placeholder-slate-300 focus:outline-none focus:border-emerald-500 transition-all font-mono"
+                                    class="w-full text-center text-2xl sm:text-3xl font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] py-3 sm:py-5 border-b-4 border-slate-200 bg-transparent text-slate-800 placeholder-slate-300 focus:outline-none focus:border-emerald-500 transition-all font-mono"
                                     maxlength="8"
                                 />
                             </div>
@@ -190,11 +198,11 @@
                                     navigasiKe(2);
                                     return false;
                                 "
-                                class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-200 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3"
+                                class="w-full bg-slate-900 text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm uppercase tracking-widest hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-200 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 sm:gap-3"
                             >
                                 <span>Gabung Sekarang (2)</span>
                                 <svg
-                                    class="w-5 h-5"
+                                    class="w-4 h-4 sm:w-5 sm:h-5"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -210,14 +218,16 @@
                         </form>
 
                         <div
-                            class="bg-slate-50 rounded-2xl p-4 flex items-start gap-4 text-left border border-slate-100 mt-8"
+                            class="bg-slate-50 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex items-start gap-3 sm:gap-4 text-left border border-slate-100 mt-6 sm:mt-8"
                         >
                             <div
-                                class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 font-bold text-xs"
+                                class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 font-bold text-[10px] sm:text-xs"
                             >
                                 i
                             </div>
-                            <p class="text-xs text-slate-500 leading-relaxed">
+                            <p
+                                class="text-[10px] sm:text-xs text-slate-500 leading-relaxed"
+                            >
                                 <span class="font-bold text-slate-700"
                                     >Tips:</span
                                 >
@@ -231,7 +241,10 @@
             </div>
         </main>
 
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
+            AOS.init({ once: true, easing: "ease-out-cubic" });
+
             const statusDesc = document.getElementById("status-desc");
             const waveBars = document.querySelectorAll(".wave-bar");
             const synth = window.speechSynthesis;

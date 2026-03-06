@@ -25,100 +25,100 @@
         .wave-bar { transition: height 0.1s ease; }
     </style>
 </head>
-<body class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] text-slate-800 relative custom-scrollbar flex flex-col h-screen overflow-hidden">
+<body class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] text-slate-800 relative custom-scrollbar flex flex-col h-[100dvh] overflow-hidden">
     
     {{-- BACKGROUND DEKORASI (Nuansa Biru) --}}
     <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div class="absolute top-[-10%] right-[-5%] w-[400px] h-[400px] bg-blue-100/40 rounded-full blur-3xl opacity-50"></div>
-        <div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-indigo-50/40 rounded-full blur-3xl opacity-50"></div>
+        <div class="absolute top-[-10%] right-[-5%] w-64 md:w-[400px] h-64 md:h-[400px] bg-blue-100/40 rounded-full blur-3xl opacity-50"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] w-64 md:w-[400px] h-64 md:h-[400px] bg-indigo-50/40 rounded-full blur-3xl opacity-50"></div>
     </div>
 
     {{-- NAVBAR & VOICE STATUS --}}
-    <header class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-4 md:px-8 py-4 shadow-sm w-full shrink-0">
-        <div class="max-w-7xl mx-auto flex items-center justify-between relative h-12">
+    <header class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-2 sm:py-4 shadow-sm w-full shrink-0">
+        <div class="max-w-7xl mx-auto grid grid-cols-3 items-center relative h-10 sm:h-12 md:h-14">
             
             {{-- Kiri: Tombol 0 (Kembali ke Dashboard) --}}
-            <div class="flex items-center gap-4 relative z-10 w-1/3 justify-start shrink-0">
-                <button onclick="navigasiKe(0)" class="flex w-11 h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white items-center justify-center transition-all duration-300 shadow-sm shrink-0 group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95">
-                    <svg class="w-5 h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="flex items-center gap-2 sm:gap-4 justify-start shrink-0">
+                <button onclick="navigasiKe(0)" class="flex w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white items-center justify-center transition-all duration-300 shadow-sm group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
                     </svg>
-                    <span class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white">0</span>
+                    <span class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[8px] md:text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white">0</span>
                 </button>
-                <div class="hidden sm:block text-left cursor-pointer group shrink-0" onclick="navigasiKe(0)">
-                    <span class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest">Navigasi Suara</span>
-                    <span class="block text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors">0 - Kembali</span>
+                <div class="hidden sm:block text-left cursor-pointer group" onclick="navigasiKe(0)">
+                    <span class="block text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest">Navigasi Suara</span>
+                    <span class="block text-[10px] md:text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors">0 - Kembali</span>
                 </div>
             </div>
 
-            {{-- Tengah: Judul (Center Absolute) --}}
-            <div class="text-center absolute left-1/2 transform -translate-x-1/2 w-1/3 z-0 pointer-events-none flex flex-col items-center justify-center">
-                <h1 class="text-lg md:text-xl font-extrabold text-slate-900 tracking-tight leading-none truncate pointer-events-auto">
+            {{-- Tengah: Judul --}}
+            <div class="flex flex-col items-center justify-center justify-self-center w-full max-w-[150px] sm:max-w-none pointer-events-none">
+                <h1 class="text-sm sm:text-lg md:text-xl font-extrabold text-slate-900 tracking-tight leading-none truncate w-full text-center pointer-events-auto">
                     Ujian Online
                 </h1>
-                <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mt-1 truncate pointer-events-auto">
+                <p class="text-[8px] sm:text-[10px] font-bold text-blue-600 uppercase tracking-widest mt-1 truncate pointer-events-auto">
                     Daftar Ujian Tersedia
                 </p>
             </div>
 
             {{-- Kanan: Indikator Voice --}}
-            <div class="flex items-center justify-end gap-3 relative z-10 w-1/3 shrink-0">
-                <div class="flex items-center gap-[2px] h-4 w-10 justify-center" id="wave-container">
+            <div class="flex items-center justify-end gap-1.5 sm:gap-3 justify-self-end shrink-0">
+                <div class="flex items-center gap-[2px] h-4 w-6 sm:w-10 justify-center" id="wave-container">
                     <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
                     <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
                     <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
                 </div>
-                <span id="status-desc" class="hidden sm:block text-[9px] font-black text-slate-400 uppercase tracking-widest w-20 text-left">SIAP</span>
+                <span id="status-desc" class="hidden sm:block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest w-12 sm:w-20 text-left">SIAP</span>
             </div>
         </div>
     </header>
 
     <main class="flex-1 overflow-y-auto custom-scrollbar relative">
-        <div class="p-4 sm:p-6 lg:p-10 max-w-5xl mx-auto w-full space-y-8 pb-24">
+        <div class="p-3 sm:p-6 lg:p-10 max-w-5xl mx-auto w-full space-y-6 sm:space-y-8 pb-32">
             
             {{-- Pesan Sukses Ujian Selesai --}}
             @if(session('success'))
-                <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-2xl font-bold text-sm safe-fade-in flex items-center gap-3 shadow-sm">
-                    <div class="p-1.5 bg-emerald-100 rounded-lg shrink-0">
-                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                <div class="p-3 sm:p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm safe-fade-in flex items-center gap-2 sm:gap-3 shadow-sm">
+                    <div class="p-1 sm:p-1.5 bg-emerald-100 rounded-lg shrink-0">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                     </div>
                     {{ session('success') }}
                 </div>
             @endif
 
             {{-- TOMBOL 1: MASUKKAN TOKEN --}}
-            <div onclick="navigasiKe(1)" class="group bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[2.5rem] p-6 md:p-8 text-white shadow-xl shadow-blue-200/50 cursor-pointer relative overflow-hidden transform hover:-translate-y-1 transition-all safe-fade-in" style="animation-delay: 0.1s">
-                <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-                    <div class="flex flex-col md:flex-row items-center gap-6">
-                        <div class="w-16 h-16 rounded-2xl bg-white/20 border border-white/10 flex items-center justify-center backdrop-blur-md shrink-0">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div onclick="navigasiKe(1)" class="group bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[1.5rem] sm:rounded-[2.5rem] p-5 md:p-8 text-white shadow-xl shadow-blue-200/50 cursor-pointer relative overflow-hidden transform hover:-translate-y-1 active:scale-95 transition-all safe-fade-in" style="animation-delay: 0.1s">
+                <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-5 md:gap-6 text-center md:text-left">
+                    <div class="flex flex-col md:flex-row items-center gap-4 md:gap-6 w-full md:w-auto">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/20 border border-white/10 flex items-center justify-center backdrop-blur-md shrink-0">
+                            <svg class="w-7 h-7 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
                             </svg>
                         </div>
                         <div>
-                            <h2 class="text-2xl font-black tracking-tight">Punya Token Ujian?</h2>
-                            <p class="text-blue-50 text-sm font-medium mt-1">Gabung ujian dadakan atau kuis khusus menggunakan kode dari dosen.</p>
+                            <h2 class="text-xl sm:text-2xl font-black tracking-tight">Punya Token Ujian?</h2>
+                            <p class="text-blue-50 text-xs sm:text-sm font-medium mt-1">Gabung ujian dadakan atau kuis khusus menggunakan kode dari dosen.</p>
                         </div>
                     </div>
-                    <button class="bg-white text-blue-700 px-8 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest group-hover:bg-blue-50 transition-all shadow-lg flex items-center gap-2 shrink-0">
+                    <button class="w-full md:w-auto bg-white text-blue-700 px-6 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest group-hover:bg-blue-50 transition-all shadow-lg flex items-center justify-center md:justify-start gap-2 shrink-0 active:scale-95">
                         <span class="opacity-50 text-blue-400">1</span> Masukkan Token
                     </button>
                 </div>
                 <div class="absolute right-0 top-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
             </div>
 
-            <div class="space-y-6">
+            <div class="space-y-4 sm:space-y-6">
                 
                 {{-- FILTER TABS --}}
-                <div class="flex gap-2 border-b border-slate-200 mb-6 safe-fade-in overflow-x-auto custom-scrollbar pb-2" style="animation-delay: 0.2s" id="filterTabs">
-                    <button onclick="filterExams('Semua', this)" class="tab-btn px-6 py-3 border-b-2 border-blue-600 text-blue-600 font-bold text-sm whitespace-nowrap transition-colors">Semua</button>
-                    <button onclick="filterExams('UTS', this)" class="tab-btn px-6 py-3 border-b-2 border-transparent text-slate-400 font-bold text-sm hover:text-slate-800 transition-colors whitespace-nowrap">UTS</button>
-                    <button onclick="filterExams('UAS', this)" class="tab-btn px-6 py-3 border-b-2 border-transparent text-slate-400 font-bold text-sm hover:text-slate-800 transition-colors whitespace-nowrap">UAS</button>
-                    <button onclick="filterExams('Kuis', this)" class="tab-btn px-6 py-3 border-b-2 border-transparent text-slate-400 font-bold text-sm hover:text-slate-800 transition-colors whitespace-nowrap">Kuis</button>
+                <div class="flex gap-2 border-b border-slate-200 mb-4 sm:mb-6 safe-fade-in overflow-x-auto custom-scrollbar pb-2" style="animation-delay: 0.2s" id="filterTabs">
+                    <button onclick="filterExams('Semua', this)" class="tab-btn px-4 sm:px-6 py-2.5 sm:py-3 border-b-2 border-blue-600 text-blue-600 font-bold text-xs sm:text-sm whitespace-nowrap transition-colors">Semua</button>
+                    <button onclick="filterExams('UTS', this)" class="tab-btn px-4 sm:px-6 py-2.5 sm:py-3 border-b-2 border-transparent text-slate-400 font-bold text-xs sm:text-sm hover:text-slate-800 transition-colors whitespace-nowrap">UTS</button>
+                    <button onclick="filterExams('UAS', this)" class="tab-btn px-4 sm:px-6 py-2.5 sm:py-3 border-b-2 border-transparent text-slate-400 font-bold text-xs sm:text-sm hover:text-slate-800 transition-colors whitespace-nowrap">UAS</button>
+                    <button onclick="filterExams('Kuis', this)" class="tab-btn px-4 sm:px-6 py-2.5 sm:py-3 border-b-2 border-transparent text-slate-400 font-bold text-xs sm:text-sm hover:text-slate-800 transition-colors whitespace-nowrap">Kuis</button>
                 </div>
 
                 {{-- GRID UJIAN --}}
-                <div class="grid grid-cols-1 gap-5">
+                <div class="grid grid-cols-1 gap-4 sm:gap-5">
                     @forelse ($exams as $index => $exam)
                         @php
                             $voiceId = $index + 2; 
@@ -158,73 +158,74 @@
 
                             // Card Styling
                             $cardClass = $isAktif 
-                                ? "bg-white border-blue-200 shadow-lg shadow-blue-100/50 cursor-pointer hover:-translate-y-1" 
-                                : ($sudahSelesai ? "bg-emerald-50/40 border-emerald-200 shadow-sm cursor-pointer hover:-translate-y-1" : "bg-slate-50 border-slate-200 shadow-sm cursor-not-allowed opacity-80");
+                                ? "bg-white border-blue-200 shadow-lg shadow-blue-100/50 cursor-pointer hover:-translate-y-1 active:scale-[0.98]" 
+                                : ($sudahSelesai ? "bg-emerald-50/40 border-emerald-200 shadow-sm cursor-pointer hover:-translate-y-1 active:scale-[0.98]" : "bg-slate-50 border-slate-200 shadow-sm cursor-not-allowed opacity-80");
                             
                             $badgeBg = $isAktif ? 'bg-slate-800 text-white' : ($sudahSelesai ? 'bg-emerald-600 text-white' : 'bg-slate-300 text-slate-500');
                         @endphp
 
-                        <div onclick="navigasiKe({{ $voiceId }})" class="exam-card group p-5 rounded-[2rem] border-2 transition-all relative overflow-hidden flex flex-col lg:flex-row items-center gap-6 safe-fade-in {{ $cardClass }}" data-kategori="{{ $exam->kategori }}" style="animation-delay: 0.3s">
+                        <div onclick="navigasiKe({{ $voiceId }})" class="exam-card group p-4 sm:p-5 rounded-[1.5rem] sm:rounded-[2rem] border-2 transition-all relative overflow-hidden flex flex-col sm:flex-row items-center sm:items-stretch gap-4 sm:gap-6 safe-fade-in {{ $cardClass }}" data-kategori="{{ $exam->kategori }}" style="animation-delay: 0.3s">
                             
                             @if($isAktif)
-                                <div class="absolute top-0 right-0 bg-blue-500 text-white text-[9px] font-black px-4 py-1 rounded-bl-xl uppercase tracking-widest animate-pulse shadow-sm">
+                                <div class="absolute top-0 right-0 bg-blue-500 text-white text-[8px] sm:text-[9px] font-black px-3 sm:px-4 py-1 rounded-bl-xl uppercase tracking-widest animate-pulse shadow-sm">
                                     Sedang Berlangsung
                                 </div>
                             @elseif($sudahSelesai)
-                                <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[9px] font-black px-4 py-1 rounded-bl-xl uppercase tracking-widest shadow-sm flex items-center gap-1">
+                                <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[8px] sm:text-[9px] font-black px-3 sm:px-4 py-1 rounded-bl-xl uppercase tracking-widest shadow-sm flex items-center gap-1">
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                     Selesai
                                 </div>
                             @endif
 
                             {{-- Tanggal Box --}}
-                            <div class="w-full lg:w-24 h-24 {{ $bgClass }} {{ $dateTextClass }} rounded-[1.5rem] flex flex-col items-center justify-center shrink-0 border {{ $borderClass }} relative">
-                                <div class="absolute -top-3 -left-3 w-8 h-8 rounded-full {{ $badgeBg }} flex items-center justify-center font-black text-xs border-[3px] border-white shadow-sm z-10">
+                            <div class="w-full sm:w-24 py-3 sm:py-0 h-auto sm:h-24 {{ $bgClass }} {{ $dateTextClass }} rounded-[1rem] sm:rounded-[1.5rem] flex flex-row sm:flex-col items-center justify-center gap-2 sm:gap-0 shrink-0 border {{ $borderClass }} relative mt-4 sm:mt-0">
+                                <div class="absolute -top-3 -left-3 w-7 h-7 sm:w-8 sm:h-8 rounded-full {{ $badgeBg }} flex items-center justify-center font-black text-[10px] sm:text-xs border-[3px] border-white shadow-sm z-10">
                                     {{ $voiceId }}
                                 </div>
-                                <span class="text-[10px] font-black bg-white/60 px-2 py-0.5 rounded-md mb-1 shadow-sm mt-2">{{ $exam->kategori }}</span>
-                                <span class="text-3xl font-black leading-none">{{ \Carbon\Carbon::parse($exam->waktu_mulai)->format('d') }}</span>
+                                <span class="text-[9px] sm:text-[10px] font-black bg-white/60 px-2 py-0.5 rounded-md shadow-sm sm:mb-1 sm:mt-2">{{ $exam->kategori }}</span>
+                                <span class="hidden sm:block text-3xl font-black leading-none">{{ \Carbon\Carbon::parse($exam->waktu_mulai)->format('d') }}</span>
+                                <span class="sm:hidden text-lg font-black leading-none">Tgl {{ \Carbon\Carbon::parse($exam->waktu_mulai)->format('d') }}</span>
                             </div>
                             
                             {{-- Info Box --}}
-                            <div class="flex-1 w-full text-center lg:text-left pr-0">
-                                <div class="flex flex-col lg:flex-row items-center gap-3 mb-2 mt-2 lg:mt-0">
-                                    <h4 class="text-lg sm:text-xl font-black {{ $isAktif ? 'text-slate-900 group-hover:text-blue-600' : 'text-slate-600' }} transition-colors">
+                            <div class="flex-1 w-full text-center sm:text-left pr-0">
+                                <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 mb-2">
+                                    <h4 class="text-base sm:text-xl font-black {{ $isAktif ? 'text-slate-900 group-hover:text-blue-600' : 'text-slate-600' }} transition-colors">
                                         {{ $exam->judul }}
                                     </h4>
-                                    <span class="px-3 py-1 {{ $bgClass }} {{ $textClass }} text-[10px] font-bold rounded-full uppercase tracking-wide border {{ $borderClass }}">
+                                    <span class="px-2.5 py-1 {{ $bgClass }} {{ $textClass }} text-[9px] sm:text-[10px] font-bold rounded-full uppercase tracking-wide border {{ $borderClass }}">
                                         {{ $status_text }}
                                     </span>
                                 </div>
-                                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm {{ $isAktif ? 'text-slate-500' : 'text-slate-400' }} font-medium justify-center lg:justify-start">
-                                    <span class="flex items-center gap-1.5 justify-center lg:justify-start">
-                                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                                <div class="flex flex-col xl:flex-row xl:items-center gap-1.5 sm:gap-4 text-[11px] sm:text-sm {{ $isAktif ? 'text-slate-500' : 'text-slate-400' }} font-medium justify-center sm:justify-start">
+                                    <span class="flex items-center gap-1.5 justify-center sm:justify-start">
+                                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                                         {{ $exam->kelas->mataKuliah->nama ?? 'Kelas' }}
                                     </span>
-                                    <span class="hidden sm:inline text-slate-300">•</span>
-                                    <span class="flex items-center gap-1.5 justify-center lg:justify-start">
-                                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span class="hidden xl:inline text-slate-300">•</span>
+                                    <span class="flex items-center gap-1.5 justify-center sm:justify-start">
+                                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                         {{ \Carbon\Carbon::parse($exam->waktu_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($exam->waktu_selesai)->format('H:i') }} WIB
                                     </span>
                                 </div>
                             </div>
                             
                             {{-- Tombol Aksi Utama --}}
-                            <div class="flex flex-wrap items-center justify-center lg:justify-end w-full lg:w-auto mt-4 lg:mt-0">
+                            <div class="flex flex-wrap items-center justify-center sm:justify-end w-full sm:w-auto mt-2 sm:mt-0">
                                 @if($sudahSelesai)
-                                    <div class="flex flex-col items-center sm:items-end">
-                                        <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1">Nilai Anda</span>
-                                        <span class="px-5 py-2.5 bg-white text-emerald-600 font-black rounded-xl text-lg border border-emerald-200 shadow-sm">
+                                    <div class="flex flex-row sm:flex-col items-center justify-center gap-3 sm:gap-0 sm:items-end w-full sm:w-auto p-3 sm:p-0 bg-emerald-50 sm:bg-transparent rounded-xl sm:rounded-none">
+                                        <span class="text-[9px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-widest sm:mb-1">Nilai Anda:</span>
+                                        <span class="px-4 py-1.5 sm:px-5 sm:py-2.5 bg-white text-emerald-600 font-black rounded-lg sm:rounded-xl text-base sm:text-lg border border-emerald-200 shadow-sm">
                                             {{ rtrim(rtrim(number_format($userResult->nilai, 2, '.', ''), '0'), '.') }}
                                         </span>
                                     </div>
                                 @elseif($status_text == 'Belum Terbit' || $status_text == 'Belum Dimulai' || $status_text == 'Waktu Habis')
-                                    <button disabled class="px-5 py-3 bg-slate-100 text-slate-400 font-bold rounded-xl text-xs uppercase tracking-widest flex items-center gap-2 cursor-not-allowed border border-slate-200">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    <button disabled class="w-full sm:w-auto px-4 py-2.5 sm:py-3 bg-slate-100 text-slate-400 font-bold rounded-xl text-[10px] sm:text-xs uppercase tracking-widest flex items-center justify-center gap-2 cursor-not-allowed border border-slate-200">
+                                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7a4 4 0 00-8 0v4h8z"></path></svg>
                                         {{ $status_text }}
                                     </button>
                                 @elseif($status_text == 'Sedang Berlangsung')
-                                    <a href="{{ route('exam.preparation', $exam->id) }}" class="px-6 py-3 bg-blue-600 text-white font-black rounded-xl text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-md shadow-blue-200 flex items-center gap-2">
+                                    <a href="{{ route('exam.preparation', $exam->id) }}" class="w-full sm:w-auto px-5 py-3 sm:py-3 bg-blue-600 text-white font-black rounded-xl text-[10px] sm:text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-md shadow-blue-200 flex items-center justify-center gap-2">
                                         <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
                                         Kerjakan
                                     </a>
@@ -233,20 +234,20 @@
 
                         </div>
                     @empty
-                        <div class="text-center py-20 bg-white rounded-[2rem] border border-slate-200 shadow-sm exam-empty">
-                            <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-5">
-                                <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <div class="text-center py-16 sm:py-20 bg-white rounded-[1.5rem] sm:rounded-[2rem] border border-slate-200 shadow-sm exam-empty">
+                            <div class="w-16 h-16 sm:w-24 sm:h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5">
+                                <svg class="w-8 h-8 sm:w-12 sm:h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             </div>
-                            <h4 class="text-xl font-black text-slate-700">Belum ada ujian yang tersedia.</h4>
-                            <p class="text-sm font-medium text-slate-500 mt-2">Daftar ujian akan muncul jika dosen sudah menerbitkannya.</p>
+                            <h4 class="text-lg sm:text-xl font-black text-slate-700 px-4">Belum ada ujian yang tersedia.</h4>
+                            <p class="text-xs sm:text-sm font-medium text-slate-500 mt-2 px-6">Daftar ujian akan muncul jika dosen sudah menerbitkannya.</p>
                         </div>
                     @endforelse
 
-                    <div id="noDataFiltered" class="hidden text-center py-20 bg-white rounded-[2rem] border border-slate-200 shadow-sm">
-                        <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <div id="noDataFiltered" class="hidden text-center py-16 sm:py-20 bg-white rounded-[1.5rem] sm:rounded-[2rem] border border-slate-200 shadow-sm">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 sm:w-10 sm:h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </div>
-                        <h4 class="text-lg font-bold text-slate-600">Tidak ada ujian di kategori ini.</h4>
+                        <h4 class="text-base sm:text-lg font-bold text-slate-600">Tidak ada ujian di kategori ini.</h4>
                     </div>
 
                 </div>

@@ -20,7 +20,7 @@
         <div id="mobileBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden transition-opacity"></div>
 
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-screen transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
-            <div class="p-8 border-b border-slate-100 flex items-center gap-4">
+            <div class="p-8 border-b border-slate-100 flex items-center gap-4 shrink-0">
                 <img src="{{ asset('images/logo-ummi.png') }}" class="w-10 h-10 object-contain" alt="Logo UMMI" onerror="this.src = 'https://via.placeholder.com/40'" />
                 <div>
                     <h1 class="text-lg font-black text-slate-900 tracking-tight leading-none">LMS Inklusi</h1>
@@ -73,7 +73,7 @@
                 </a>
             </nav>
 
-            <div class="p-6 border-t border-slate-100">
+            <div class="p-6 border-t border-slate-100 shrink-0">
                 <button onclick="navigasiKe(0)" class="w-full p-4 flex items-center justify-between text-red-600 font-bold bg-red-50 rounded-2xl hover:bg-red-100 transition-all border border-red-100 cursor-pointer">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
@@ -87,72 +87,92 @@
         <main class="flex-1 min-h-screen flex flex-col relative lg:ml-80 transition-all duration-300 custom-scrollbar">
             <div class="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-blue-50 to-transparent -z-10"></div>
 
-            <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-8 py-6 sticky top-0 z-30">
-                <div class="max-w-7xl mx-auto flex items-center justify-between h-14">
-                    <div class="flex items-center gap-4">
-                        <button onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer">
+            <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 sticky top-0 z-30">
+                <div class="max-w-7xl mx-auto flex items-center justify-between h-10 sm:h-14">
+                    <div class="flex items-center gap-2 sm:gap-4">
+                        <button onclick="toggleSidebar()" class="lg:hidden p-1.5 sm:p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                         </button>
                         <div>
-                            <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Pemberitahuan</h2>
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Informasi Akademik</span>
+                            <h2 class="text-lg sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-none">Pemberitahuan</h2>
+                            <p class="text-[9px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Informasi Akademik</p>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-4">
-                        <div class="flex items-center gap-3 pr-4 border-r border-slate-200">
-                            <button onclick="navigasiKe(7)" class="relative p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    <div class="flex items-center gap-2 sm:gap-4">
+                        <div class="flex items-center gap-1 sm:gap-3 pr-2 sm:pr-4 border-r border-slate-200">
+                            <button onclick="navigasiKe(7)" class="relative p-1.5 sm:p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                                 @if($unreadCount > 0)
-                                    <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                                    <span class="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
                                 @endif
                             </button>
-                            <button onclick="navigasiKe(9)" class="p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <button onclick="navigasiKe(9)" class="hidden sm:block p-1.5 sm:p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer relative">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </button>
                         </div>
-                        <div class="hidden md:flex items-center gap-3 pl-4">
-                            <div id="wave-container" class="flex items-center gap-[2px] h-4 w-10 justify-center">
+                        
+                        <div class="flex items-center gap-1.5 sm:gap-3 pl-1 sm:pl-4">
+                            <div id="wave-container" class="flex items-center gap-[2px] h-4 w-6 sm:w-10 justify-center">
                                 <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
                                 <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
                                 <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
                             </div>
-                            <span id="status-desc" class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Siap</span>
+                            <span id="status-desc" class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest">Siap</span>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <div class="p-6 lg:p-10 max-w-6xl mx-auto w-full space-y-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest">Terbaru ({{ $unreadCount ?? 0 }})</h3>
+            <div class="p-4 sm:p-6 lg:p-10 max-w-6xl mx-auto w-full space-y-4 sm:space-y-6">
+                <div class="flex justify-between items-center mb-2 sm:mb-4 px-1 sm:px-0 overflow-hidden">
+                    <h3 data-aos="fade-right" data-aos-duration="600" class="text-xs sm:text-sm font-bold text-slate-500 uppercase tracking-widest">
+                        Terbaru ({{ $unreadCount ?? 0 }})
+                    </h3>
                     @if($unreadCount > 0)
-                    <form method="POST" action="{{ route('notifications.read') }}">
+                    <form data-aos="fade-left" data-aos-duration="600" method="POST" action="{{ route('notifications.read') }}">
                         @csrf
-                        <button class="text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:underline hover:text-blue-700 transition-all cursor-pointer">
+                        <button class="text-[9px] sm:text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:underline hover:text-blue-700 transition-all cursor-pointer">
                             Tandai semua dibaca
                         </button>
                     </form>
                     @endif
                 </div>
 
-                <div class="space-y-4">
+                <div class="space-y-3 sm:space-y-4">
                     @forelse ($notifications as $notif)
-                    <div onclick="window.location.href='{{ $notif->url ?? '#' }}'" class="bg-white p-8 rounded-[2.5rem] border-l-8 {{ $notif->is_read ? 'border-slate-200 opacity-80' : 'border-blue-500' }} shadow-sm hover:shadow-lg transition-all flex flex-col md:flex-row items-start md:items-center gap-6 cursor-pointer group">
-                        <div class="w-16 h-16 bg-blue-50 rounded-3xl flex items-center justify-center text-blue-600 shrink-0 group-hover:scale-110 transition-transform">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    <div 
+                        data-aos="fade-up" 
+                        data-aos-delay="{{ $loop->index * 100 }}" 
+                        onclick="window.location.href='{{ $notif->url ?? '#' }}'" 
+                        class="bg-white p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] border-l-[6px] sm:border-l-8 {{ $notif->is_read ? 'border-slate-200 opacity-80' : 'border-blue-500' }} shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-6 cursor-pointer group"
+                    >
+                        
+                        <div class="flex items-center gap-4 w-full md:w-auto">
+                            <div class="w-12 h-12 sm:w-16 sm:h-16 bg-blue-50 rounded-[1rem] sm:rounded-3xl flex items-center justify-center text-blue-600 shrink-0 group-hover:scale-110 transition-transform duration-300">
+                                <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            </div>
+                            
+                            <div class="flex-1 md:hidden">
+                                <h4 class="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">{{ $notif->title }}</h4>
+                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1 block">{{ $notif->created_at->diffForHumans() }}</span>
+                            </div>
                         </div>
+
                         <div class="flex-1 w-full">
-                            <div class="flex justify-between items-start mb-2">
+                            <div class="hidden md:flex justify-between items-start mb-2">
                                 <h4 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{{ $notif->title }}</h4>
                                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1 rounded-lg whitespace-nowrap">{{ $notif->created_at->diffForHumans() }}</span>
                             </div>
-                            <p class="text-sm text-slate-500 leading-relaxed font-medium">{{ $notif->message }}</p>
+                            <p class="text-xs sm:text-sm text-slate-500 leading-relaxed font-medium">{{ $notif->message }}</p>
                         </div>
                     </div>
                     @empty
-                    <div class="text-center py-10 bg-white rounded-[2.5rem] border border-slate-100">
-                        <p class="text-slate-400 font-bold">Tidak ada pemberitahuan.</p>
+                    <div data-aos="zoom-in" data-aos-duration="600" class="text-center py-10 sm:py-16 bg-white rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col items-center justify-center">
+                        <div class="w-16 h-16 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center mb-4">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-400 font-bold">Tidak ada pemberitahuan baru.</p>
                     </div>
                     @endforelse
                 </div>
@@ -161,6 +181,7 @@
         
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
+            // INISIALISASI ANIMASI
             AOS.init({ once: true, easing: "ease-out-cubic" });
 
             function toggleSidebar() {
@@ -181,11 +202,10 @@
                 rec.lang = "id-ID";
                 rec.continuous = true;
 
-                // Cegah Infinite Loop Jika Mikrofon Diblokir
                 rec.onerror = (event) => {
                     console.error("Mic Error:", event.error);
                     if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-                        rec.onend = null; // Hentikan loop start
+                        rec.onend = null; 
                         if(statusDesc) statusDesc.innerText = "MIC DIBLOKIR";
                     }
                 };
@@ -257,13 +277,12 @@
                 else if (nomor === 0) { tujuan = "{{ route('logout') ?? '#' }}"; teks = "Keluar akun. Sampai jumpa."; }
 
                 if (teks !== "") {
-                    // Jika ada link tujuan, pindah halaman setelah bicara selesai
                     if (tujuan !== "" && tujuan !== "#") {
                         bicara(teks, () => {
                             window.location.href = tujuan;
                         });
                     } else {
-                        bicara(teks, () => { try { rec.start(); } catch(e){} }); // Jika hanya info (seperti no 7)
+                        bicara(teks, () => { try { rec.start(); } catch(e){} });
                     }
                 }
             }
@@ -275,7 +294,6 @@
                     rec.onresult = (event) => {
                         const hasil = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
                         
-                        // Fitur Ulangi Panduan
                         if(hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan")) {
                             bicara(getPanduanUtama(), () => { mulaiMendengar(); });
                             return;
@@ -292,7 +310,6 @@
                         else if (hasil.includes("nol") || hasil.includes("keluar")) navigasiKe(0);
                     };
 
-                    // Loop terus mendengarkan selama tidak error
                     if(rec.onend !== null) {
                          rec.onend = () => { rec.start(); };
                     }

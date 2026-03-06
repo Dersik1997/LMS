@@ -43,148 +43,98 @@
         </style>
     </head>
     <body
-        class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] min-h-full flex flex-col border-box overflow-x-hidden text-slate-800"
+        class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] min-h-[100dvh] flex flex-col border-box overflow-x-hidden text-slate-800"
     >
         <div
             class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none"
         >
             <div
-                class="absolute top-[-10%] right-[-5%] w-[400px] h-[400px] bg-blue-100/40 rounded-full blur-3xl opacity-50"
+                class="absolute top-[-10%] right-[-5%] w-64 md:w-[400px] h-64 md:h-[400px] bg-blue-100/40 rounded-full blur-3xl opacity-50"
             ></div>
             <div
-                class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-indigo-50/40 rounded-full blur-3xl opacity-50"
+                class="absolute bottom-[-10%] left-[-10%] w-64 md:w-[400px] h-64 md:h-[400px] bg-indigo-50/40 rounded-full blur-3xl opacity-50"
             ></div>
         </div>
 
         <main
-            class="flex-1 flex flex-col h-screen overflow-y-scroll custom-scrollbar relative"
+            class="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar relative"
         >
-            <div
-                class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-4 md:px-8 py-4 shadow-sm transition-all w-full"
-            >
-                <div
-                    class="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-4 lg:gap-6 relative"
-                >
-                    <div
-                        class="flex items-center gap-4 relative z-10 w-full lg:w-auto"
-                    >
-                        <a href="{{ route('course.detail', $currentSession?->kelas->id ?? 0) }}"
-                            class="w-11 h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm shrink-0 group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95"
-                        >
-                            <svg
-                                class="w-5 h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2.5"
-                                    d="M15 19l-7-7 7-7"
-                                ></path>
-                            </svg>
-                            <span
-                                class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white"
-                                >0</span
-                            >
-                        </a>
-                        <a href="{{ route('course.detail', $currentSession?->kelas->id ?? 0) }}"
-                            class="hidden sm:block text-left cursor-pointer group shrink-0 decoration-transparent"
-                        >
-                            <span
-                                class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest"
-                                >Navigasi Suara</span
-                            >
-                            <span
-                                class="block text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors"
-                                >0 - Kembali</span
-                            >
-                        </a>
-                        <div
-                            class="hidden sm:block w-px h-10 bg-slate-200 mx-2"
-                        ></div>
-                        <div class="overflow-hidden flex-1">
-                            <h1
-                                class="text-lg md:text-xl font-extrabold text-slate-900 tracking-tight leading-none truncate max-w-[250px] md:max-w-none"
-                            >
-                                {{ $session->kelas->mataKuliah->nama ?? 'Mata Kuliah' }}
-                            </h1>
-                            <p
-                                class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mt-1 truncate"
-                            >
-                                {{ $session->kelas->dosen->nama ?? '-' }}
-                            </p>
+            <div class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-3 sm:py-4 shadow-sm transition-all w-full">
+                <div class="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-3 lg:gap-6 relative">
+                    
+                    <div class="flex items-center justify-between w-full lg:w-auto gap-3 relative z-10">
+                        <div class="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
+                            <a href="{{ route('course.detail', $currentSession?->kelas->id ?? 0) }}" class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm shrink-0 group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95">
+                                <svg class="w-5 h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                                <span class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white shadow-sm">0</span>
+                            </a>
+                            
+                            <a href="{{ route('course.detail', $currentSession?->kelas->id ?? 0) }}" class="hidden sm:block text-left cursor-pointer group shrink-0 decoration-transparent">
+                                <span class="block text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest">Navigasi Suara</span>
+                                <span class="block text-[10px] md:text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors">0 - Kembali</span>
+                            </a>
+                            
+                            <div class="hidden lg:block w-px h-10 bg-slate-200 mx-1 md:mx-2"></div>
+                            
+                            <div class="overflow-hidden flex-1">
+                                <h1 class="text-sm md:text-xl font-extrabold text-slate-900 tracking-tight leading-none truncate">
+                                    {{ $session->kelas->mataKuliah->nama ?? 'Mata Kuliah' }}
+                                </h1>
+                                <p class="text-[8px] md:text-[10px] font-bold text-blue-600 uppercase tracking-widest mt-1 truncate">
+                                    Dosen: {{ $session->kelas->dosen->nama ?? '-' }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex lg:hidden items-center justify-end gap-1.5 shrink-0 pl-2">
+                            <div class="flex items-center gap-[2px] h-4 w-6 justify-center" id="wave-container-mobile">
+                                <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
+                                <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
+                                <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
+                            </div>
                         </div>
                     </div>
 
-                    <div
-                        class="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto"
-                    >
-                        <nav
-                            class="w-full lg:w-auto flex p-1.5 bg-slate-100/80 rounded-xl overflow-x-auto custom-scrollbar snap-x gap-1 border border-slate-200/50"
-                        >
-                            <button
-                                onclick="navigasiKe(1)"
-                                class="cursor-pointer active:scale-95 snap-start shrink-0 px-5 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/50 font-bold text-[10px] uppercase tracking-widest border border-transparent whitespace-nowrap transition-all"
-                            >
+                    <div class="flex items-center justify-between lg:justify-end gap-2 md:gap-4 w-full lg:w-auto">
+                        <nav class="w-full lg:w-auto flex p-1.5 bg-slate-100/80 rounded-xl overflow-x-auto scrollbar-hide snap-x gap-1 border border-slate-200/50">
+                            <button onclick="navigasiKe(1)" class="cursor-pointer active:scale-95 snap-start shrink-0 px-4 md:px-5 py-1.5 md:py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/50 font-bold text-[9px] md:text-[10px] uppercase tracking-widest border border-transparent whitespace-nowrap transition-all">
                                 1. Pembelajaran
                             </button>
-                            <button
-                                onclick="navigasiKe(2)"
-                                class="cursor-pointer active:scale-95 snap-start shrink-0 px-5 py-2 rounded-lg bg-white text-blue-700 font-bold text-[10px] uppercase tracking-widest shadow-sm border border-slate-200 whitespace-nowrap transition-all"
-                            >
+                            <button onclick="navigasiKe(2)" class="cursor-pointer active:scale-95 snap-start shrink-0 px-4 md:px-5 py-1.5 md:py-2 rounded-lg bg-white text-blue-700 font-bold text-[9px] md:text-[10px] uppercase tracking-widest shadow-sm border border-slate-200 whitespace-nowrap transition-all">
                                 2. Presensi
                             </button>
-                            <button
-                                onclick="navigasiKe(3)"
-                                class="cursor-pointer active:scale-95 snap-start shrink-0 px-5 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/50 font-bold text-[10px] uppercase tracking-widest border border-transparent whitespace-nowrap transition-all"
-                            >
+                            <button onclick="navigasiKe(3)" class="cursor-pointer active:scale-95 snap-start shrink-0 px-4 md:px-5 py-1.5 md:py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/50 font-bold text-[9px] md:text-[10px] uppercase tracking-widest border border-transparent whitespace-nowrap transition-all">
                                 3. Penugasan
                             </button>
-                            <button
-                                onclick="navigasiKe(4)"
-                                class="cursor-pointer active:scale-95 snap-start shrink-0 px-5 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/50 font-bold text-[10px] uppercase tracking-widest border border-transparent whitespace-nowrap transition-all"
-                            >
+                            <button onclick="navigasiKe(4)" class="cursor-pointer active:scale-95 snap-start shrink-0 px-4 md:px-5 py-1.5 md:py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/50 font-bold text-[9px] md:text-[10px] uppercase tracking-widest border border-transparent whitespace-nowrap transition-all">
                                 4. Anggota
                             </button>
                         </nav>
-                        <div
-                            class="hidden md:flex items-center gap-3 pl-4 border-l border-slate-200 relative z-10 justify-end shrink-0 w-32"
-                        >
-                            <div
-                                class="flex items-center gap-[2px] h-4 w-10 justify-center"
-                                id="wave-container"
-                            >
-                                <div
-                                    class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"
-                                ></div>
-                                <div
-                                    class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"
-                                ></div>
-                                <div
-                                    class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"
-                                ></div>
+                        
+                        <div class="hidden lg:flex items-center gap-3 pl-4 border-l border-slate-200 relative z-10 justify-end shrink-0 w-32">
+                            <div class="flex items-center gap-[2px] h-4 w-10 justify-center" id="wave-container-desktop">
+                                <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
+                                <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
+                                <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
                             </div>
-                            <span
-                                id="status-desc"
-                                class="text-[9px] font-black text-slate-400 uppercase tracking-widest w-full text-left"
-                                >SIAP</span
-                            >
+                            <span id="status-desc" class="text-[9px] font-black text-slate-400 uppercase tracking-widest w-full text-left">SIAP</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="max-w-6xl mx-auto w-full p-6 lg:p-8 space-y-8 pb-20">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="max-w-6xl mx-auto w-full p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 pb-20">
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                     <div
                         data-aos="fade-up"
                         data-aos-duration="600"
-                        class="bg-blue-600 text-white p-6 rounded-[2rem] shadow-lg shadow-blue-200/50 flex flex-col justify-between h-32 relative overflow-hidden group"
+                        class="bg-blue-600 text-white p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] shadow-lg shadow-blue-200/50 flex flex-col justify-between h-24 sm:h-32 relative overflow-hidden group"
                     >
                         <div class="relative z-10">
-                            <h3 class="text-4xl font-black tracking-tighter">
+                            <h3 class="text-2xl sm:text-4xl font-black tracking-tighter">
                                 @php
                                 $total = $stats['hadir'] + $stats['izin'] + $stats['sakit'] + $stats['alpha'];
                                 $persen = $total > 0 ? round(($stats['hadir'] / $total) * 100) : 0;
@@ -192,7 +142,7 @@
                                 {{ $persen }}%
                             </h3>
                             <p
-                                class="text-[9px] font-bold text-blue-200 uppercase tracking-widest mt-1"
+                                class="text-[8px] sm:text-[9px] font-bold text-blue-200 uppercase tracking-widest mt-1"
                             >
                                 Total Kehadiran
                             </p>
@@ -201,7 +151,7 @@
                             class="absolute -right-4 -bottom-4 opacity-20 group-hover:scale-110 transition-transform"
                         >
                             <svg
-                                class="w-24 h-24"
+                                class="w-16 h-16 sm:w-24 sm:h-24"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -220,13 +170,13 @@
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="100"
-                        class="bg-white p-6 rounded-[2rem] border border-emerald-100 shadow-sm flex flex-col justify-center items-center text-center"
+                        class="bg-white p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-emerald-100 shadow-sm flex flex-col justify-center items-center text-center"
                     >
                         <div
-                            class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2"
+                            class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-1.5 sm:mb-2"
                         >
                             <svg
-                                class="w-5 h-5"
+                                class="w-4 h-4 sm:w-5 sm:h-5"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -239,11 +189,11 @@
                                 ></path>
                             </svg>
                         </div>
-                        <span class="text-2xl font-black text-slate-900"
+                        <span class="text-xl sm:text-2xl font-black text-slate-900"
                             >{{ $stats['hadir'] }}</span
                         >
                         <span
-                            class="text-[9px] font-bold text-slate-400 uppercase tracking-widest"
+                            class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-widest"
                             >Hadir</span
                         >
                     </div>
@@ -252,13 +202,13 @@
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="200"
-                        class="bg-white p-6 rounded-[2rem] border border-orange-100 shadow-sm flex flex-col justify-center items-center text-center"
+                        class="bg-white p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-orange-100 shadow-sm flex flex-col justify-center items-center text-center"
                     >
                         <div
-                            class="w-10 h-10 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center mb-2"
+                            class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center mb-1.5 sm:mb-2"
                         >
                             <svg
-                                class="w-5 h-5"
+                                class="w-4 h-4 sm:w-5 sm:h-5"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -271,11 +221,11 @@
                                 ></path>
                             </svg>
                         </div>
-                        <span class="text-2xl font-black text-slate-900"
+                        <span class="text-xl sm:text-2xl font-black text-slate-900"
                             >{{ $stats['izin'] + $stats['sakit'] }}</span
                         >
                         <span
-                            class="text-[9px] font-bold text-slate-400 uppercase tracking-widest"
+                            class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-widest"
                             >Izin/Sakit</span
                         >
                     </div>
@@ -284,13 +234,13 @@
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="300"
-                        class="bg-white p-6 rounded-[2rem] border border-red-100 shadow-sm flex flex-col justify-center items-center text-center"
+                        class="bg-white p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-red-100 shadow-sm flex flex-col justify-center items-center text-center"
                     >
                         <div
-                            class="w-10 h-10 rounded-full bg-red-50 text-red-600 flex items-center justify-center mb-2"
+                            class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-red-50 text-red-600 flex items-center justify-center mb-1.5 sm:mb-2"
                         >
                             <svg
-                                class="w-5 h-5"
+                                class="w-4 h-4 sm:w-5 sm:h-5"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -303,11 +253,11 @@
                                 ></path>
                             </svg>
                         </div>
-                        <span class="text-2xl font-black text-slate-900"
+                        <span class="text-xl sm:text-2xl font-black text-slate-900"
                             >{{ $stats['alpha'] }}</span
                         >
                         <span
-                            class="text-[9px] font-bold text-slate-400 uppercase tracking-widest"
+                            class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-widest"
                             >Alpha</span
                         >
                     </div>
@@ -316,7 +266,7 @@
                 <div class="space-y-4">
                     <h3
                         data-aos="fade-in"
-                        class="text-sm font-black text-slate-900 uppercase tracking-widest px-2"
+                        class="text-xs sm:text-sm font-black text-slate-900 uppercase tracking-widest px-1 sm:px-2"
                     >
                         Riwayat Pertemuan
                     </h3>
@@ -326,38 +276,38 @@
                         <div
                             data-aos="fade-up"
                             data-aos-duration="600"
-                            class="group bg-white rounded-[2.5rem] p-1 border-2 border-blue-500 shadow-lg shadow-blue-100 relative overflow-hidden transition-transform hover:scale-[1.01]"
+                            class="group bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-1 border-2 border-blue-500 shadow-lg shadow-blue-100 relative overflow-hidden transition-transform hover:scale-[1.01]"
                         >
                             <div
-                                class="absolute top-0 right-0 bg-blue-500 text-white text-[9px] font-black px-4 py-1 rounded-bl-xl uppercase tracking-widest"
+                                class="absolute top-0 right-0 bg-blue-500 text-white text-[8px] sm:text-[9px] font-black px-3 sm:px-4 py-1 rounded-bl-lg sm:rounded-bl-xl uppercase tracking-widest"
                             >
                                 Sedang Berlangsung
                             </div>
 
-                            <div class="p-6">
-                                <div class="flex flex-col md:flex-row items-center gap-6 mb-6">
+                            <div class="p-4 sm:p-6">
+                                <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-4 sm:mb-6 mt-4 sm:mt-0">
                                     <div
-                                        class="w-20 h-20 rounded-2xl bg-blue-50 text-blue-600 flex flex-col items-center justify-center shrink-0 border border-blue-100"
+                                        class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-blue-50 text-blue-600 flex flex-col items-center justify-center shrink-0 border border-blue-100"
                                     >
-                                       <span class="text-[10px] font-black uppercase tracking-widest text-blue-400">
+                                       <span class="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-blue-400">
                                             {{ \Carbon\Carbon::parse($currentSession->created_at)->translatedFormat('M') }}
                                         </span>
-                                        <span class="text-3xl font-black">
+                                        <span class="text-xl sm:text-3xl font-black">
                                             {{ \Carbon\Carbon::parse($currentSession->created_at)->translatedFormat('d') }}
                                         </span>
                                     </div>
 
-                                    <div class="flex-1 text-center md:text-left">
-                                        <h4 class="text-lg font-black text-slate-900">
+                                    <div class="flex-1 text-center sm:text-left">
+                                        <h4 class="text-base sm:text-lg font-black text-slate-900">
                                             Pertemuan {{ $currentSession->urutan }}: {{ $currentSession->judul }}
                                         </h4>
-                                        <p class="text-xs font-medium text-slate-500 mt-1">
-                                            Silahkan isi kehadiran sesuai jam pembelajaran mata kuliah.
+                                        <p class="text-[10px] sm:text-xs font-medium text-slate-500 mt-1">
+                                            Silahkan isi kehadiran sesuai jam pembelajaran.
                                         </p>
 
-                                        <div class="mt-3 inline-flex items-center gap-2 bg-blue-50 px-3 py-1 rounded-lg">
-                                            <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                                            <span class="text-[9px] font-bold text-blue-600 uppercase tracking-widest">
+                                        <div class="mt-2 sm:mt-3 inline-flex items-center gap-1.5 sm:gap-2 bg-blue-50 px-2 sm:px-3 py-1 rounded-md sm:rounded-lg">
+                                            <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full animate-pulse"></span>
+                                            <span class="text-[8px] sm:text-[9px] font-bold text-blue-600 uppercase tracking-widest">
                                                 Presensi Dibuka
                                             </span>
                                         </div>
@@ -365,26 +315,26 @@
                                 </div>
 
                                 {{-- BUTTON PRESENSI --}}
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-100">
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-slate-100">
                                     <button
                                         onclick="navigasiKe(5)"
-                                        class="cursor-pointer active:scale-95 flex items-center justify-center gap-3 w-full bg-emerald-500 text-white px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg hover:bg-emerald-600 hover:-translate-y-1 transition-all"
+                                        class="cursor-pointer active:scale-95 flex items-center justify-center gap-2 sm:gap-3 w-full bg-emerald-500 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-[0.1em] sm:tracking-[0.2em] shadow-lg hover:bg-emerald-600 hover:-translate-y-1 transition-all"
                                     >
-                                        <span class="bg-white/20 w-6 h-6 rounded-full flex items-center justify-center text-xs">5</span>
+                                        <span class="bg-white/20 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs">5</span>
                                         Hadir
                                     </button>
                                     <button
                                         onclick="navigasiKe(6)"
-                                        class="cursor-pointer active:scale-95 flex items-center justify-center gap-3 w-full bg-orange-500 text-white px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg hover:bg-orange-600 hover:-translate-y-1 transition-all"
+                                        class="cursor-pointer active:scale-95 flex items-center justify-center gap-2 sm:gap-3 w-full bg-orange-500 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-[0.1em] sm:tracking-[0.2em] shadow-lg hover:bg-orange-600 hover:-translate-y-1 transition-all"
                                     >
-                                        <span class="bg-white/20 w-6 h-6 rounded-full flex items-center justify-center text-xs">6</span>
+                                        <span class="bg-white/20 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs">6</span>
                                         Sakit
                                     </button>
                                     <button
                                         onclick="navigasiKe(7)"
-                                        class="cursor-pointer active:scale-95 flex items-center justify-center gap-3 w-full bg-blue-500 text-white px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg hover:bg-blue-600 hover:-translate-y-1 transition-all"
+                                        class="cursor-pointer active:scale-95 flex items-center justify-center gap-2 sm:gap-3 w-full bg-blue-500 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-[0.1em] sm:tracking-[0.2em] shadow-lg hover:bg-blue-600 hover:-translate-y-1 transition-all"
                                     >
-                                        <span class="bg-white/20 w-6 h-6 rounded-full flex items-center justify-center text-xs">7</span>
+                                        <span class="bg-white/20 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs">7</span>
                                         Izin
                                     </button>
                                 </div>
@@ -401,26 +351,26 @@
                         <div
                             data-aos="fade-up"
                             data-aos-duration="600"
-                            class="bg-white rounded-[2.5rem] p-6 border border-slate-200 shadow-sm
-                                   flex flex-col md:flex-row items-center gap-6
+                            class="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-6 border border-slate-200 shadow-sm
+                                   flex flex-col sm:flex-row items-center gap-4 sm:gap-6
                                    {{ $attendance ? '' : 'opacity-60' }}"
                         >
                             {{-- TANGGAL --}}
-                            <div class="w-16 h-16 rounded-2xl bg-slate-50 text-slate-400 flex flex-col items-center justify-center shrink-0">
-                                <span class="text-[8px] font-black uppercase tracking-widest">
+                            <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-slate-50 text-slate-400 flex flex-col items-center justify-center shrink-0">
+                                <span class="text-[7px] sm:text-[8px] font-black uppercase tracking-widest">
                                     {{ \Carbon\Carbon::parse($session->tanggal)->translatedFormat('M') }}
                                 </span>
-                                <span class="text-2xl font-black">
+                                <span class="text-lg sm:text-2xl font-black">
                                     {{ \Carbon\Carbon::parse($session->tanggal)->translatedFormat('d') }}
                                 </span>
                             </div>
 
                             {{-- INFO SESI --}}
-                            <div class="flex-1 text-center md:text-left">
-                                <h4 class="text-base font-bold text-slate-700">
+                            <div class="flex-1 text-center sm:text-left">
+                                <h4 class="text-sm sm:text-base font-bold text-slate-700">
                                     Pertemuan {{ $session->urutan }}: {{ $session->judul }}
                                 </h4>
-                                <p class="text-[10px] font-medium text-slate-400 mt-1">
+                                <p class="text-[9px] sm:text-[10px] font-medium text-slate-400 mt-1">
                                     {{ $session->jam_mulai }} - {{ $session->jam_selesai }} WIB
                                 </p>
                             </div>
@@ -429,7 +379,7 @@
                             @if ($attendance)
                                 <button
                                     disabled
-                                    class="px-6 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest border flex items-center gap-2 cursor-not-allowed
+                                    class="w-full sm:w-auto px-4 sm:px-6 py-2 rounded-lg sm:rounded-xl font-black text-[9px] sm:text-[10px] justify-center uppercase tracking-widest border flex items-center gap-1.5 sm:gap-2 cursor-not-allowed
                                     {{ $attendance->status === 'hadir' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
                                        ($attendance->status === 'izin' ? 'bg-blue-50 text-blue-600 border-blue-100' :
                                        'bg-orange-50 text-orange-600 border-orange-100') }}"
@@ -437,7 +387,7 @@
                                     ✔ {{ ucfirst($attendance->status) }}
                                 </button>
                             @else
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                <span class="w-full sm:w-auto text-center text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                                     Belum Absen
                                 </span>
                             @endif
@@ -452,7 +402,8 @@
             AOS.init({ once: true, easing: "ease-out-cubic" });
 
             const statusDesc = document.getElementById("status-desc");
-            const waveBars = document.querySelectorAll(".wave-bar");
+            const waveBarsDesktop = document.querySelectorAll("#wave-container-desktop .wave-bar");
+            const waveBarsMobile = document.querySelectorAll("#wave-container-mobile .wave-bar");
             const synth = window.speechSynthesis;
 
             // 🔐 SESSION ID AMAN (sinkron Blade)
@@ -470,9 +421,6 @@
             let rec = null;
             let interval;
 
-            // ==============================
-            // SAFE SpeechRecognition
-            // ==============================
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRec = window.webkitSpeechRecognition || window.SpeechRecognition;
                 rec = new SpeechRec();
@@ -481,17 +429,14 @@
             }
 
             function setWave(active) {
-                if (!waveBars.length) return;
-                waveBars.forEach((bar) => {
-                    bar.style.height = active
-                        ? `${Math.floor(Math.random() * 12) + 4}px`
-                        : "4px";
-                });
+                if (waveBarsDesktop.length > 0) {
+                    waveBarsDesktop.forEach((bar) => { bar.style.height = active ? `${Math.floor(Math.random() * 12) + 4}px` : "4px"; });
+                }
+                if (waveBarsMobile.length > 0) {
+                    waveBarsMobile.forEach((bar) => { bar.style.height = active ? `${Math.floor(Math.random() * 12) + 4}px` : "4px"; });
+                }
             }
 
-            // ==============================
-            // TEXT TO SPEECH
-            // ==============================
             function bicara(teks, callback) {
                 synth.cancel();
                 const utter = new SpeechSynthesisUtterance(teks);
@@ -513,7 +458,6 @@
                 synth.speak(utter);
             }
 
-            // FUNGSI PANDUAN SUARA DINAMIS
             function getPanduanSuara() {
                 let teks = `Halaman Presensi kelas ${namaMatkul}. `;
                 teks += `Statistik kehadiran Anda: Kehadiran ${totalKehadiran} persen. Hadir ${hadir} kali, Izin atau Sakit ${izinSakit} kali, Alpha ${alpha} kali. `;
@@ -529,16 +473,13 @@
                 return teks;
             }
 
-            // ==============================
-            // PRESENSI FUNCTION
-            // ==============================
             function kirimPresensi(status) {
                 if (!CURRENT_SESSION_ID) {
                     alert("Tidak ada sesi aktif.");
                     return;
                 }
 
-                document.getElementById('status-desc').innerText = "MEMPROSES...";
+                if (statusDesc) statusDesc.innerText = "MEMPROSES...";
 
                 fetch("{{ url('presensi') }}/" + CURRENT_SESSION_ID + "/" + status, {
                     method: "POST",
@@ -566,16 +507,13 @@
                 });
             }
 
-            // ==============================
-            // NAVIGASI + VOICE COMMAND
-            // ==============================
             function navigasiKe(nomor) {
                 let tujuan = "";
                 let teks = "";
 
                 if (nomor === 0) {
-                    tujuan = "{{ route('dashboard') ?? '#' }}";
-                    teks = "Kembali ke Beranda.";
+                    tujuan = "{{ route('course.detail', $session->kelas->id ?? 0) }}";
+                    teks = "Kembali ke Menu Utama Pembelajaran.";
                 }
                 else if (nomor === 1) {
                     tujuan = "{{ route('course.detail', $currentSession?->kelas->id ?? 0) }}";
@@ -592,7 +530,6 @@
                     tujuan = "{{ route('course.members', $currentSession?->kelas->id ?? 0) }}";
                     teks = "Membuka Menu Anggota Kelas.";
                 }
-                // ===== PRESENSI =====
                 else if (nomor === 5) {
                     if(!hasActiveSession) { bicara("Belum ada absensi yang dibuka saat ini.", () => mulaiMendengar()); return; }
                     kirimPresensi("hadir");
@@ -622,9 +559,6 @@
                 }
             }
 
-            // ==============================
-            // VOICE RECOGNITION
-            // ==============================
             function mulaiMendengar() {
                 if (!rec) return;
 
@@ -659,9 +593,6 @@
                 }
             }
 
-            // ==============================
-            // INIT
-            // ==============================
             window.onload = () => {
                 document.body.addEventListener("click", () => {}, { once: true });
                 

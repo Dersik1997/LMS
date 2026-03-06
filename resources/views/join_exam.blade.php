@@ -2,12 +2,17 @@
 <html lang="id" class="h-full">
     <head>
         <meta charset="UTF-8" />
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
         <meta
             name="viewport"
             content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
         <title>Gabung Ujian | LMS Inklusi UMMI</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link
+            href="https://unpkg.com/aos@2.3.1/dist/aos.css"
+            rel="stylesheet"
+        />
         <link
             href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
             rel="stylesheet"
@@ -28,7 +33,7 @@
                 border-radius: 20px;
             }
             body {
-                min-height: 100vh;
+                min-height: 100dvh;
                 display: flex;
                 flex-direction: column;
                 overflow-x: hidden;
@@ -43,33 +48,33 @@
             class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none"
         >
             <div
-                class="absolute top-[-10%] right-[-5%] w-[400px] h-[400px] bg-indigo-100/40 rounded-full blur-3xl opacity-50"
+                class="absolute top-[-10%] right-[-5%] w-64 md:w-[400px] h-64 md:h-[400px] bg-indigo-100/40 rounded-full blur-3xl opacity-50"
             ></div>
             <div
-                class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-purple-50/40 rounded-full blur-3xl opacity-50"
+                class="absolute bottom-[-10%] left-[-10%] w-64 md:w-[400px] h-64 md:h-[400px] bg-purple-50/40 rounded-full blur-3xl opacity-50"
             ></div>
         </div>
 
         <main
             class="flex-1 flex flex-col h-screen overflow-y-auto custom-scrollbar relative"
         >
-            {{-- NAVBAR & VOICE STATUS --}}
+            {{-- NAVBAR MOBILE-FRIENDLY (Judul di Tengah) --}}
             <header
-                class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-4 md:px-8 py-4 shadow-sm w-full shrink-0"
+                class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-3 sm:py-4 shadow-sm w-full shrink-0"
             >
                 <div
-                    class="max-w-7xl mx-auto flex items-center justify-between relative h-12"
+                    class="max-w-7xl mx-auto flex items-center justify-between relative h-10 sm:h-12 md:h-14"
                 >
                     {{-- Kiri: Tombol 0 (Kembali) --}}
                     <div
-                        class="flex items-center gap-4 relative z-10 w-1/3 justify-start shrink-0"
+                        class="flex items-center gap-2 sm:gap-4 relative z-10 w-auto justify-start shrink-0"
                     >
                         <a
                             href="{{ route('exams') }}"
-                            class="flex w-11 h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white items-center justify-center transition-all duration-300 shadow-sm shrink-0 group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95"
+                            class="flex w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white items-center justify-center transition-all duration-300 shadow-sm shrink-0 group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95"
                         >
                             <svg
-                                class="w-5 h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform"
+                                class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -82,7 +87,7 @@
                                 ></path>
                             </svg>
                             <span
-                                class="absolute -bottom-1 -right-1 bg-black text-white text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white"
+                                class="absolute -bottom-1 -right-1 bg-black text-white text-[8px] md:text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white"
                                 >0</span
                             >
                         </a>
@@ -91,11 +96,11 @@
                             class="hidden sm:block text-left cursor-pointer group shrink-0 decoration-transparent"
                         >
                             <span
-                                class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest"
+                                class="block text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest"
                                 >Navigasi Suara</span
                             >
                             <span
-                                class="block text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors"
+                                class="block text-[10px] md:text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors"
                                 >0 - Kembali</span
                             >
                         </a>
@@ -103,15 +108,15 @@
 
                     {{-- Tengah: Judul (Center Absolute) --}}
                     <div
-                        class="text-center absolute left-1/2 transform -translate-x-1/2 w-1/3 z-0 pointer-events-none flex flex-col items-center justify-center"
+                        class="text-center absolute left-1/2 transform -translate-x-1/2 w-[50%] sm:w-[60%] md:w-1/3 z-0 pointer-events-none flex flex-col items-center justify-center"
                     >
                         <h1
-                            class="text-lg md:text-xl font-extrabold text-slate-900 tracking-tight leading-none truncate pointer-events-auto"
+                            class="text-sm sm:text-lg md:text-xl font-extrabold text-slate-900 tracking-tight leading-none truncate pointer-events-auto"
                         >
                             Gabung Ujian
                         </h1>
                         <p
-                            class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mt-1 truncate pointer-events-auto"
+                            class="text-[8px] sm:text-[10px] font-bold text-blue-600 uppercase tracking-widest mt-1 truncate pointer-events-auto"
                         >
                             Mahasiswa
                         </p>
@@ -119,10 +124,10 @@
 
                     {{-- Kanan: Indikator Voice --}}
                     <div
-                        class="flex items-center justify-end gap-3 relative z-10 w-1/3 shrink-0"
+                        class="flex items-center justify-end gap-1.5 sm:gap-3 relative z-10 w-auto shrink-0"
                     >
                         <div
-                            class="flex items-center gap-[2px] h-4 w-10 justify-center"
+                            class="flex items-center gap-[2px] h-4 w-6 sm:w-10 justify-center"
                             id="wave-container"
                         >
                             <div
@@ -137,32 +142,37 @@
                         </div>
                         <span
                             id="status-desc"
-                            class="hidden sm:block text-[9px] font-black text-slate-400 uppercase tracking-widest w-20 text-left"
+                            class="hidden sm:block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest w-12 sm:w-20 text-left"
                             >SIAP</span
                         >
                     </div>
                 </div>
             </header>
 
-            {{-- KONTEN UTAMA: Ukuran box disamakan dengan Gabung Kelas --}}
+            {{-- KONTEN UTAMA --}}
             <div
-                class="max-w-4xl mx-auto w-full p-6 flex flex-col items-center justify-center min-h-[80vh] pb-20 relative z-10"
+                class="max-w-4xl mx-auto w-full p-4 sm:p-6 flex flex-col items-center justify-center min-h-[80vh] pb-20 relative z-10"
             >
                 <div
-                    class="bg-white rounded-[3rem] shadow-xl shadow-indigo-100/50 border border-slate-200 p-8 md:p-12 w-full relative overflow-hidden text-center"
+                    data-aos="zoom-in"
+                    class="bg-white rounded-[2rem] sm:rounded-[3rem] shadow-xl shadow-indigo-100/50 border border-slate-200 p-6 sm:p-8 md:p-12 w-full relative overflow-hidden text-center"
                 >
                     <div
-                        class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-bl-[100%] -mr-10 -mt-10 -z-0"
+                        class="absolute top-0 right-0 w-40 sm:w-64 h-40 sm:h-64 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-bl-[100%] -mr-5 -mt-5 sm:-mr-10 sm:-mt-10 -z-0"
                     ></div>
 
-                    <div class="relative z-10 text-center space-y-8">
+                    <div
+                        class="relative z-10 text-center space-y-6 sm:space-y-8"
+                    >
                         <div class="space-y-2">
                             <h2
-                                class="text-3xl font-black text-slate-900 tracking-tight"
+                                class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight"
                             >
                                 Punya Token Ujian?
                             </h2>
-                            <p class="text-slate-500 font-medium">
+                            <p
+                                class="text-xs sm:text-sm text-slate-500 font-medium px-4 sm:px-0"
+                            >
                                 Masukkan token yang diberikan oleh dosen
                                 pengawas untuk memulai ujian Anda.
                             </p>
@@ -172,7 +182,7 @@
                             action="{{ route('exam.verify') }}"
                             method="POST"
                             id="join-form"
-                            class="max-w-md mx-auto space-y-6"
+                            class="max-w-md mx-auto space-y-4 sm:space-y-6"
                         >
                             @csrf
                             <div
@@ -180,7 +190,7 @@
                                 onclick="navigasiKe(1)"
                             >
                                 <label
-                                    class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 text-center"
+                                    class="block text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 sm:mb-3 text-center"
                                     >Token Ujian (Sebutkan Langsung / 1)</label
                                 >
                                 <div class="relative">
@@ -189,14 +199,14 @@
                                         id="token-input"
                                         name="token"
                                         placeholder="Contoh: X7Y-99"
-                                        class="w-full text-center text-3xl font-black uppercase tracking-[0.2em] py-5 border-b-4 border-slate-200 bg-transparent text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-500 transition-all font-mono"
+                                        class="w-full text-center text-2xl sm:text-3xl font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] py-3 sm:py-5 border-b-4 border-slate-200 bg-transparent text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-500 transition-all font-mono"
                                         maxlength="10"
                                     />
                                     <div
-                                        class="absolute right-4 top-[22px] text-slate-300 group-hover:text-indigo-500 transition-colors pointer-events-none"
+                                        class="absolute right-2 sm:right-4 top-[14px] sm:top-[22px] text-slate-300 group-hover:text-indigo-500 transition-colors pointer-events-none"
                                     >
                                         <svg
-                                            class="w-6 h-6"
+                                            class="w-5 h-5 sm:w-6 sm:h-6"
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
@@ -205,7 +215,7 @@
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round"
                                                 stroke-width="2"
-                                                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V4.5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                                                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
                                             />
                                         </svg>
                                     </div>
@@ -215,11 +225,11 @@
                             <button
                                 type="button"
                                 onclick="navigasiKe(2)"
-                                class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-200 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3"
+                                class="w-full bg-slate-900 text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm uppercase tracking-widest hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-200 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 sm:gap-3"
                             >
                                 <span>Gabung Sekarang (2)</span>
                                 <svg
-                                    class="w-5 h-5"
+                                    class="w-4 h-4 sm:w-5 sm:h-5"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -235,14 +245,16 @@
                         </form>
 
                         <div
-                            class="bg-slate-50 rounded-2xl p-4 flex items-start gap-4 text-left border border-slate-100 mt-8"
+                            class="bg-slate-50 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex items-start gap-3 sm:gap-4 text-left border border-slate-100 mt-6 sm:mt-8"
                         >
                             <div
-                                class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0 font-bold text-xs"
+                                class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0 font-bold text-[10px] sm:text-xs"
                             >
                                 i
                             </div>
-                            <p class="text-xs text-slate-500 leading-relaxed">
+                            <p
+                                class="text-[10px] sm:text-xs text-slate-500 leading-relaxed"
+                            >
                                 <span class="font-bold text-slate-700"
                                     >Tips:</span
                                 >
@@ -256,7 +268,10 @@
             </div>
         </main>
 
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
+            AOS.init({ once: true, easing: "ease-out-cubic" });
+
             const statusDesc = document.getElementById("status-desc");
             const waveBars = document.querySelectorAll(".wave-bar");
             const tokenInput = document.getElementById("token-input");
@@ -290,8 +305,8 @@
                 synth.cancel();
                 const utter = new SpeechSynthesisUtterance(teks);
                 utter.lang = "id-ID";
-                utter.rate =
-                    parseFloat(localStorage.getItem("speechRate")) || 1.0;
+                const savedRate = localStorage.getItem("speechRate");
+                utter.rate = parseFloat(savedRate) || 1.0;
 
                 utter.onstart = () => {
                     if (statusDesc) statusDesc.innerText = "BERBICARA...";
@@ -306,7 +321,6 @@
                 synth.speak(utter);
             }
 
-            // FUNGSI PANDUAN UTAMA
             function getPanduanUtama() {
                 let teks = "Halaman Gabung Ujian. ";
                 teks += "Silakan sebutkan token ujian Anda secara perlahan. ";
@@ -358,10 +372,7 @@
             }
 
             function prosesEjaanToken(transcript) {
-                // Hilangkan spasi dan jadikan kapital semua
                 let kode = transcript.replace(/\s+/g, "").toUpperCase();
-
-                // Hapus kata-kata perintah navigasi agar tidak tertulis sebagai token
                 kode = kode.replace(
                     /(NOL|SATU|DUA|KEMBALI|ULANG|GABUNG|PANDUAN|BANTUAN)/g,
                     "",
@@ -369,7 +380,7 @@
 
                 if (kode.length > 0) {
                     tokenInput.value = kode;
-                    isConfirming = true; // Masuk mode konfirmasi
+                    isConfirming = true;
                     let ejaan = kode.split("").join(" ");
 
                     let teksConfirm = `Token yang terdeteksi adalah ${ejaan}. Sebut angka dua untuk gabung, atau satu untuk mengulang input.`;
@@ -397,9 +408,8 @@
                             .toLowerCase()
                             .trim();
 
-                        // Fitur Ulangi / Panduan
                         if (
-                            hasil === "ulang" ||
+                            hasil.includes("ulang") ||
                             hasil.includes("panduan") ||
                             hasil.includes("bantuan")
                         ) {
@@ -410,12 +420,12 @@
                             return;
                         }
 
-                        // JIKA SEDANG DALAM MODE KONFIRMASI (Menunggu jawaban 1 atau 2)
                         if (isConfirming) {
                             if (
                                 hasil.includes("dua") ||
                                 hasil.includes("gabung") ||
-                                hasil.includes("ya")
+                                hasil.includes("ya") ||
+                                hasil.includes("iya")
                             ) {
                                 rec.stop();
                                 navigasiKe(2);
@@ -442,9 +452,7 @@
                                     },
                                 );
                             }
-                        }
-                        // JIKA SEDANG MODE MENDENGARKAN TOKEN (Awal)
-                        else {
+                        } else {
                             if (hasil === "nol" || hasil === "kembali") {
                                 rec.stop();
                                 navigasiKe(0);
@@ -458,7 +466,6 @@
                                 rec.stop();
                                 navigasiKe(2);
                             } else {
-                                // Asumsikan yang diucapkan adalah Ejaan Token
                                 rec.stop();
                                 prosesEjaanToken(hasil);
                             }
@@ -477,7 +484,6 @@
                 document.body.addEventListener("click", () => {}, {
                     once: true,
                 });
-
                 setTimeout(() => {
                     bicara(getPanduanUtama(), () => {
                         mulaiMendengar();

@@ -84,7 +84,7 @@
         </style>
     </head>
     <body
-        class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] text-slate-800 border-box selection:bg-blue-200 relative custom-scrollbar flex flex-col h-screen overflow-hidden"
+        class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] text-slate-800 border-box selection:bg-blue-200 relative custom-scrollbar flex flex-col h-[100dvh] overflow-hidden"
     >
         @php $mulai = \Carbon\Carbon::parse($exam->waktu_mulai); $selesai =
         \Carbon\Carbon::parse($exam->waktu_selesai); $durasiMenit =
@@ -97,30 +97,30 @@
             class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none"
         >
             <div
-                class="absolute top-[-10%] right-[-5%] w-[400px] h-[400px] bg-blue-100/40 rounded-full blur-3xl opacity-50"
+                class="absolute top-[-10%] right-[-5%] w-64 md:w-[400px] h-64 md:h-[400px] bg-blue-100/40 rounded-full blur-3xl opacity-50"
             ></div>
             <div
-                class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-indigo-50/40 rounded-full blur-3xl opacity-50"
+                class="absolute bottom-[-10%] left-[-10%] w-64 md:w-[400px] h-64 md:h-[400px] bg-indigo-50/40 rounded-full blur-3xl opacity-50"
             ></div>
         </div>
 
-        {{-- NAVBAR BARU --}}
+        {{-- NAVBAR BARU (MOBILE GRID SYSTEM) --}}
         <header
-            class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-4 md:px-8 py-4 shadow-sm w-full shrink-0"
+            class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-2 sm:py-4 shadow-sm w-full shrink-0"
         >
             <div
-                class="w-full mx-auto flex items-center justify-between relative h-12"
+                class="w-full mx-auto grid grid-cols-3 items-center relative h-10 sm:h-12"
             >
                 {{-- Kiri: Tombol Back + Angka 0 --}}
                 <div
-                    class="flex items-center gap-4 relative z-10 w-1/3 justify-start shrink-0"
+                    class="flex items-center gap-2 sm:gap-4 justify-start shrink-0"
                 >
                     <button
                         onclick="navigasiKe(0)"
-                        class="w-11 h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm shrink-0 group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95"
+                        class="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95"
                     >
                         <svg
-                            class="w-5 h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform"
+                            class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -133,7 +133,7 @@
                             ></path>
                         </svg>
                         <span
-                            class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white"
+                            class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[8px] md:text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white"
                             >0</span
                         >
                     </button>
@@ -154,21 +154,21 @@
 
                 {{-- Tengah: Judul & Timer --}}
                 <div
-                    class="text-center absolute left-1/2 transform -translate-x-1/2 w-1/3 z-0 pointer-events-none flex flex-col items-center justify-center"
+                    class="flex flex-col items-center justify-center justify-self-center w-full max-w-[170px] sm:max-w-none pointer-events-none"
                 >
                     <h1
-                        class="text-lg md:text-xl font-extrabold text-slate-900 tracking-tight leading-none truncate pointer-events-auto w-full"
+                        class="text-sm sm:text-lg md:text-xl font-extrabold text-slate-900 tracking-tight leading-none truncate pointer-events-auto w-full text-center"
                     >
                         {{ $exam->judul }}
                     </h1>
                     <div
-                        class="mt-1.5 pointer-events-auto flex items-center justify-center gap-2"
+                        class="mt-1 sm:mt-1.5 pointer-events-auto flex items-center justify-center gap-1.5 sm:gap-2"
                     >
                         <div
-                            class="flex items-center gap-1.5 bg-red-50 px-2 py-0.5 rounded-md border border-red-100 shadow-sm"
+                            class="flex items-center gap-1 sm:gap-1.5 bg-red-50 px-1.5 sm:px-2 py-0.5 rounded-md border border-red-100 shadow-sm"
                         >
                             <svg
-                                class="w-3 h-3 text-red-500 animate-pulse"
+                                class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-red-500 animate-pulse"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -182,24 +182,24 @@
                             </svg>
                             <span
                                 id="timerDisplay"
-                                class="text-[10px] font-black text-red-600 font-mono tracking-widest"
+                                class="text-[9px] sm:text-[10px] font-black text-red-600 font-mono tracking-widest"
                                 >00:00:00</span
                             >
                         </div>
                         <span
-                            class="text-[9px] font-black text-blue-700 uppercase tracking-widest bg-blue-100 px-2 py-1 rounded-md border border-blue-200 shadow-sm"
+                            class="text-[8px] sm:text-[9px] font-black text-blue-700 uppercase tracking-widest bg-blue-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md border border-blue-200 shadow-sm whitespace-nowrap"
                         >
-                            No. Soal: <span id="lblSoalNoTop">1</span>
+                            Soal: <span id="lblSoalNoTop">1</span>
                         </span>
                     </div>
                 </div>
 
                 {{-- Kanan: Indikator Voice --}}
                 <div
-                    class="flex items-center justify-end gap-3 relative z-10 w-1/3 shrink-0"
+                    class="flex items-center justify-end gap-1.5 sm:gap-3 justify-self-end shrink-0"
                 >
                     <div
-                        class="flex items-center gap-[2px] h-4 w-10 justify-center"
+                        class="flex items-center gap-[2px] h-4 w-6 sm:w-10 justify-center"
                         id="wave-container"
                     >
                         <div
@@ -226,11 +226,13 @@
             {{-- AREA KIRI: Konten Soal + Footer Navigasi --}}
             <div class="flex-1 flex flex-col h-full bg-slate-50/50 relative">
                 <div
-                    class="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-8 lg:p-12"
+                    class="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-4 md:p-8 lg:p-12"
                 >
-                    <div class="w-full max-w-5xl mx-auto space-y-8">
+                    <div
+                        class="w-full max-w-5xl mx-auto space-y-4 sm:space-y-8"
+                    >
                         <div
-                            class="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden relative min-h-[500px] flex flex-col transition-all duration-500"
+                            class="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden relative min-h-[400px] sm:min-h-[500px] flex flex-col transition-all duration-500"
                         >
                             {{-- Loader --}}
                             <div
@@ -238,45 +240,50 @@
                                 class="absolute inset-0 bg-white/95 backdrop-blur-md z-50 flex flex-col items-center justify-center transition-all"
                             >
                                 <div
-                                    class="w-12 h-12 border-4 border-slate-100 border-t-blue-600 rounded-full animate-spin mb-4"
+                                    class="w-10 h-10 sm:w-12 sm:h-12 border-4 border-slate-100 border-t-blue-600 rounded-full animate-spin mb-4"
                                 ></div>
                                 <span
-                                    class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]"
+                                    class="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]"
                                     >Memproses Soal...</span
                                 >
                             </div>
 
-                            <div class="p-8 md:p-12 flex-1 flex flex-col">
+                            <div
+                                class="p-5 sm:p-8 md:p-12 flex-1 flex flex-col"
+                            >
                                 <div
-                                    class="flex justify-between items-center mb-8 pb-6 border-b border-slate-100"
+                                    class="flex justify-between items-center mb-5 sm:mb-8 pb-4 sm:pb-6 border-b border-slate-100"
                                 >
                                     <h3
-                                        class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-3"
+                                        class="text-base sm:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2 sm:gap-3"
                                     >
                                         <span
-                                            class="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center text-xl shadow-md shadow-blue-200"
+                                            class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 text-white rounded-[0.8rem] sm:rounded-xl flex items-center justify-center text-lg sm:text-xl shadow-md shadow-blue-200"
                                             id="lblSoalNoLarge"
                                             >1</span
                                         >
-                                        Pertanyaan
+                                        <span class="hidden sm:inline"
+                                            >Pertanyaan</span
+                                        >
+                                        <span class="sm:hidden">Soal</span>
                                     </h3>
                                     <span
                                         id="lblTipeSoal"
-                                        class="px-4 py-2 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black uppercase tracking-widest border border-slate-200"
+                                        class="px-3 sm:px-4 py-1.5 sm:py-2 bg-slate-100 text-slate-500 rounded-lg text-[9px] sm:text-[10px] font-black uppercase tracking-widest border border-slate-200 text-center"
                                         >Pilihan Ganda</span
                                     >
                                 </div>
 
                                 <div
                                     id="teksSoal"
-                                    class="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed mb-12"
+                                    class="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 leading-relaxed mb-8 sm:mb-12"
                                 >
                                     {{-- Konten Soal Di-render Disini --}}
                                 </div>
 
                                 <div
                                     id="opsiContainer"
-                                    class="grid grid-cols-1 gap-4 mt-auto"
+                                    class="grid grid-cols-1 gap-3 sm:gap-4 mt-auto"
                                 >
                                     {{-- Opsi Jawaban Di-render Disini --}}
                                 </div>
@@ -287,25 +294,25 @@
 
                 {{-- FOOTER NAV (Fixed di bawah area soal) --}}
                 <footer
-                    class="bg-white/90 backdrop-blur-md border-t border-slate-200 p-4 shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.02)] z-30"
+                    class="bg-white/90 backdrop-blur-md border-t border-slate-200 p-3 sm:p-4 shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.02)] z-30"
                 >
                     <div
-                        class="w-full max-w-5xl mx-auto flex items-center justify-between gap-4"
+                        class="w-full max-w-5xl mx-auto flex items-center justify-between gap-2 sm:gap-4"
                     >
                         <button
                             onclick="navPrev()"
                             id="btnPrev"
-                            class="flex-1 md:flex-none px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
+                            class="flex-1 md:flex-none px-0 sm:px-8 py-3.5 sm:py-4 bg-slate-100 text-slate-600 rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest hover:bg-slate-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 text-center"
                         >
                             Sebelumnya
                         </button>
 
                         <button
                             onclick="openMobileNav()"
-                            class="lg:hidden p-4 bg-blue-50 text-blue-600 rounded-2xl border border-blue-100 hover:bg-blue-100 transition-colors active:scale-95 relative"
+                            class="lg:hidden p-3.5 sm:p-4 bg-blue-50 text-blue-600 rounded-xl sm:rounded-2xl border border-blue-100 hover:bg-blue-100 transition-colors active:scale-95 relative shrink-0"
                         >
                             <svg
-                                class="w-6 h-6"
+                                class="w-5 h-5 sm:w-6 sm:h-6"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -322,7 +329,7 @@
                         <button
                             onclick="navNext()"
                             id="btnNext"
-                            class="flex-1 md:flex-none px-8 py-4 bg-blue-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-blue-600/30 hover:bg-blue-700 transition-all active:scale-95"
+                            class="flex-1 md:flex-none px-0 sm:px-8 py-3.5 sm:py-4 bg-blue-600 text-white rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest shadow-lg shadow-blue-600/30 hover:bg-blue-700 transition-all active:scale-95 text-center"
                         >
                             <span id="txtBtnNext">Selanjutnya</span>
                         </button>
@@ -398,7 +405,7 @@
 
             <div
                 id="mobileNavContent"
-                class="absolute bottom-0 left-0 w-full bg-white rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] transform translate-y-full transition-transform duration-300 ease-out flex flex-col max-h-[85vh]"
+                class="absolute bottom-0 left-0 w-full bg-white rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] transform translate-y-full transition-transform duration-300 ease-out flex flex-col max-h-[85vh] pb-6 sm:pb-0"
             >
                 <div
                     class="pt-4 pb-2 flex flex-col items-center border-b border-slate-100 shrink-0 bg-white rounded-t-[2rem]"
@@ -448,7 +455,7 @@
                 <div class="p-6 bg-white border-t border-slate-100 shrink-0">
                     <button
                         onclick="konfirmasiSelesai()"
-                        class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] shadow-lg hover:bg-blue-600 transition-colors active:scale-95"
+                        class="w-full py-4 bg-slate-900 text-white rounded-xl sm:rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] shadow-lg hover:bg-blue-600 transition-colors active:scale-95"
                     >
                         Kumpulkan Ujian
                     </button>
@@ -573,19 +580,19 @@
                         const letter = ['A', 'B', 'C', 'D', 'E'][idx];
 
                         const div = document.createElement('div');
-                        div.className = `option-item p-4 sm:p-5 rounded-2xl border-2 cursor-pointer flex items-center gap-4 transition-all relative overflow-hidden ${isSelected ? 'border-blue-600 bg-blue-50 z-10' : 'border-slate-200 hover:border-blue-300 bg-white hover:bg-slate-50'}`;
+                        div.className = `option-item p-4 sm:p-5 rounded-2xl border-2 cursor-pointer flex items-center gap-3 sm:gap-4 transition-all relative overflow-hidden ${isSelected ? 'border-blue-600 bg-blue-50 z-10' : 'border-slate-200 hover:border-blue-300 bg-white hover:bg-slate-50'}`;
                         div.onclick = () => pilihJawaban(opt.id, idx);
 
                         div.innerHTML = `
                             ${isSelected ? '<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-blue-600"></div>' : ''}
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center font-black transition-colors ${isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'}">${letter}</div>
-                            <div class="flex-1 font-bold text-base sm:text-lg ${isSelected ? 'text-blue-900' : 'text-slate-700'}">${opt.teks_opsi}</div>
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center font-black transition-colors shrink-0 ${isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'}">${letter}</div>
+                            <div class="flex-1 font-bold text-sm sm:text-base md:text-lg ${isSelected ? 'text-blue-900' : 'text-slate-700'}">${opt.teks_opsi}</div>
                         `;
                         container.appendChild(div);
                     });
                 } else {
                     const txt = document.createElement('textarea');
-                    txt.className = "w-full p-6 bg-slate-50 border-2 border-slate-200 rounded-[2rem] h-64 font-bold text-slate-700 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 focus:bg-white transition-all resize-y";
+                    txt.className = "w-full p-4 sm:p-6 bg-slate-50 border-2 border-slate-200 rounded-xl sm:rounded-[2rem] h-48 sm:h-64 font-bold text-sm sm:text-base text-slate-700 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 focus:bg-white transition-all resize-y";
                     txt.placeholder = "Tulis jawaban esai Anda di sini...";
                     txt.value = answers[q.id] || '';
                     txt.oninput = (e) => { answers[q.id] = e.target.value; renderNavigasi(); };
@@ -598,11 +605,11 @@
                 const txtBtnNext = document.getElementById('txtBtnNext');
 
                 if (currentIndex === questions.length - 1) {
-                    btnNext.className = "flex-1 md:flex-none px-8 py-4 bg-emerald-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-600/30 hover:bg-emerald-700 transition-all active:scale-95";
+                    btnNext.className = "flex-1 md:flex-none px-0 sm:px-8 py-3.5 sm:py-4 bg-emerald-600 text-white rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-600/30 hover:bg-emerald-700 transition-all active:scale-95 text-center";
                     txtBtnNext.innerText = "Kumpulkan";
                     btnNext.onclick = konfirmasiSelesai;
                 } else {
-                    btnNext.className = "flex-1 md:flex-none px-8 py-4 bg-blue-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-blue-600/30 hover:bg-blue-700 transition-all active:scale-95";
+                    btnNext.className = "flex-1 md:flex-none px-0 sm:px-8 py-3.5 sm:py-4 bg-blue-600 text-white rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest shadow-lg shadow-blue-600/30 hover:bg-blue-700 transition-all active:scale-95 text-center";
                     txtBtnNext.innerText = "Selanjutnya";
                     btnNext.onclick = navNext;
                 }

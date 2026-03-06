@@ -365,7 +365,7 @@
                         const passSpoken = passFix.split("").join(" ");
 
                         bicara(
-                            `Kata sandi anda adalah ${passSpoken}. Apakah sudah benar?`,
+                            `Kata sandi anda adalah ${passSpoken}. Apakah sudah benar? Sebutkan Benar atau Ulangi`,
                             () => {
                                 dengar((konf) => {
                                     const jawab = konf.toLowerCase();

@@ -258,15 +258,15 @@
             ></div>
 
             <header
-                class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-8 py-6 sticky top-0 z-30"
+                class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 sticky top-0 z-30"
             >
                 <div
-                    class="max-w-7xl mx-auto flex items-center justify-between h-14"
+                    class="max-w-7xl mx-auto flex items-center justify-between h-10 sm:h-14"
                 >
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2 sm:gap-4">
                         <button
                             onclick="toggleSidebar()"
-                            class="lg:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer"
+                            class="lg:hidden p-1.5 sm:p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer"
                         >
                             <svg
                                 class="w-6 h-6"
@@ -284,7 +284,7 @@
                         </button>
                         <div>
                             <h2
-                                class="text-2xl font-extrabold text-slate-900 tracking-tight"
+                                class="text-lg sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-none"
                             >
                                 {{-- Menampilkan Hanya Kata Pertama dari Nama Lengkap --}}
                                 @php
@@ -293,22 +293,22 @@
                                 @endphp
                                 Halo, {{ $namaPanggilan }}
                             </h2>
-                            <p class="text-sm font-medium text-slate-500">
+                            <p class="text-[9px] sm:text-sm font-medium text-slate-500 mt-1">
                                 Siap untuk belajar hari ini?
                             </p>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2 sm:gap-4">
                         <div
-                            class="flex items-center gap-3 pr-4 border-r border-slate-200"
+                            class="flex items-center gap-1 sm:gap-3 pr-2 sm:pr-4 border-r border-slate-200"
                         >
                             <button
                                 onclick="navigasiKe(7)"
-                                class="p-2 text-slate-400 hover:text-blue-600 transition-all relative cursor-pointer"
+                                class="p-1.5 sm:p-2 text-slate-400 hover:text-blue-600 transition-all relative cursor-pointer"
                             >
                                 <svg
-                                    class="w-6 h-6"
+                                    class="w-5 h-5 sm:w-6 sm:h-6"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -321,15 +321,15 @@
                                     ></path>
                                 </svg>
                                 <span
-                                    class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"
+                                    class="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"
                                 ></span>
                             </button>
                             <button
                                 onclick="navigasiKe(9)"
-                                class="p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer"
+                                class="hidden sm:block p-1.5 sm:p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer relative"
                             >
                                 <svg
-                                    class="w-6 h-6"
+                                    class="w-5 h-5 sm:w-6 sm:h-6"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -337,31 +337,25 @@
                                     <path
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
-                                        stroke-width="2"
+                                        stroke-width="2.5"
                                         d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                     ></path>
                                 </svg>
                             </button>
                         </div>
 
-                        <div class="hidden md:flex items-center gap-3 pl-4">
+                        <div class="flex items-center gap-1.5 sm:gap-3 pl-1 sm:pl-4">
                             <div
                                 id="wave-container"
-                                class="flex items-center gap-[2px] h-4 w-10 justify-center"
+                                class="flex items-center gap-[2px] h-4 w-6 sm:w-10 justify-center"
                             >
-                                <div
-                                    class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"
-                                ></div>
-                                <div
-                                    class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"
-                                ></div>
-                                <div
-                                    class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"
-                                ></div>
+                                <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
+                                <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
+                                <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
                             </div>
                             <span
                                 id="status-desc"
-                                class="text-[9px] font-black text-slate-400 uppercase tracking-widest"
+                                class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest"
                                 >Siap</span
                             >
                         </div>
@@ -369,35 +363,33 @@
                 </div>
             </header>
 
-            <div class="p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-10">
+            <div class="p-4 sm:p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-8 sm:space-y-10">
                 <div
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                    class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6"
                 >
                     <div
                         onclick="navigasiKe(1)"
                         data-aos="fade-up"
                         data-aos-delay="100"
-                        class="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all border border-slate-100 cursor-pointer relative overflow-hidden h-full"
+                        class="group bg-white p-4 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all border border-slate-100 cursor-pointer relative overflow-hidden h-full flex flex-col justify-between"
                     >
                         <div
-                            class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-[100%] -mr-6 -mt-6 transition-transform group-hover:scale-110"
+                            class="absolute top-0 right-0 w-16 h-16 sm:w-24 sm:h-24 bg-blue-50 rounded-bl-[100%] -mr-4 -mt-4 sm:-mr-6 sm:-mt-6 transition-transform group-hover:scale-110"
                         ></div>
-                        <div
-                            class="relative z-10 flex flex-col h-full justify-between"
-                        >
+                        <div class="relative z-10 flex flex-col h-full justify-between">
                             <div
-                                class="w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-6 font-black text-xl shadow-lg shadow-blue-200"
+                                class="w-10 h-10 sm:w-14 sm:h-14 bg-blue-600 text-white rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-6 font-black text-lg sm:text-xl shadow-lg shadow-blue-200"
                             >
                                 1
                             </div>
                             <div>
                                 <h3
-                                    class="text-xl font-black text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors leading-tight"
+                                    class="text-sm sm:text-xl font-black text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors leading-tight"
                                 >
                                     Daftar Mata Kuliah
                                 </h3>
                                 <p
-                                    class="text-sm text-slate-400 font-medium mt-2"
+                                    class="text-[10px] sm:text-sm text-slate-400 font-medium mt-1 sm:mt-2"
                                 >
                                     Lihat semua.
                                 </p>
@@ -409,27 +401,25 @@
                         onclick="navigasiKe(2)"
                         data-aos="fade-up"
                         data-aos-delay="200"
-                        class="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all border border-slate-100 cursor-pointer relative overflow-hidden h-full"
+                        class="group bg-white p-4 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all border border-slate-100 cursor-pointer relative overflow-hidden h-full flex flex-col justify-between"
                     >
                         <div
-                            class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-[100%] -mr-6 -mt-6 transition-transform group-hover:scale-110"
+                            class="absolute top-0 right-0 w-16 h-16 sm:w-24 sm:h-24 bg-emerald-50 rounded-bl-[100%] -mr-4 -mt-4 sm:-mr-6 sm:-mt-6 transition-transform group-hover:scale-110"
                         ></div>
-                        <div
-                            class="relative z-10 flex flex-col h-full justify-between"
-                        >
+                        <div class="relative z-10 flex flex-col h-full justify-between">
                             <div
-                                class="w-14 h-14 bg-emerald-500 text-white rounded-2xl flex items-center justify-center mb-6 font-black text-xl shadow-lg shadow-emerald-200"
+                                class="w-10 h-10 sm:w-14 sm:h-14 bg-emerald-500 text-white rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-6 font-black text-lg sm:text-xl shadow-lg shadow-emerald-200"
                             >
                                 2
                             </div>
                             <div>
                                 <h3
-                                    class="text-xl font-black text-slate-900 tracking-tight group-hover:text-emerald-600 transition-colors leading-tight"
+                                    class="text-sm sm:text-xl font-black text-slate-900 tracking-tight group-hover:text-emerald-600 transition-colors leading-tight"
                                 >
                                     Gabung Mata Kuliah
                                 </h3>
                                 <p
-                                    class="text-sm text-slate-400 font-medium mt-2"
+                                    class="text-[10px] sm:text-sm text-slate-400 font-medium mt-1 sm:mt-2"
                                 >
                                     Masukan kode.
                                 </p>
@@ -441,27 +431,25 @@
                         onclick="navigasiKe(3)"
                         data-aos="fade-up"
                         data-aos-delay="300"
-                        class="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all border border-slate-100 cursor-pointer relative overflow-hidden h-full"
+                        class="group bg-white p-4 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all border border-slate-100 cursor-pointer relative overflow-hidden h-full flex flex-col justify-between"
                     >
                         <div
-                            class="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-bl-[100%] -mr-6 -mt-6 transition-transform group-hover:scale-110"
+                            class="absolute top-0 right-0 w-16 h-16 sm:w-24 sm:h-24 bg-orange-50 rounded-bl-[100%] -mr-4 -mt-4 sm:-mr-6 sm:-mt-6 transition-transform group-hover:scale-110"
                         ></div>
-                        <div
-                            class="relative z-10 flex flex-col h-full justify-between"
-                        >
+                        <div class="relative z-10 flex flex-col h-full justify-between">
                             <div
-                                class="w-14 h-14 bg-orange-500 text-white rounded-2xl flex items-center justify-center mb-6 font-black text-xl shadow-lg shadow-orange-200"
+                                class="w-10 h-10 sm:w-14 sm:h-14 bg-orange-500 text-white rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-6 font-black text-lg sm:text-xl shadow-lg shadow-orange-200"
                             >
                                 3
                             </div>
                             <div>
                                 <h3
-                                    class="text-xl font-black text-slate-900 tracking-tight group-hover:text-orange-600 transition-colors leading-tight"
+                                    class="text-sm sm:text-xl font-black text-slate-900 tracking-tight group-hover:text-orange-600 transition-colors leading-tight"
                                 >
                                     Daftar Ujian
                                 </h3>
                                 <p
-                                    class="text-sm text-slate-400 font-medium mt-2"
+                                    class="text-[10px] sm:text-sm text-slate-400 font-medium mt-1 sm:mt-2"
                                 >
                                     Cek jadwal.
                                 </p>
@@ -473,70 +461,68 @@
                         onclick="navigasiKe(4)"
                         data-aos="fade-up"
                         data-aos-delay="400"
-                        class="group bg-gradient-to-br from-indigo-600 to-purple-700 p-8 rounded-[2.5rem] shadow-xl shadow-indigo-200 hover:shadow-2xl hover:-translate-y-1 transition-all text-white cursor-pointer relative overflow-hidden h-full"
+                        class="group bg-gradient-to-br from-indigo-600 to-purple-700 p-4 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-xl shadow-indigo-200 hover:shadow-2xl hover:-translate-y-1 transition-all text-white cursor-pointer relative overflow-hidden h-full flex flex-col justify-between"
                     >
-                        <div
-                            class="relative z-10 flex flex-col h-full justify-between"
-                        >
+                        <div class="relative z-10 flex flex-col h-full justify-between">
                             <div
-                                class="w-14 h-14 bg-white/20 border border-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-6 font-black text-xl"
+                                class="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 border border-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-6 font-black text-lg sm:text-xl"
                             >
                                 4
                             </div>
                             <div>
                                 <h3
-                                    class="text-xl font-black tracking-tight leading-tight"
+                                    class="text-sm sm:text-xl font-black tracking-tight leading-tight"
                                 >
                                     Gabung Ujian
                                 </h3>
                                 <p
-                                    class="text-sm text-indigo-100 font-medium mt-2"
+                                    class="text-[10px] sm:text-sm text-indigo-100 font-medium mt-1 sm:mt-2"
                                 >
                                     Input token.
                                 </p>
                             </div>
                         </div>
                         <div
-                            class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"
+                            class="absolute -right-6 -bottom-6 sm:-right-10 sm:-bottom-10 w-24 h-24 sm:w-40 sm:h-40 bg-white/10 rounded-full blur-2xl"
                         ></div>
                     </div>
                 </div>
 
                 <div data-aos="fade-up" data-aos-delay="500">
-                    <div class="flex items-center justify-between mb-6 px-2">
+                    <div class="flex items-center justify-between mb-4 sm:mb-6 px-1 sm:px-2">
                         <h3
-                            class="text-sm font-black text-slate-900 uppercase tracking-widest"
+                            class="text-xs sm:text-sm font-black text-slate-900 uppercase tracking-widest"
                         >
                             Sedang Dipelajari
                         </h3>
                         <span
-                            class="text-[10px] font-bold bg-slate-200 text-slate-600 px-3 py-1 rounded-full"
+                            class="text-[9px] sm:text-[10px] font-bold bg-slate-200 text-slate-600 px-2 sm:px-3 py-1 rounded-full"
                             >Semester {{ $mahasiswa->semester }}</span
                         >
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                         @foreach ($kelas as $index => $k)
                             <div
                                 onclick="navigasiKe({{ 11 + $index }})"
-                                class="group bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-lg transition-all cursor-pointer flex items-center gap-6"
+                                class="group bg-white p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-lg transition-all cursor-pointer flex items-center gap-4 sm:gap-6"
                             >
                                 <div
-                                    class="w-20 h-20 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center font-black text-2xl"
+                                    class="w-14 h-14 sm:w-20 sm:h-20 bg-blue-50 text-blue-600 rounded-xl sm:rounded-3xl flex items-center justify-center font-black text-lg sm:text-2xl shrink-0"
                                 >
                                     {{ 11 + $index }}
                                 </div>
 
-                                <div class="flex-1">
-                                    <h4 class="text-lg font-black text-slate-900">
+                                <div class="flex-1 min-w-0">
+                                    <h4 class="text-sm sm:text-lg font-black text-slate-900 truncate">
                                         {{ $k->mataKuliah->nama }}
                                     </h4>
 
-                                    <p class="text-xs font-bold text-slate-400 uppercase">
+                                    <p class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase truncate mt-0.5 sm:mt-0">
                                         {{ $k->dosen->nama }}
                                     </p>
 
-                                    <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mt-2">
+                                    <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mt-2 sm:mt-2">
                                         <div
                                             class="h-full bg-blue-500 rounded-full"
                                             style="width: {{ $k->progress ?? 0 }}%"
