@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
     <style>
-        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -29,11 +29,11 @@
         @keyframes cardPopUp { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     </style>
 </head>
-<body class="m-0 font-['Plus_Jakarta_Sans'] bg-slate-50 text-slate-800 antialiased h-screen flex overflow-hidden">
+<body class="m-0 font-['Plus_Jakarta_Sans'] bg-slate-50 text-slate-800 antialiased h-[100dvh] flex overflow-hidden">
     
     <div id="mobileBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden transition-opacity"></div>
 
-    <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-full transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shrink-0 shadow-2xl lg:shadow-none">
+    <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-[100dvh] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shrink-0 shadow-2xl lg:shadow-none">
         <div class="p-8 border-b border-slate-100 flex items-center gap-4 shrink-0">
             <img src="{{ asset('images/logo-ummi.png') }}" class="w-10 h-10 object-contain" alt="Logo" onerror="this.src='https://ui-avatars.com/api/?name=UMMI&background=0D8ABC&color=fff'" />
             <div>
@@ -88,7 +88,7 @@
         </nav>
 
         <div class="p-6 border-t border-slate-100 shrink-0">
-            <a href="{{ route('logout') }}" class="w-full p-4 flex items-center justify-between text-red-600 font-bold bg-red-50 rounded-2xl hover:bg-red-100 transition-all border border-red-100">
+            <a href="{{ route('logout.dosen') }}" class="w-full p-4 flex items-center justify-between text-red-600 font-bold bg-red-50 rounded-2xl hover:bg-red-100 transition-all border border-red-100">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                     <span>Keluar</span>
@@ -97,22 +97,22 @@
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col h-full relative min-w-0 bg-[#f8fafc] overflow-y-auto custom-scrollbar">
+    <main class="flex-1 flex flex-col h-[100dvh] relative min-w-0 bg-[#f8fafc] overflow-y-auto custom-scrollbar">
         
-        <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-4 sm:py-6 sticky top-0 z-30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div class="flex items-center gap-3 sm:gap-4 h-10 sm:h-14">
-                <button onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer">
+        <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 sticky top-0 z-20 shrink-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+            <div class="flex items-center gap-3 sm:gap-4 w-full sm:w-auto h-10 sm:h-14">
+                <button onclick="toggleSidebar()" class="lg:hidden p-1.5 sm:p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer shrink-0">
                     <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
-                <div>
-                    <h2 class="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">Input Nilai Kelas</h2>
-                    <p class="text-[9px] sm:text-sm font-medium text-slate-500">
+                <div class="min-w-0 flex-1">
+                    <h2 class="text-base sm:text-2xl font-black text-slate-900 tracking-tight truncate">Input Nilai Kelas</h2>
+                    <p class="text-[9px] sm:text-sm font-medium text-slate-500 truncate">
                         {{ isset($kelas) ? 'Kelas ' . $kelas->kode_kelas . ' - ' . ($kelas->mataKuliah->nama ?? '') : 'Pilih kelas untuk menilai' }}
                     </p>
                 </div>
             </div>
 
-            <div class="relative w-full sm:w-auto min-w-[250px]">
+            <div class="relative w-full sm:w-auto min-w-[200px] sm:min-w-[250px]">
                 <select onchange="changeClass(this.value)" class="appearance-none w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 sm:px-5 sm:py-3 font-bold text-xs sm:text-sm outline-none focus:ring-2 focus:ring-blue-500 shadow-sm text-slate-700 cursor-pointer">
                     @if(isset($listKelas) && $listKelas->count() > 0)
                         @foreach($listKelas as $k)
@@ -130,10 +130,10 @@
             </div>
         </header>
 
-        <div class="p-4 sm:p-6 lg:p-10 w-full mb-10">
+        <div class="p-3 sm:p-6 lg:p-10 w-full mb-10 pb-32">
             
             @if(session('success'))
-                <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl font-bold text-sm safe-fade-in">
+                <div class="mb-4 sm:mb-6 p-3 sm:p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl font-bold text-xs sm:text-sm safe-fade-in shadow-sm">
                     {{ session('success') }}
                 </div>
             @endif
@@ -150,43 +150,42 @@
                 <div class="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden safe-fade-in w-full">
                     
                     <div class="p-4 sm:p-6 border-b border-slate-100 flex flex-col xl:flex-row justify-between items-start xl:items-center bg-slate-50/50 gap-4 sm:gap-5">
-                        <div>
+                        <div class="w-full xl:w-auto">
                             <h3 class="font-black text-slate-700 uppercase tracking-widest text-[10px] sm:text-xs mb-2">
                                 Form Penilaian ({{ $kelas->mahasiswa->count() }} Mahasiswa)
                             </h3>
-                            <span id="badgeInfoBobot" class="inline-block text-[9px] sm:text-[10px] font-bold text-blue-600 bg-blue-50 px-2 sm:px-2.5 py-1 rounded-lg border border-blue-100 break-words">
-                                Bobot Saat Ini: Absen <span id="txtA">{{ $bobot->absen ?? 10 }}</span>% | Tugas <span id="txtT">{{ $bobot->tugas ?? 20 }}</span>% | UTS <span id="txtUts">{{ $bobot->uts ?? 30 }}</span>% | UAS <span id="txtUas">{{ $bobot->uas ?? 40 }}</span>%
+                            <span id="badgeInfoBobot" class="inline-block text-[9px] sm:text-[10px] font-bold text-blue-600 bg-blue-50 px-2 sm:px-2.5 py-1 rounded-lg border border-blue-100 break-words w-full sm:w-auto">
+                                Bobot: Absen <span id="txtA">{{ $bobot->absen ?? 10 }}</span>% | Tugas <span id="txtT">{{ $bobot->tugas ?? 20 }}</span>% | UTS <span id="txtUts">{{ $bobot->uts ?? 30 }}</span>% | UAS <span id="txtUas">{{ $bobot->uas ?? 40 }}</span>%
                             </span>
                         </div>
 
-                        <div class="flex flex-row flex-wrap gap-2 sm:gap-3 w-full xl:w-auto">
-                            <button type="button" onclick="openModalBobot()" class="cursor-pointer flex-1 sm:flex-none bg-white border border-slate-200 px-3 py-2 sm:px-5 sm:py-2.5 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all text-slate-600 shadow-sm flex items-center justify-center gap-1.5 sm:gap-2">
+                        <div class="flex flex-row flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 w-full xl:w-auto">
+                            <button type="button" onclick="openModalBobot()" class="cursor-pointer flex-1 sm:flex-none bg-white border border-slate-200 px-3 py-2.5 sm:px-5 sm:py-2.5 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all text-slate-600 shadow-sm flex items-center justify-center gap-1.5 sm:gap-2 text-center leading-tight">
                                 Atur Bobot
                             </button>
                             
-                            {{-- TOMBOL EXPORT SUDAH DITAMBAHKAN DI SINI SEBAGAI LINK (A TAG) --}}
-                            <a href="{{ route('dosen.grades.export', $kelas->id) }}" class="cursor-pointer flex-1 sm:flex-none bg-emerald-50 border border-emerald-200 px-3 py-2 sm:px-5 sm:py-2.5 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-emerald-100 transition-all text-emerald-600 shadow-sm flex items-center justify-center gap-1.5 sm:gap-2">
+                            <a href="{{ route('dosen.grades.export', $kelas->id) }}" class="cursor-pointer flex-1 sm:flex-none bg-emerald-50 border border-emerald-200 px-3 py-2.5 sm:px-5 sm:py-2.5 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-emerald-100 transition-all text-emerald-600 shadow-sm flex items-center justify-center gap-1.5 sm:gap-2 text-center leading-tight">
                                 Export Excel
                             </a>
 
-                            <button type="submit" class="cursor-pointer w-full sm:w-auto bg-blue-600 text-white px-5 py-2.5 sm:px-7 sm:py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
+                            <button type="submit" class="cursor-pointer w-full sm:w-auto bg-blue-600 text-white px-4 py-3 sm:px-7 sm:py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
                                 Simpan Nilai & Rekap
                             </button>
                         </div>
                     </div>
 
-                    <div class="overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap">
+                    <div class="overflow-x-auto custom-scrollbar w-full">
+                        <table class="w-full text-left text-xs sm:text-sm whitespace-nowrap min-w-[700px]">
                             <thead class="bg-slate-50 border-b border-slate-100 text-slate-500 uppercase tracking-widest text-[9px] sm:text-[10px]">
                                 <tr>
-                                    <th class="px-4 py-4 sm:px-6 sm:py-5 font-black w-10">#</th>
-                                    <th class="px-3 py-4 sm:px-4 sm:py-5 font-black min-w-[150px] sm:min-w-[200px]">NIM & Nama</th>
-                                    <th class="px-2 py-4 sm:px-3 sm:py-5 font-black text-center w-16 sm:w-24">Absen</th>
-                                    <th class="px-2 py-4 sm:px-3 sm:py-5 font-black text-center w-16 sm:w-24">Tugas</th>
-                                    <th class="px-2 py-4 sm:px-3 sm:py-5 font-black text-center w-16 sm:w-24">UTS</th>
-                                    <th class="px-2 py-4 sm:px-3 sm:py-5 font-black text-center w-16 sm:w-24">UAS</th>
-                                    <th class="px-4 py-4 sm:px-6 sm:py-5 font-black text-center w-24 sm:w-28">Total Akhir</th>
-                                    <th class="px-3 py-4 sm:px-4 sm:py-5 font-black text-center w-20 sm:w-24">Huruf Mutu</th>
+                                    <th class="px-4 py-3 sm:px-6 sm:py-5 font-black w-10">#</th>
+                                    <th class="px-3 py-3 sm:px-4 sm:py-5 font-black min-w-[150px] sm:min-w-[200px]">NIM & Nama</th>
+                                    <th class="px-2 py-3 sm:px-3 sm:py-5 font-black text-center w-16 sm:w-24">Absen</th>
+                                    <th class="px-2 py-3 sm:px-3 sm:py-5 font-black text-center w-16 sm:w-24">Tugas</th>
+                                    <th class="px-2 py-3 sm:px-3 sm:py-5 font-black text-center w-16 sm:w-24">UTS</th>
+                                    <th class="px-2 py-3 sm:px-3 sm:py-5 font-black text-center w-16 sm:w-24">UAS</th>
+                                    <th class="px-3 py-3 sm:px-6 sm:py-5 font-black text-center w-20 sm:w-28">Total Akhir</th>
+                                    <th class="px-3 py-3 sm:px-4 sm:py-5 font-black text-center w-20 sm:w-24">Huruf Mutu</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100">
@@ -195,7 +194,7 @@
                                     <tr class="hover:bg-blue-50/30 transition-colors group">
                                         <td class="px-4 py-3 sm:px-6 sm:py-4 font-bold text-slate-400">{{ $i + 1 }}</td>
                                         <td class="px-3 py-3 sm:px-4 sm:py-4">
-                                            <div class="font-bold text-slate-800 text-xs sm:text-sm">{{ $mhs->nama }}</div>
+                                            <div class="font-bold text-slate-800 text-[11px] sm:text-sm truncate">{{ $mhs->nama }}</div>
                                             <div class="font-mono text-slate-500 font-bold text-[9px] sm:text-[10px] mt-0.5">{{ $mhs->nim }}</div>
                                         </td>
                                         <td class="px-2 py-3 sm:px-3 sm:py-4 text-center">
@@ -210,7 +209,7 @@
                                         <td class="px-2 py-3 sm:px-3 sm:py-4 text-center">
                                             <input type="text" pattern="\d*" maxlength="3" name="grades[{{ $mhs->id }}][uas]" id="uas_{{ $mhs->id }}" value="{{ $nilaiMhs->uas ?? '' }}" class="w-12 sm:w-16 bg-white border border-slate-200 rounded-lg p-2 text-center font-bold text-slate-700 text-xs sm:text-sm focus:ring-2 focus:ring-blue-400 outline-none shadow-sm" onkeypress="return isNumberKey(event);" oninput="calculate('{{ $mhs->id }}')"/>
                                         </td>
-                                        <td class="px-4 py-3 sm:px-6 sm:py-4 text-center">
+                                        <td class="px-3 py-3 sm:px-6 sm:py-4 text-center">
                                             <div id="total_{{ $mhs->id }}" class="font-black text-xs sm:text-sm text-slate-400">{{ $nilaiMhs->nilai_akhir ?? '--' }}</div>
                                         </td>
                                         <td class="px-3 py-3 sm:px-4 sm:py-4 text-center">
@@ -218,7 +217,7 @@
                                         </td>
                                     </tr>
                                 @empty
-                                    <tr><td colspan="8" class="text-center py-10 text-slate-500 font-bold">Belum ada mahasiswa di kelas ini.</td></tr>
+                                    <tr><td colspan="8" class="text-center py-10 text-slate-500 font-bold text-xs sm:text-sm">Belum ada mahasiswa di kelas ini.</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -226,12 +225,12 @@
                 </div>
             </form>
             @else
-                <div class="text-center p-12 bg-white rounded-[2rem] border border-slate-200 shadow-sm mt-10 safe-fade-in">
-                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
-                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                <div class="text-center p-8 sm:p-12 bg-white rounded-[1.5rem] sm:rounded-[2rem] border border-slate-200 shadow-sm mt-6 sm:mt-10 safe-fade-in mx-1 sm:mx-0">
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 text-slate-300">
+                        <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                     </div>
-                    <h3 class="font-black text-slate-800 text-lg mb-1">Pilih Kelas Terlebih Dahulu</h3>
-                    <p class="text-slate-500 font-medium text-sm">Gunakan dropdown di sudut kanan atas untuk memilih kelas yang ingin dinilai.</p>
+                    <h3 class="font-black text-slate-800 text-base sm:text-lg mb-1">Pilih Kelas Terlebih Dahulu</h3>
+                    <p class="text-slate-500 font-medium text-xs sm:text-sm">Gunakan dropdown di sudut kanan atas untuk memilih kelas yang ingin dinilai.</p>
                 </div>
             @endif
         </div>
@@ -239,44 +238,47 @@
 
     {{-- MODAL UBAH BOBOT SIMULASI --}}
     @if(isset($kelas) && $kelas)
-    <div id="modalBobot" class="fixed inset-0 z-[60] hidden bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
-        <div class="bg-white rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden modal-card-enter">
-            <div class="p-5 sm:p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 class="font-black text-slate-800 text-base sm:text-lg">Atur Bobot Penilaian</h3>
-                <button type="button" onclick="closeModalBobot()" class="cursor-pointer text-slate-400 hover:text-red-500 transition-colors">
+    <div id="modalBobot" class="fixed inset-0 z-[60] hidden bg-slate-900/50 backdrop-blur-sm items-center justify-center p-4 transition-opacity">
+        <div class="bg-white rounded-[1.5rem] sm:rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden modal-card-enter flex flex-col max-h-[90vh]">
+            <div class="p-4 sm:p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
+                <h3 class="font-black text-slate-800 text-sm sm:text-lg">Atur Bobot Penilaian</h3>
+                <button type="button" onclick="closeModalBobot()" class="cursor-pointer text-slate-400 hover:text-red-500 transition-colors p-1">
                     <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
-            <div class="p-5 sm:p-6 space-y-5">
-                <div class="flex justify-between items-center bg-blue-50 p-3 rounded-xl border border-blue-100">
-                    <span class="text-[10px] sm:text-xs font-bold text-blue-800">Total Persentase:</span>
-                    <span id="modalTotalBadge" class="px-2 py-1 bg-blue-600 text-white text-[10px] sm:text-xs font-black rounded-md">100%</span>
+            
+            <div class="p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto custom-scrollbar">
+                <div class="flex justify-between items-center bg-blue-50 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border border-blue-100">
+                    <span class="text-[9px] sm:text-[10px] md:text-xs font-bold text-blue-800">Total Persentase:</span>
+                    <span id="modalTotalBadge" class="px-2 py-1 bg-blue-600 text-white text-[9px] sm:text-[10px] md:text-xs font-black rounded-md">100%</span>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                        <label class="block text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Absensi (%)</label>
-                        <input type="text" pattern="\d*" maxlength="3" id="modalAbsen" value="{{ $bobot->absen ?? 10 }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 sm:p-3 font-bold text-slate-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none" onkeypress="return isNumberKey(event);" oninput="checkModalTotal()"/>
+                        <label class="block text-[8px] sm:text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5">Absensi (%)</label>
+                        <input type="text" pattern="\d*" maxlength="3" id="modalAbsen" value="{{ $bobot->absen ?? 10 }}" class="w-full bg-slate-50 border border-slate-200 rounded-lg sm:rounded-xl p-2 sm:p-2.5 md:p-3 font-bold text-slate-700 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none" onkeypress="return isNumberKey(event);" oninput="checkModalTotal()"/>
                     </div>
                     <div>
-                        <label class="block text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Tugas (%)</label>
-                        <input type="text" pattern="\d*" maxlength="3" id="modalTugas" value="{{ $bobot->tugas ?? 20 }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 sm:p-3 font-bold text-slate-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none" onkeypress="return isNumberKey(event);" oninput="checkModalTotal()"/>
+                        <label class="block text-[8px] sm:text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5">Tugas (%)</label>
+                        <input type="text" pattern="\d*" maxlength="3" id="modalTugas" value="{{ $bobot->tugas ?? 20 }}" class="w-full bg-slate-50 border border-slate-200 rounded-lg sm:rounded-xl p-2 sm:p-2.5 md:p-3 font-bold text-slate-700 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none" onkeypress="return isNumberKey(event);" oninput="checkModalTotal()"/>
                     </div>
                     <div>
-                        <label class="block text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">UTS (%)</label>
-                        <input type="text" pattern="\d*" maxlength="3" id="modalUts" value="{{ $bobot->uts ?? 30 }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 sm:p-3 font-bold text-slate-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none" onkeypress="return isNumberKey(event);" oninput="checkModalTotal()"/>
+                        <label class="block text-[8px] sm:text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5">UTS (%)</label>
+                        <input type="text" pattern="\d*" maxlength="3" id="modalUts" value="{{ $bobot->uts ?? 30 }}" class="w-full bg-slate-50 border border-slate-200 rounded-lg sm:rounded-xl p-2 sm:p-2.5 md:p-3 font-bold text-slate-700 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none" onkeypress="return isNumberKey(event);" oninput="checkModalTotal()"/>
                     </div>
                     <div>
-                        <label class="block text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">UAS (%)</label>
-                        <input type="text" pattern="\d*" maxlength="3" id="modalUas" value="{{ $bobot->uas ?? 40 }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 sm:p-3 font-bold text-slate-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none" onkeypress="return isNumberKey(event);" oninput="checkModalTotal()"/>
+                        <label class="block text-[8px] sm:text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1 sm:mb-1.5">UAS (%)</label>
+                        <input type="text" pattern="\d*" maxlength="3" id="modalUas" value="{{ $bobot->uas ?? 40 }}" class="w-full bg-slate-50 border border-slate-200 rounded-lg sm:rounded-xl p-2 sm:p-2.5 md:p-3 font-bold text-slate-700 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none" onkeypress="return isNumberKey(event);" oninput="checkModalTotal()"/>
                     </div>
                 </div>
             </div>
-            <div class="p-5 sm:p-6 border-t border-slate-100 flex flex-col sm:flex-row gap-3 bg-slate-50">
-                <button type="button" onclick="closeModalBobot()" class="cursor-pointer flex-1 px-4 py-2.5 sm:py-3 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-100 transition-colors text-xs sm:text-sm">Batal</button>
-                <button type="button" onclick="saveBobot()" id="btnSaveBobot" class="cursor-pointer flex-1 px-4 py-2.5 sm:py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors text-xs sm:text-sm shadow-md">Terapkan Simulasi</button>
+            
+            <div class="p-4 sm:p-5 md:p-6 border-t border-slate-100 flex flex-col sm:flex-row gap-2 sm:gap-3 bg-slate-50 shrink-0">
+                <button type="button" onclick="closeModalBobot()" class="cursor-pointer flex-1 px-3 py-2.5 sm:px-4 sm:py-3 bg-white border border-slate-200 text-slate-600 font-bold rounded-lg sm:rounded-xl hover:bg-slate-100 transition-colors text-[10px] sm:text-xs md:text-sm uppercase tracking-widest">Batal</button>
+                <button type="button" onclick="saveBobot()" id="btnSaveBobot" class="cursor-pointer flex-1 px-3 py-2.5 sm:px-4 sm:py-3 bg-blue-600 text-white font-bold rounded-lg sm:rounded-xl hover:bg-blue-700 transition-colors text-[10px] sm:text-xs md:text-sm uppercase tracking-widest shadow-md">Terapkan Simulasi</button>
             </div>
         </div>
     </div>
+    @endif
 
     <script>
         // FUNGSI GANTI KELAS DARI DROPDOWN
@@ -292,7 +294,11 @@
             return true;
         }
 
-        document.addEventListener("DOMContentLoaded", () => calculateAll());
+        document.addEventListener("DOMContentLoaded", () => {
+            if(studentIds.length > 0) {
+                calculateAll();
+            }
+        });
 
         function toggleSidebar() {
             document.getElementById("sidebar").classList.toggle("-translate-x-full");
@@ -308,12 +314,12 @@
             document.getElementById("modalUas").value = document.getElementById("inputBobotUas").value;
             checkModalTotal();
             modal.classList.remove("hidden");
-            modal.classList.add("modal-enter");
+            modal.classList.add("flex");
         }
 
         function closeModalBobot() {
             modal.classList.add("hidden");
-            modal.classList.remove("modal-enter");
+            modal.classList.remove("flex");
         }
 
         function checkModalTotal() {
@@ -329,12 +335,12 @@
             badge.innerText = total + "%";
 
             if (total === 100) {
-                badge.className = "px-2 py-1 bg-emerald-500 text-white text-[10px] sm:text-xs font-black rounded-md";
+                badge.className = "px-2 py-1 bg-emerald-500 text-white text-[9px] sm:text-[10px] md:text-xs font-black rounded-md";
                 btnSave.disabled = false;
                 btnSave.classList.replace("bg-slate-400", "bg-blue-600");
                 btnSave.classList.replace("cursor-not-allowed", "hover:bg-blue-700");
             } else {
-                badge.className = "px-2 py-1 bg-red-500 text-white text-[10px] sm:text-xs font-black rounded-md";
+                badge.className = "px-2 py-1 bg-red-500 text-white text-[9px] sm:text-[10px] md:text-xs font-black rounded-md";
                 btnSave.disabled = true;
                 btnSave.classList.replace("bg-blue-600", "bg-slate-400");
                 btnSave.classList.replace("hover:bg-blue-700", "cursor-not-allowed");
@@ -418,6 +424,5 @@
             elHuruf.className = `px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[9px] sm:text-[10px] font-black uppercase border ${mutu.class}`;
         }
     </script>
-    @endif
 </body>
 </html>

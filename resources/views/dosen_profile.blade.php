@@ -21,15 +21,13 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
         .modal-active { display: flex !important; }
-        @keyframes popUp { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        .animate-pop { animation: popUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 </head>
-<body class="m-0 font-['Plus_Jakarta_Sans'] bg-slate-50 text-slate-800 antialiased h-screen flex overflow-hidden">
+<body class="m-0 font-['Plus_Jakarta_Sans'] bg-slate-50 text-slate-800 antialiased min-h-screen flex lg:flex-row overflow-x-hidden">
     
     <div id="mobileBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden transition-opacity"></div>
 
-    <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-full transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shrink-0 shadow-2xl lg:shadow-none">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-screen transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shrink-0 shadow-2xl lg:shadow-none">
         <div class="p-8 border-b border-slate-100 flex items-center gap-4 shrink-0">
             <img src="{{ asset('images/logo-ummi.png') }}" class="w-10 h-10 object-contain" alt="Logo" onerror="this.src='https://ui-avatars.com/api/?name=UMMI&background=0D8ABC&color=fff'" />
             <div>
@@ -82,7 +80,6 @@
                 <span>Profil Saya</span>
             </a>
         </nav>
-
         <div class="p-6 border-t border-slate-100 shrink-0">
             <a href="{{ route('logout.dosen') }}" class="w-full p-4 flex items-center justify-between text-red-600 font-bold bg-red-50 rounded-2xl hover:bg-red-100 transition-all border border-red-100">
                 <div class="flex items-center gap-3">
@@ -93,129 +90,131 @@
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col h-full relative min-w-0 bg-[#f8fafc] overflow-y-auto custom-scrollbar">
+    <main class="flex-1 flex flex-col min-h-screen relative lg:ml-80 w-full min-w-0">
         <div class="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-blue-50/80 to-transparent -z-10"></div>
 
-        <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-4 sm:py-6 sticky top-0 z-20 shrink-0">
+        <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 sticky top-0 z-20">
             <div class="max-w-7xl mx-auto flex items-center justify-between h-10 sm:h-14">
                 <div class="flex items-center gap-3 sm:gap-4">
-                    <button onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    <button onclick="toggleSidebar()" class="lg:hidden p-1.5 sm:p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
                     <div>
-                        <h2 class="text-lg sm:text-2xl font-black text-slate-900 tracking-tight leading-none">Identitas Diri</h2>
+                        <h2 class="text-lg sm:text-2xl font-black text-slate-900 tracking-tight leading-none">Profil Saya</h2>
                         <span class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1 block">Informasi akademik dan personal</span>
                     </div>
                 </div>
             </div>
         </header>
 
-        <div class="p-4 sm:p-6 lg:p-10 max-w-6xl mx-auto w-full space-y-6 sm:space-y-8 mb-10">
+        <div class="p-4 sm:p-6 lg:p-10 max-w-6xl mx-auto w-full space-y-6 sm:space-y-8 pb-20">
             @if(session('success'))
-                <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl font-bold text-sm safe-fade-in">{{ session('success') }}</div>
+                <div class="p-3 sm:p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl font-bold text-xs sm:text-sm">{{ session('success') }}</div>
             @endif
             @if($errors->any())
-                <div class="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl font-bold text-sm safe-fade-in">
+                <div class="p-3 sm:p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl font-bold text-xs sm:text-sm">
                     <ul class="list-disc list-inside">@foreach($errors->all() as $error) <li>{{ $error }}</li> @endforeach</ul>
                 </div>
             @endif
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {{-- Kiri: Foto & Nama --}}
-                <div data-aos="fade-up" class="bg-white p-6 sm:p-8 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col items-center text-center relative overflow-hidden">
-                    <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-[2rem] border-4 border-blue-50 p-1 mb-6 relative z-10 shadow-sm">
-                        <img src="{{ $dosen->foto ? asset('storage/'.$dosen->foto) : 'https://ui-avatars.com/api/?name='.urlencode($dosen->nama).'&background=0D8ABC&color=fff' }}" class="w-full h-full object-cover rounded-[1.8rem]" />
+                <div data-aos="fade-up" class="bg-white p-5 sm:p-6 lg:p-8 rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col items-center text-center relative overflow-hidden">
+                    <div class="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-[1.5rem] sm:rounded-[2rem] border-4 border-blue-50 p-1 mb-4 sm:mb-6 relative z-10 shadow-sm">
+                        <img src="{{ $dosen->foto ? asset('storage/'.$dosen->foto) : 'https://ui-avatars.com/api/?name='.urlencode($dosen->nama).'&background=0D8ABC&color=fff' }}" class="w-full h-full object-cover rounded-xl sm:rounded-[1.8rem]" />
                     </div>
-                    <h2 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight relative z-10">{{ $dosen->nama }}</h2>
-                    <p class="text-xs sm:text-sm font-bold text-slate-400 mt-1 relative z-10">NIDN: {{ $dosen->nidn ?? '-' }}</p>
-                    <div class="mt-6 flex flex-wrap justify-center gap-2 relative z-10">
-                        <span class="px-3 sm:px-4 py-1.5 sm:py-2 bg-emerald-50 text-emerald-600 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest border border-emerald-100">Dosen Aktif</span>
-                        <span class="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-50 text-blue-600 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest border border-blue-100">{{ $dosen->jabatan }}</span>
+                    <h2 class="text-base sm:text-lg lg:text-xl font-black text-slate-900 tracking-tight relative z-10">{{ $dosen->nama }}</h2>
+                    <p class="text-[10px] sm:text-xs lg:text-sm font-bold text-slate-400 mt-1 relative z-10">NIDN: {{ $dosen->nidn ?? '-' }}</p>
+                    <div class="mt-4 sm:mt-6 flex flex-wrap justify-center gap-2 relative z-10">
+                        <span class="px-2.5 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 bg-emerald-50 text-emerald-600 rounded-lg sm:rounded-xl text-[8px] sm:text-[9px] lg:text-[10px] font-black uppercase tracking-widest border border-emerald-100">Dosen Aktif</span>
+                        <span class="px-2.5 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 bg-blue-50 text-blue-600 rounded-lg sm:rounded-xl text-[8px] sm:text-[9px] lg:text-[10px] font-black uppercase tracking-widest border border-blue-100">{{ $dosen->jabatan }}</span>
                     </div>
                 </div>
 
                 {{-- Kanan: Detail Info --}}
-                <div data-aos="fade-up" data-aos-delay="100" class="lg:col-span-2 bg-white p-6 sm:p-8 rounded-[2.5rem] shadow-sm border border-slate-100 relative overflow-hidden">
+                <div data-aos="fade-up" data-aos-delay="100" class="lg:col-span-2 bg-white p-5 sm:p-6 lg:p-8 rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem] shadow-sm border border-slate-100 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 sm:w-40 sm:h-40 lg:w-64 lg:h-64 bg-blue-50 rounded-full blur-2xl sm:blur-3xl opacity-50 -mr-8 -mt-8 sm:-mr-10 sm:-mt-10 lg:-mr-16 lg:-mt-16 pointer-events-none"></div>
+
                     <div class="relative z-10 space-y-6 sm:space-y-8">
                         <div>
-                            <h3 class="text-base sm:text-lg font-black text-slate-900 mb-4 flex items-center gap-3">
-                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <h3 class="text-sm sm:text-base lg:text-lg font-black text-slate-900 mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                                 Informasi Akun & Akademik
                             </h3>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                                <div class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-100">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
+                                <div class="bg-slate-50 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-100">
                                     <label class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Email / Google Link</label>
-                                    <p class="font-bold text-blue-600 text-xs sm:text-sm truncate">{{ $dosen->email }}</p>
+                                    <p class="font-bold text-blue-600 text-[11px] sm:text-xs lg:text-sm truncate">{{ $dosen->email }}</p>
                                 </div>
-                                <div class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-100">
+                                <div class="bg-slate-50 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-100">
                                     <label class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Nomor WhatsApp</label>
-                                    <p class="font-bold text-slate-800 text-xs sm:text-sm">{{ $dosen->no_hp ?? '-' }}</p>
+                                    <p class="font-bold text-slate-800 text-[11px] sm:text-xs lg:text-sm">{{ $dosen->no_hp ?? '-' }}</p>
                                 </div>
-                                <div class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-100">
+                                <div class="bg-slate-50 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-100">
                                     <label class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Homebase / Prodi</label>
-                                    <p class="font-bold text-slate-800 text-xs sm:text-sm">{{ $dosen->homebase }}</p>
+                                    <p class="font-bold text-slate-800 text-[11px] sm:text-xs lg:text-sm">{{ $dosen->homebase }}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="flex items-center gap-4">
-                            <button onclick="openModal('editModal')" type="button" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold text-[10px] sm:text-[11px] uppercase tracking-widest hover:bg-blue-700 transition-all shadow-md cursor-pointer">Edit Identitas & Email</button>
+                            <button onclick="openModal('editModal')" type="button" class="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-600 text-white rounded-lg sm:rounded-xl font-bold text-[9px] sm:text-[10px] lg:text-[11px] uppercase tracking-widest hover:bg-blue-700 transition-all shadow-md cursor-pointer">Edit Identitas & Email</button>
                         </div>
                     </div>
                 </div>
             </div>
 
             {{-- Keamanan --}}
-            <div data-aos="fade-up" data-aos-delay="200" class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-[2.5rem] p-6 sm:p-8 shadow-xl text-white flex flex-col md:flex-row items-center justify-between gap-6">
-                <div class="flex items-center gap-4 w-full md:w-auto">
-                    <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md shrink-0 text-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            <div data-aos="fade-up" data-aos-delay="200" class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-[1.5rem] sm:rounded-[2rem] lg:rounded-[2.5rem] p-5 sm:p-6 lg:p-8 shadow-xl text-white flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 mb-10">
+                <div class="flex items-center gap-3 sm:gap-4 w-full md:w-auto">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/10 rounded-xl sm:rounded-2xl flex items-center justify-center backdrop-blur-md shrink-0 text-white">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                     </div>
                     <div>
-                        <h3 class="text-lg font-black tracking-tight">Keamanan Akun</h3>
-                        <p class="text-slate-300 text-xs sm:text-sm">Ganti kata sandi secara berkala untuk perlindungan.</p>
+                        <h3 class="text-base sm:text-lg font-black tracking-tight">Keamanan Akun</h3>
+                        <p class="text-slate-300 text-[10px] sm:text-xs lg:text-sm">Ganti kata sandi secara berkala untuk perlindungan.</p>
                     </div>
                 </div>
-                <button onclick="openModal('passwordModal')" type="button" class="px-8 py-3.5 bg-white text-slate-900 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-100 transition-all shadow-md cursor-pointer">Ganti Password</button>
+                <button onclick="openModal('passwordModal')" type="button" class="w-full md:w-auto px-6 sm:px-8 py-3 sm:py-3.5 bg-white text-slate-900 rounded-lg sm:rounded-xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest hover:bg-slate-100 transition-all shadow-md cursor-pointer">Ganti Password</button>
             </div>
         </div>
     </main>
 
     {{-- MODAL EDIT PROFIL --}}
     <div id="editModal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm items-center justify-center p-4 transition-opacity">
-        <div class="bg-white rounded-[2rem] w-full max-w-2xl shadow-2xl overflow-hidden animate-pop relative max-h-[90vh] flex flex-col">
-            <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
-                <h2 class="text-lg font-black text-slate-900">Edit Identitas & Email</h2>
-                <button onclick="closeModal('editModal')" class="text-slate-400 hover:text-red-500 p-1 transition-all cursor-pointer"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <div class="bg-white rounded-[1.5rem] sm:rounded-[2rem] w-full max-w-2xl shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col">
+            <div class="px-5 sm:px-6 py-4 sm:py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 shrink-0">
+                <h2 class="text-base sm:text-lg font-black text-slate-900">Edit Identitas & Email</h2>
+                <button onclick="closeModal('editModal')" class="text-slate-400 hover:text-red-500 p-1 transition-all cursor-pointer"><svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
-            <div class="p-6 overflow-y-auto custom-scrollbar">
-                <form action="{{ route('dosen.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <div class="p-5 sm:p-6 overflow-y-auto custom-scrollbar">
+                <form action="{{ route('dosen.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-4 sm:space-y-6">
                     @csrf @method('PUT')
-                    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-                        <div class="w-20 h-20 rounded-[1.2rem] border-2 border-slate-100 overflow-hidden shrink-0">
+                    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-[1rem] sm:rounded-[1.2rem] border-2 border-slate-100 overflow-hidden shrink-0">
                             <img src="{{ $dosen->foto ? asset('storage/'.$dosen->foto) : 'https://ui-avatars.com/api/?name='.urlencode($dosen->nama) }}" class="w-full h-full object-cover">
                         </div>
                         <div class="flex-1 w-full">
-                            <label class="block text-xs font-bold text-slate-700 mb-2">Ganti Foto Profil</label>
-                            <input type="file" name="foto" accept="image/*" class="w-full text-xs text-slate-500 cursor-pointer border border-dashed border-slate-200 p-1.5 rounded-xl bg-slate-50">
+                            <label class="block text-[10px] sm:text-xs font-bold text-slate-700 mb-1 sm:mb-2 text-center sm:text-left">Ganti Foto Profil</label>
+                            <input type="file" name="foto" accept="image/*" class="w-full text-[10px] sm:text-xs text-slate-500 cursor-pointer border border-dashed border-slate-200 p-1.5 sm:p-1.5 rounded-lg sm:rounded-xl bg-slate-50">
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                         <div class="md:col-span-2">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Nama Lengkap & Gelar</label>
-                            <input type="text" name="nama" value="{{ $dosen->nama }}" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-medium text-sm" required>
+                            <label class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Nama Lengkap & Gelar</label>
+                            <input type="text" name="nama" value="{{ $dosen->nama }}" class="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-50 border border-slate-200 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-medium text-xs sm:text-sm" required>
                         </div>
                         <div>
-                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Email Institusi</label>
-                            <input type="email" name="email" value="{{ $dosen->email }}" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-medium text-sm" required>
+                            <label class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Email Institusi</label>
+                            <input type="email" name="email" value="{{ $dosen->email }}" class="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-50 border border-slate-200 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-medium text-xs sm:text-sm" required>
                         </div>
                         <div>
-                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">No. WhatsApp</label>
-                            <input type="text" name="no_hp" value="{{ $dosen->no_hp }}" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-medium text-sm">
+                            <label class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">No. WhatsApp</label>
+                            <input type="text" name="no_hp" value="{{ $dosen->no_hp }}" class="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-50 border border-slate-200 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-medium text-xs sm:text-sm">
                         </div>
                     </div>
-                    <div class="pt-4 flex justify-end gap-3 border-t border-slate-100">
-                        <button type="button" onclick="closeModal('editModal')" class="px-6 py-3 text-slate-500 font-bold text-[10px] uppercase bg-slate-100 hover:bg-slate-200 rounded-xl transition-all">Batal</button>
-                        <button type="submit" class="px-6 py-3 bg-blue-600 text-white font-bold text-[10px] uppercase hover:bg-blue-700 rounded-xl shadow-md transition-all">Simpan Perubahan</button>
+                    <div class="pt-4 flex justify-end gap-2 sm:gap-3 border-t border-slate-100">
+                        <button type="button" onclick="closeModal('editModal')" class="px-4 sm:px-6 py-2.5 sm:py-3 text-slate-500 font-bold text-[9px] sm:text-[10px] uppercase bg-slate-100 hover:bg-slate-200 rounded-lg sm:rounded-xl transition-all">Batal</button>
+                        <button type="submit" class="px-4 sm:px-6 py-2.5 sm:py-3 bg-blue-600 text-white font-bold text-[9px] sm:text-[10px] uppercase hover:bg-blue-700 rounded-lg sm:rounded-xl shadow-md transition-all">Simpan Perubahan</button>
                     </div>
                 </form>
             </div>
@@ -224,29 +223,29 @@
 
     {{-- MODAL GANTI PASSWORD --}}
     <div id="passwordModal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm items-center justify-center p-4 transition-opacity">
-        <div class="bg-white rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden animate-pop relative">
-            <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                <h2 class="text-lg font-black text-slate-900">Ganti Password</h2>
-                <button type="button" onclick="closeModal('passwordModal')" class="text-slate-400 hover:text-red-500 p-1 transition-all cursor-pointer"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <div class="bg-white rounded-[1.5rem] sm:rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden relative">
+            <div class="px-5 sm:px-6 py-4 sm:py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                <h2 class="text-base sm:text-lg font-black text-slate-900">Ganti Password</h2>
+                <button type="button" onclick="closeModal('passwordModal')" class="text-slate-400 hover:text-red-500 p-1 transition-all cursor-pointer"><svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
-            <div class="p-6">
-                <form action="{{ route('dosen.profile.password') }}" method="POST" class="space-y-4">
+            <div class="p-5 sm:p-6">
+                <form action="{{ route('dosen.profile.password') }}" method="POST" class="space-y-3 sm:space-y-4">
                     @csrf @method('PUT')
                     <div>
-                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Password Lama</label>
-                        <input type="password" name="current_password" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm" required>
+                        <label class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Password Lama</label>
+                        <input type="password" name="current_password" class="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-50 border border-slate-200 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-xs sm:text-sm" required>
                     </div>
                     <div>
-                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Password Baru</label>
-                        <input type="password" name="password" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm" required minlength="8">
+                        <label class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Password Baru</label>
+                        <input type="password" name="password" class="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-50 border border-slate-200 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-xs sm:text-sm" required minlength="8">
                     </div>
                     <div>
-                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Konfirmasi Password Baru</label>
-                        <input type="password" name="password_confirmation" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm" required minlength="8">
+                        <label class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Konfirmasi Password Baru</label>
+                        <input type="password" name="password_confirmation" class="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-50 border border-slate-200 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-xs sm:text-sm" required minlength="8">
                     </div>
-                    <div class="pt-4 flex gap-3 border-t border-slate-100">
-                        <button type="button" onclick="closeModal('passwordModal')" class="flex-1 py-3 text-slate-500 font-bold text-[10px] uppercase bg-slate-100 hover:bg-slate-200 rounded-xl transition-all">Batal</button>
-                        <button type="submit" class="flex-1 py-3 bg-slate-900 text-white font-bold text-[10px] uppercase hover:bg-black rounded-xl shadow-md transition-all">Update Password</button>
+                    <div class="pt-4 flex gap-2 sm:gap-3 border-t border-slate-100">
+                        <button type="button" onclick="closeModal('passwordModal')" class="flex-1 py-2.5 sm:py-3 text-slate-500 font-bold text-[9px] sm:text-[10px] uppercase bg-slate-100 hover:bg-slate-200 rounded-lg sm:rounded-xl transition-all">Batal</button>
+                        <button type="submit" class="flex-1 py-2.5 sm:py-3 bg-slate-900 text-white font-bold text-[9px] sm:text-[10px] uppercase hover:bg-black rounded-lg sm:rounded-xl shadow-md transition-all">Update Password</button>
                     </div>
                 </form>
             </div>
@@ -256,6 +255,7 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() { AOS.init({ once: true, easing: 'ease-out-cubic', offset: 50 }); });
+        
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
             document.getElementById('mobileBackdrop').classList.toggle('hidden');

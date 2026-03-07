@@ -10,9 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
     <style>
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
+        html { scroll-behavior: smooth; }
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
@@ -24,38 +23,33 @@
             @page { size: A4 landscape; margin: 15mm; }
             body { background-color: white !important; color: black !important; }
             
-            /* Memaksa browser mencetak warna background tabel & badge */
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            
-            /* Sembunyikan elemen web yang tidak perlu */
             .web-only { display: none !important; }
-            
-            /* Tampilkan elemen khusus print */
             .print-only { display: block !important; }
             table.print-only { display: table !important; }
 
-            /* Styling khusus tabel saat di-print */
             .print-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 11px; }
             .print-table th, .print-table td { border: 1px solid #94a3b8; padding: 8px; text-align: center; vertical-align: middle; }
             .print-table th { background-color: #f1f5f9 !important; color: #1e293b; text-transform: uppercase; font-size: 10px; font-weight: bold; }
             .print-table th.text-left, .print-table td.text-left { text-align: left !important; }
             
-            /* Sembunyikan scrollbar agar tabel ter-print semua */
             .custom-scrollbar { overflow: visible !important; }
             .custom-scrollbar::-webkit-scrollbar { display: none; }
         }
     </style>
 </head>
-<body class="font-['Plus_Jakarta_Sans'] bg-[#f1f5f9] text-slate-800 min-h-full flex flex-col border-box overflow-x-hidden selection:bg-blue-200 print:bg-white print:overflow-visible">
+<body class="font-['Plus_Jakarta_Sans'] bg-[#f1f5f9] text-slate-800 min-h-[100dvh] flex flex-col border-box overflow-x-hidden overflow-y-scroll selection:bg-blue-200 print:bg-white print:overflow-visible">
     
     {{-- ============================================================== --}}
     {{-- 1. BAGIAN INI HANYA MUNCUL DI WEB (LAYAR)                        --}}
     {{-- ============================================================== --}}
+    
+    {{-- NAVBAR PERSIS SEPERTI GAMBAR --}}
     <div class="web-only w-full bg-white/80 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-4 md:px-8 py-4 shadow-sm transition-all">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             
             <div class="flex items-center gap-4">
-                <a href="{{ route('dosen.course.assignments', $kelas->id) }}" class="w-11 h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white flex items-center justify-center transition-all shadow-sm shrink-0 group border border-slate-200 hover:border-blue-600">
+                <a href="{{ route('dosen.course.assignments', $kelas->id) }}" class="w-11 h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white flex items-center justify-center transition-all shadow-sm shrink-0 group active:scale-95">
                     <svg class="w-5 h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
                     </svg>
@@ -64,9 +58,10 @@
                     <h1 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-tight truncate">
                         Rekap Nilai Tugas
                     </h1>
-                    <div class="flex items-center gap-3 mt-1">
+                    <div class="flex flex-wrap items-center gap-2 mt-1">
+                        {{-- TAMBAHAN NAMA KELAS SESUAI REQUEST --}}
                         <span class="text-[10px] font-black text-blue-700 uppercase tracking-widest bg-blue-100 px-2.5 py-1 rounded-md">
-                            Kelas {{ $kelas->kode_kelas }}
+                            KELAS {{ $kelas->nama_kelas ?? '' }} {{ $kelas->kode_kelas }}
                         </span>
                         <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">
                             {{ $kelas->mataKuliah->nama ?? '-' }}
@@ -75,8 +70,8 @@
                 </div>
             </div>
 
-            {{-- TOMBOL CETAK LANGSUNG PANGGIL BROWSER PRINT --}}
-            <button onclick="window.print()" class="hidden md:flex px-5 py-2.5 bg-slate-800 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 transition-all items-center gap-2 shadow-md cursor-pointer">
+            {{-- TOMBOL CETAK --}}
+            <button onclick="window.print()" class="w-full md:w-auto flex justify-center px-6 py-3 md:py-2.5 bg-slate-800 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 transition-all items-center gap-2 shadow-md cursor-pointer active:scale-95">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                 Cetak PDF Tabel
             </button>
@@ -84,37 +79,43 @@
         </div>
     </div>
 
-    <main class="flex-1 max-w-7xl mx-auto p-4 md:p-8 w-full space-y-6 mb-20 web-only">
+    <main class="flex-1 max-w-7xl mx-auto p-4 sm:p-6 md:p-8 w-full space-y-6 mb-20 web-only">
         <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden" data-aos="fade-up" data-aos-duration="600">
-            <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div class="p-5 sm:p-6 border-b border-slate-100 bg-slate-50/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h3 class="font-black text-slate-800 text-sm uppercase tracking-wider">Matriks Nilai Mahasiswa</h3>
                     <p class="text-xs text-slate-500 font-medium mt-1">Menampilkan rekapitulasi nilai untuk {{ $assignments->count() }} Tugas.</p>
                 </div>
-                <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-full bg-emerald-100 border border-emerald-300"></span> <span class="text-[10px] font-bold text-slate-500 mr-2">Sudah Dinilai</span>
-                    <span class="w-3 h-3 rounded-full bg-slate-100 border border-slate-300"></span> <span class="text-[10px] font-bold text-slate-500">Belum / Kosong</span>
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-3 h-3 rounded-full bg-emerald-100 border border-emerald-300"></span> 
+                        <span class="text-[10px] font-bold text-slate-500">Sudah Dinilai</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-3 h-3 rounded-full bg-slate-100 border border-slate-300"></span> 
+                        <span class="text-[10px] font-bold text-slate-500">Belum / Kosong</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left border-collapse min-w-[800px]">
+            <div class="overflow-x-auto custom-scrollbar w-full relative">
+                <table class="w-full text-left border-collapse min-w-[700px] sm:min-w-[800px]">
                     <thead>
                         <tr class="bg-slate-100/80 text-[10px] uppercase tracking-widest text-slate-500 border-b border-slate-200">
-                            <th class="p-4 font-black w-10 text-center">No</th>
-                            <th class="p-4 font-black min-w-[200px] sticky left-0 bg-slate-100/80 shadow-[2px_0_5px_rgba(0,0,0,0.02)] z-10">Mahasiswa</th>
+                            <th class="p-3 sm:p-4 font-black w-10 text-center">No</th>
+                            <th class="p-3 sm:p-4 font-black min-w-[180px] sm:min-w-[200px] sticky left-0 bg-slate-100/90 backdrop-blur-sm shadow-[2px_0_5px_rgba(0,0,0,0.03)] z-10">Mahasiswa</th>
                             
                             @foreach($assignments as $tugas)
-                                <th class="p-4 font-black text-center min-w-[100px] border-l border-slate-200/60" title="{{ $tugas->judul }}">
-                                    <div class="truncate w-24 mx-auto text-blue-600">Tugas {{ $loop->iteration }}</div>
+                                <th class="p-3 sm:p-4 font-black text-center min-w-[90px] sm:min-w-[100px] border-l border-slate-200/60" title="{{ $tugas->judul }}">
+                                    <div class="truncate w-20 sm:w-24 mx-auto text-blue-600">Tugas {{ $loop->iteration }}</div>
                                     <div class="text-[8px] text-slate-400 mt-1 truncate">{{ Str::limit($tugas->judul, 15) }}</div>
                                 </th>
                             @endforeach
                             
-                            <th class="p-4 font-black text-center bg-blue-50 border-l border-blue-100 min-w-[100px]">Rata-rata</th>
+                            <th class="p-3 sm:p-4 font-black text-center bg-blue-50 border-l border-blue-100 min-w-[100px]">Rata-rata</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-100 text-sm font-medium">
+                    <tbody class="divide-y divide-slate-100 text-xs sm:text-sm font-medium">
                         
                         @forelse($kelas->mahasiswa as $index => $mhs)
                             @php
@@ -122,9 +123,9 @@
                                 $jumlahDinilai = 0;
                             @endphp
                             <tr class="hover:bg-slate-50/50 transition-colors group">
-                                <td class="p-4 text-center text-slate-400">{{ $index + 1 }}</td>
-                                <td class="p-4 sticky left-0 bg-white group-hover:bg-slate-50/90 shadow-[2px_0_5px_rgba(0,0,0,0.02)] z-10 transition-colors">
-                                    <div class="font-bold text-slate-800">{{ $mhs->nama }}</div>
+                                <td class="p-3 sm:p-4 text-center text-slate-400">{{ $index + 1 }}</td>
+                                <td class="p-3 sm:p-4 sticky left-0 bg-white group-hover:bg-slate-50 shadow-[2px_0_5px_rgba(0,0,0,0.02)] z-10 transition-colors">
+                                    <div class="font-bold text-slate-800 line-clamp-1">{{ $mhs->nama }}</div>
                                     <div class="text-[10px] text-slate-400 font-mono tracking-wider mt-0.5">{{ $mhs->nim }}</div>
                                 </td>
                                 
@@ -139,7 +140,7 @@
                                         }
                                     @endphp
                                     
-                                    <td class="p-4 text-center border-l border-slate-100">
+                                    <td class="p-3 sm:p-4 text-center border-l border-slate-100">
                                         @if($nilai !== null)
                                             <span class="inline-flex items-center justify-center w-10 h-8 bg-emerald-50 text-emerald-700 font-black rounded-lg border border-emerald-100">
                                                 {{ $nilai }}
@@ -161,7 +162,7 @@
                                     elseif($rataRata > 0) $badgeColor = 'bg-red-100 text-red-700 border border-red-200';
                                 @endphp
                                 
-                                <td class="p-4 text-center bg-blue-50/30 border-l border-blue-50">
+                                <td class="p-3 sm:p-4 text-center bg-blue-50/30 border-l border-blue-50">
                                     <span class="inline-flex items-center justify-center px-3 py-1.5 {{ $badgeColor }} font-black rounded-lg text-xs shadow-sm">
                                         {{ $rataRata > 0 ? $rataRata : '-' }}
                                     </span>
@@ -195,7 +196,7 @@
                         <p style="margin: 5px 0 0 0; color: #64748b; font-size: 12px;">Portal Dosen - Sistem Informasi Akademik</p>
                     </td>
                     <td style="text-align: right; vertical-align: bottom; border: none; padding: 0;">
-                        <span style="background-color: #dbeafe; color: #1d4ed8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; border: 1px solid #bfdbfe;">KELAS {{ $kelas->kode_kelas }}</span>
+                        <span style="background-color: #dbeafe; color: #1d4ed8; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; border: 1px solid #bfdbfe;">KELAS {{ $kelas->nama_kelas ?? '' }} {{ $kelas->kode_kelas }}</span>
                     </td>
                 </tr>
             </table>

@@ -13,13 +13,14 @@ class Kelas extends Model
         'dosen_id',
         'mata_kuliah_id',
         'kode_kelas',
+        'nama_kelas', // <--- Wajib ditambah di sini
         'kode_akses',
         'hari',
         'jam_mulai',
         'jam_selesai',
         'ruangan',
         'sampul', 
-        'warna', // <--- Wajib ditambah agar tidak error saat create kelas
+        'warna', 
     ];
 
     public function mataKuliah()

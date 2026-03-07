@@ -28,6 +28,7 @@ class KelasController extends Controller
         $request->validate([
             'nama_mata_kuliah' => 'required|string|max:255',
             'kode_kelas'       => 'required|string|max:20',
+            'nama_kelas'       => 'required|string|max:50', // <--- Tambah validasi nama_kelas
             'sks'              => 'required|integer|min:1',
             'hari'             => 'required|string',
             'jam_mulai'        => 'required',
@@ -61,7 +62,8 @@ class KelasController extends Controller
             'dosen_id'       => $dosenId,
             'mata_kuliah_id' => $mataKuliah->id,
             'kode_kelas'     => strtoupper($request->kode_kelas),
-            'kode_akses'     => strtoupper($request->kode_kelas), // Kunci: Disamakan dengan kode kelas
+            'nama_kelas'     => strtoupper($request->nama_kelas), // <--- Simpan nama_kelas ke database
+            'kode_akses'     => strtoupper($request->kode_kelas), 
             'hari'           => $request->hari,
             'jam_mulai'      => $request->jam_mulai,
             'jam_selesai'    => $request->jam_selesai,
@@ -84,6 +86,7 @@ class KelasController extends Controller
         $request->validate([
             'nama_mata_kuliah' => 'required|string|max:255',
             'kode_kelas'       => 'required|string|max:20',
+            'nama_kelas'       => 'required|string|max:50', // <--- Tambah validasi nama_kelas
             'hari'             => 'required|string',
             'jam_mulai'        => 'required',
             'jam_selesai'      => 'required',
@@ -112,7 +115,8 @@ class KelasController extends Controller
 
         // Update data lainnya
         $kelas->kode_kelas  = strtoupper($request->kode_kelas);
-        $kelas->kode_akses  = strtoupper($request->kode_kelas); // Update juga kode akses jika kode kelas berubah
+        $kelas->nama_kelas  = strtoupper($request->nama_kelas); // <--- Update nama_kelas
+        $kelas->kode_akses  = strtoupper($request->kode_kelas); 
         $kelas->hari        = $request->hari;
         $kelas->jam_mulai   = $request->jam_mulai;
         $kelas->jam_selesai = $request->jam_selesai;
