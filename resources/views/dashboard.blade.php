@@ -32,19 +32,11 @@
         </style>
     </head>
 
-    <body
-        class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] h-[100dvh] flex flex-col lg:flex-row border-box text-slate-800 overflow-hidden"
-    >
-        <div
-            id="mobileBackdrop"
-            onclick="toggleSidebar()"
-            class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden transition-opacity"
-        ></div>
+    <body class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] h-[100dvh] flex flex-col lg:flex-row border-box text-slate-800 overflow-hidden">
+        
+        <div id="mobileBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden transition-opacity"></div>
 
-        <aside
-            id="sidebar"
-            class="fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-[100dvh] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shrink-0"
-        >
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-[100dvh] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shrink-0">
             <div class="p-8 border-b border-slate-100 flex items-center gap-4 shrink-0">
                 <img
                     src="{{ asset('images/logo-ummi.png') }}"
@@ -53,377 +45,187 @@
                     onerror="this.src = 'https://via.placeholder.com/40'"
                 />
                 <div>
-                    <h1
-                        class="text-lg font-black text-slate-900 tracking-tight leading-none"
-                    >
-                        LMS Inklusi
-                    </h1>
-                    <p
-                        class="text-[9px] font-bold text-blue-600 uppercase tracking-widest mt-1"
-                    >
-                        Portal Mahasiswa
-                    </p>
+                    <h1 class="text-lg font-black text-slate-900 tracking-tight leading-none">LMS Inklusi</h1>
+                    <p class="text-[9px] font-bold text-blue-600 uppercase tracking-widest mt-1">Portal Mahasiswa</p>
                 </div>
-                <button
-                    onclick="toggleSidebar()"
-                    class="lg:hidden ml-auto text-slate-400 hover:text-slate-600 cursor-pointer p-2 bg-slate-50 rounded-lg"
-                >
-                    <svg
-                        class="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                        ></path>
+                <button onclick="toggleSidebar()" class="lg:hidden ml-auto text-slate-400 hover:text-slate-600 cursor-pointer p-2 bg-slate-50 rounded-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
 
             <nav class="flex-1 p-6 space-y-3 overflow-y-auto custom-scrollbar">
-                <a
-                    href="{{ route('dashboard') ?? '#' }}"
-                    onclick="navigasiKe(5)"
-                    class="flex items-center justify-between p-4 bg-blue-50 text-blue-700 rounded-2xl font-bold transition-all shadow-sm border border-blue-100"
-                >
+                <a href="{{ route('dashboard') ?? '#' }}" class="flex items-center justify-between p-4 bg-blue-50 text-blue-700 rounded-2xl font-bold transition-all shadow-sm border border-blue-100">
                     <div class="flex items-center gap-4">
-                        <svg
-                            class="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                            ></path>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
                         </svg>
                         <span>Beranda</span>
                     </div>
-                    <span
-                        class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm"
-                        >5</span
-                    >
                 </a>
 
-                <a
-                    href="{{ route('profile') ?? '#' }}"
-                    onclick="navigasiKe(6)"
-                    class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
-                >
+                <a href="{{ route('profile') ?? '#' }}" onclick="navigasiKe(3); return false;" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
                     <div class="flex items-center gap-4">
-                        <svg
-                            class="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                            ></path>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
                         <span>Profil Saya</span>
                     </div>
-                    <span
-                        class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm"
-                        >6</span
-                    >
+                    <span class="text-[10px] bg-slate-800 text-white px-2 py-1 rounded-lg font-black shadow-sm">3</span>
                 </a>
 
-                <a
-                    href="{{ route('notifications') ?? '#' }}"
-                    onclick="navigasiKe(7)"
-                    class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
-                >
+                <a href="{{ route('notifications') ?? '#' }}" onclick="navigasiKe(4); return false;" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
                     <div class="flex items-center gap-4">
-                        <svg
-                            class="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                            ></path>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                         </svg>
                         <span>Pemberitahuan</span>
                     </div>
-                    <span
-                        class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm"
-                        >7</span
-                    >
+                    <span class="text-[10px] bg-slate-800 text-white px-2 py-1 rounded-lg font-black shadow-sm">4</span>
                 </a>
 
-                <a
-                    href="{{ route('messages') ?? '#' }}"
-                    onclick="navigasiKe(8)"
-                    class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
-                >
+                <a href="{{ route('messages') ?? '#' }}" onclick="navigasiKe(5); return false;" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
                     <div class="flex items-center gap-4">
-                        <svg
-                            class="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                            ></path>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
                         </svg>
                         <span>Pesan</span>
                     </div>
-                    <span
-                        class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm"
-                        >8</span
-                    >
+                    <span class="text-[10px] bg-slate-800 text-white px-2 py-1 rounded-lg font-black shadow-sm">5</span>
                 </a>
 
-                <a
-                    href="{{ route('help') ?? '#' }}"
-                    onclick="navigasiKe(9)"
-                    class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
-                >
+                <a href="{{ route('help') ?? '#' }}" onclick="navigasiKe(6); return false;" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
                     <div class="flex items-center gap-4">
-                        <svg
-                            class="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2.5"
-                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            ></path>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <span>Bantuan</span>
                     </div>
-                    <span
-                        class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm"
-                        >9</span
-                    >
+                    <span class="text-[10px] bg-slate-800 text-white px-2 py-1 rounded-lg font-black shadow-sm">6</span>
                 </a>
             </nav>
 
             <div class="p-6 border-t border-slate-100 shrink-0">
-                <button
-                    onclick="navigasiKe(0)"
-                    class="w-full p-4 flex items-center justify-between text-red-600 font-bold bg-red-50 rounded-2xl hover:bg-red-100 transition-all border border-red-100 cursor-pointer"
-                >
+                <button onclick="navigasiKe(0)" class="w-full p-4 flex items-center justify-between text-red-600 font-bold bg-red-50 rounded-2xl hover:bg-red-100 transition-all border border-red-100 cursor-pointer">
                     <div class="flex items-center gap-3">
-                        <svg
-                            class="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2.5"
-                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                            ></path>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                         </svg>
                         <span>Keluar</span>
                     </div>
-                    <span
-                        class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm"
-                        >0</span
-                    >
+                    <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">0</span>
                 </button>
             </div>
         </aside>
 
-        <main
-            class="flex-1 flex flex-col h-[100dvh] overflow-y-auto relative lg:ml-80 transition-all duration-300 custom-scrollbar"
-        >
-            <div
-                class="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-blue-50 to-transparent -z-10"
-            ></div>
+        <main class="flex-1 flex flex-col h-[100dvh] overflow-y-auto relative lg:ml-80 transition-all duration-300 custom-scrollbar">
+            <div class="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-blue-50 to-transparent -z-10"></div>
 
-            <header
-                class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 sm:px-8 py-3 sm:py-6 sticky top-0 z-30 shrink-0"
-            >
-                <div
-                    class="max-w-7xl mx-auto flex items-center justify-between h-10 sm:h-14"
-                >
+            <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 sm:px-8 py-3 sm:py-6 sticky top-0 z-30 shrink-0" title="Ketuk area ini untuk memotong suara sistem">
+                <div class="max-w-7xl mx-auto flex items-center justify-between h-10 sm:h-14">
                     <div class="flex items-center gap-2 sm:gap-4">
-                        <button
-                            onclick="toggleSidebar()"
-                            class="lg:hidden p-1.5 sm:p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer"
-                        >
-                            <svg
-                                class="w-6 h-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M4 6h16M4 12h16M4 18h16"
-                                ></path>
+                        <button onclick="toggleSidebar()" class="lg:hidden p-1.5 sm:p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                             </svg>
                         </button>
                         <div>
-                            <h2
-                                class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-none"
-                            >
-                                {{-- Menampilkan Hanya Kata Pertama dari Nama Lengkap --}}
+                            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-none">
                                 @php
-                                    $namaArray = explode(' ', $mahasiswa->nama);
-                                    $namaPanggilan = $namaArray[0] ?? $mahasiswa->nama;
+                                    $namaArray = explode(' ', $mahasiswa->nama ?? 'Mahasiswa');
+                                    $namaPanggilan = $namaArray[0];
                                 @endphp
                                 Halo, {{ $namaPanggilan }}
                             </h2>
-                            <p class="text-[9px] sm:text-sm font-medium text-slate-500 mt-1">
-                                Siap untuk belajar hari ini?
-                            </p>
+                            <p class="text-[9px] sm:text-sm font-medium text-slate-500 mt-1">Siap untuk belajar hari ini?</p>
                         </div>
                     </div>
 
                     <div class="flex items-center gap-2 sm:gap-4">
-                        <div
-                            class="flex items-center gap-1 sm:gap-3 pr-2 sm:pr-4 border-r border-slate-200"
-                        >
-                            <button
-                                onclick="navigasiKe(7)"
-                                class="relative p-1.5 sm:p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer"
-                            >
-                                <svg
-                                    class="w-5 h-5 sm:w-6 h-6"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                                    ></path>
+                        <div class="flex items-center gap-1 sm:gap-3 pr-2 sm:pr-4 border-r border-slate-200">
+                            <button onclick="navigasiKe(4)" class="relative p-1.5 sm:p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                                 </svg>
                                 @if(isset($unreadCount) && $unreadCount > 0)
                                     <span class="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
                                 @endif
                             </button>
-                            <button
-                                onclick="navigasiKe(9)"
-                                class="hidden sm:block p-1.5 sm:p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer relative"
-                            >
-                                <svg
-                                    class="w-5 h-5 sm:w-6 sm:h-6"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2.5"
-                                        d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                    ></path>
+                            <button onclick="navigasiKe(6)" class="hidden sm:block p-1.5 sm:p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer relative">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </button>
                         </div>
 
-                        <div class="flex items-center gap-1.5 sm:gap-3 pl-1 sm:pl-2 w-[90px] sm:w-[130px] justify-start shrink-0">
+                        <div class="flex items-center gap-1.5 sm:gap-3 pl-1 sm:pl-2 w-[90px] sm:w-[130px] justify-start shrink-0 cursor-pointer">
                             <div class="flex items-center gap-[2px] h-4 w-4 sm:w-6 justify-center shrink-0" id="wave-container">
                                 <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
                                 <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
                                 <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
                             </div>
-                            <span id="status-desc" class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest text-left w-16 sm:w-24 truncate">Siap</span>
+                            <span id="status-desc" class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest text-left w-16 sm:w-24 truncate">MENYIAPKAN</span>
                         </div>
                     </div>
                 </div>
             </header>
 
             <div class="p-4 sm:p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-8 sm:space-y-10">
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-                    <div onclick="navigasiKe(1)" data-aos="fade-up" data-aos-delay="100" class="group bg-white p-4 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all border border-slate-100 cursor-pointer relative overflow-hidden flex flex-col justify-between">
-                        <div class="absolute top-0 right-0 w-16 h-16 sm:w-24 sm:h-24 bg-blue-50 rounded-bl-[100%] -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    <div onclick="navigasiKe(1)" data-aos="fade-up" data-aos-delay="100" class="group bg-white p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all border border-slate-100 cursor-pointer relative overflow-hidden flex flex-col justify-between">
+                        <div class="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-blue-50 rounded-bl-[100%] -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                         <div class="relative z-10 flex flex-col h-full justify-between">
-                            <div class="w-10 h-10 sm:w-14 sm:h-14 bg-blue-600 text-white rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-6 font-black text-lg sm:text-xl shadow-lg shadow-blue-200">1</div>
+                            <div class="w-12 h-12 sm:w-16 sm:h-16 bg-blue-600 text-white rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-8 font-black text-xl sm:text-2xl shadow-lg shadow-blue-200">1</div>
                             <div>
-                                <h3 class="text-sm sm:text-xl font-black text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors leading-tight">Daftar Mata Kuliah</h3>
-                                <p class="text-[10px] sm:text-sm text-slate-400 font-medium mt-1 sm:mt-2">Lihat semua.</p>
+                                <h3 class="text-lg sm:text-2xl font-black text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors leading-tight">Daftar Mata Kuliah</h3>
+                                <p class="text-xs sm:text-base text-slate-400 font-medium mt-1 sm:mt-2">Lihat dan gabung mata kuliah.</p>
                             </div>
                         </div>
                     </div>
 
-                    <div onclick="navigasiKe(2)" data-aos="fade-up" data-aos-delay="200" class="group bg-white p-4 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all border border-slate-100 cursor-pointer relative overflow-hidden flex flex-col justify-between">
-                        <div class="absolute top-0 right-0 w-16 h-16 sm:w-24 sm:h-24 bg-emerald-50 rounded-bl-[100%] -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    <div onclick="navigasiKe(2)" data-aos="fade-up" data-aos-delay="200" class="group bg-gradient-to-br from-indigo-600 to-purple-700 p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-xl shadow-indigo-200 hover:shadow-2xl hover:-translate-y-1 transition-all text-white cursor-pointer relative overflow-hidden flex flex-col justify-between">
                         <div class="relative z-10 flex flex-col h-full justify-between">
-                            <div class="w-10 h-10 sm:w-14 sm:h-14 bg-emerald-500 text-white rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-6 font-black text-lg sm:text-xl shadow-lg shadow-emerald-200">2</div>
+                            <div class="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 border border-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-8 font-black text-xl sm:text-2xl">2</div>
                             <div>
-                                <h3 class="text-sm sm:text-xl font-black text-slate-900 tracking-tight group-hover:text-emerald-600 transition-colors leading-tight">Gabung Mata Kuliah</h3>
-                                <p class="text-[10px] sm:text-sm text-slate-400 font-medium mt-1 sm:mt-2">Masukan kode.</p>
+                                <h3 class="text-lg sm:text-2xl font-black tracking-tight leading-tight">Daftar Ujian</h3>
+                                <p class="text-xs sm:text-base text-indigo-100 font-medium mt-1 sm:mt-2">Cek jadwal dan mulai ujian.</p>
                             </div>
                         </div>
-                    </div>
-
-                    <div onclick="navigasiKe(3)" data-aos="fade-up" data-aos-delay="300" class="group bg-white p-4 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all border border-slate-100 cursor-pointer relative overflow-hidden flex flex-col justify-between">
-                        <div class="absolute top-0 right-0 w-16 h-16 sm:w-24 sm:h-24 bg-orange-50 rounded-bl-[100%] -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                        <div class="relative z-10 flex flex-col h-full justify-between">
-                            <div class="w-10 h-10 sm:w-14 sm:h-14 bg-orange-500 text-white rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-6 font-black text-lg sm:text-xl shadow-lg shadow-orange-200">3</div>
-                            <div>
-                                <h3 class="text-sm sm:text-xl font-black text-slate-900 tracking-tight group-hover:text-orange-600 transition-colors leading-tight">Daftar Ujian</h3>
-                                <p class="text-[10px] sm:text-sm text-slate-400 font-medium mt-1 sm:mt-2">Cek jadwal.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div onclick="navigasiKe(4)" data-aos="fade-up" data-aos-delay="400" class="group bg-gradient-to-br from-indigo-600 to-purple-700 p-4 sm:p-8 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-xl shadow-indigo-200 hover:shadow-2xl hover:-translate-y-1 transition-all text-white cursor-pointer relative overflow-hidden flex flex-col justify-between">
-                        <div class="relative z-10 flex flex-col h-full justify-between">
-                            <div class="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 border border-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-6 font-black text-lg sm:text-xl">4</div>
-                            <div>
-                                <h3 class="text-sm sm:text-xl font-black tracking-tight leading-tight">Gabung Ujian</h3>
-                                <p class="text-[10px] sm:text-sm text-indigo-100 font-medium mt-1 sm:mt-2">Input token.</p>
-                            </div>
-                        </div>
-                        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+                        <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
                     </div>
                 </div>
 
-                <div data-aos="fade-up" data-aos-delay="500">
+                <div data-aos="fade-up" data-aos-delay="300">
                     <div class="flex items-center justify-between mb-4 sm:mb-6 px-1">
                         <h3 class="text-xs sm:text-sm font-black text-slate-900 uppercase tracking-widest">Sedang Dipelajari</h3>
-                        <span class="text-[9px] sm:text-[10px] font-bold bg-slate-200 text-slate-600 px-2 sm:px-3 py-1 rounded-full">Semester {{ $mahasiswa->semester }}</span>
+                        <span class="text-[9px] sm:text-[10px] font-bold bg-slate-200 text-slate-600 px-2 sm:px-3 py-1 rounded-full">Semester {{ $mahasiswa->semester ?? '-' }}</span>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                        @foreach ($kelas as $index => $k)
-                            <div onclick="navigasiKe({{ 11 + $index }})" class="group bg-white p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-lg transition-all cursor-pointer flex items-center gap-4 sm:gap-6">
-                                <div class="w-14 h-14 sm:w-20 sm:h-20 bg-blue-50 text-blue-600 rounded-xl sm:rounded-3xl flex items-center justify-center font-black text-lg sm:text-2xl shrink-0">
-                                    {{ 11 + $index }}
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <h4 class="text-sm sm:text-lg font-black text-slate-900 truncate">{{ $k->mataKuliah->nama }}</h4>
-                                    <p class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase truncate mt-0.5">{{ $k->dosen->nama }}</p>
-                                    <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mt-2">
-                                        <div class="h-full bg-blue-500 rounded-full" style="width: {{ $k->progress ?? 0 }}%"></div>
+                        @if(isset($kelas) && count($kelas) > 0)
+                            @foreach ($kelas as $k)
+                                <a href="{{ route('course.detail', ['kelas' => $k->id]) }}" class="group bg-white p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-lg transition-all flex items-center gap-4 sm:gap-6">
+                                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 transition-colors">
+                                        <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                        </svg>
                                     </div>
-                                </div>
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="text-sm sm:text-base font-black text-slate-900 truncate">{{ $k->mataKuliah->nama }}</h4>
+                                        <p class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase truncate mt-0.5">{{ $k->dosen->nama }}</p>
+                                        <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mt-2">
+                                            <div class="h-full bg-blue-500 rounded-full transition-all" style="width: {{ $k->progress ?? 0 }}%"></div>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
+                        @else
+                            <div class="col-span-full p-8 text-center text-slate-400 text-sm font-medium border-2 border-dashed border-slate-200 rounded-3xl">
+                                Belum ada mata kuliah yang sedang dipelajari.
                             </div>
-                        @endforeach
+                        @endif
                     </div>
                 </div>
             </div>
@@ -432,16 +234,6 @@
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
         <script>
-            const kelasData = {!! json_encode(
-                $kelas->values()->map(function ($k, $i) {
-                    return [
-                        'nomor' => 11 + $i,
-                        'nama'  => $k->mataKuliah->nama,
-                        'url' => route('course.detail', ['kelas' => $k->id]),
-                    ];
-                })->toArray()
-            ) !!};
-
             AOS.init({ once: true, easing: "ease-out-cubic" });
 
             function toggleSidebar() {
@@ -454,161 +246,222 @@
             const synth = window.speechSynthesis;
 
             const SpeechRec = window.webkitSpeechRecognition || window.SpeechRecognition;
-            let rec = SpeechRec ? new SpeechRec() : null;
+            let rec = null;
+            let isRecActive = false;
+            let isRedirecting = false;
+            let isSpeaking = false;
 
-            if (rec) {
+            if (SpeechRec) {
+                rec = new SpeechRec();
                 rec.lang = "id-ID";
                 rec.continuous = true;
+                rec.interimResults = true; // Rahasia Voice Barge-in
             }
 
+            let waveInterval;
             function setWave(active) {
-                waveBars.forEach(bar => {
-                    bar.style.height = active ? `${Math.floor(Math.random() * 12) + 4}px` : "4px";
-                });
+                if (active) {
+                    if (waveInterval) clearInterval(waveInterval);
+                    waveInterval = setInterval(() => {
+                        waveBars.forEach((bar) => {
+                            const h = Math.floor(Math.random() * 20) + 4;
+                            bar.style.height = `${h}px`;
+                        });
+                    }, 100);
+                } else {
+                    clearInterval(waveInterval);
+                    waveBars.forEach((bar) => (bar.style.height = "4px"));
+                }
             }
 
-            let interval;
-
-            function bicara(teks, callback) {
-                synth.cancel();
-                const utter = new SpeechSynthesisUtterance(teks);
-                utter.lang = "id-ID";
-                utter.rate = parseFloat(localStorage.getItem("speechRate")) || 1.0;
-
-                utter.onstart = () => {
-                    if(statusDesc) statusDesc.innerText = "BERBICARA...";
-                    interval = setInterval(() => setWave(true), 150);
-                };
-
-                utter.onend = () => {
-                    if(statusDesc) statusDesc.innerText = "MENDENGARKAN...";
-                    clearInterval(interval);
+            // Fitur Cut-Off manual dengan tap layar
+            document.body.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+                if (isSpeaking && !isRedirecting) {
+                    synth.cancel();
                     setWave(false);
-                    if (callback) callback();
-                };
+                }
+            });
 
-                synth.speak(utter);
+            function mulaiMendengar() {
+                if (!rec || isRedirecting || isRecActive) return;
+                try {
+                    rec.start();
+                    isRecActive = true;
+                } catch (e) {
+                    console.error("Mic error:", e);
+                }
+            }
+
+            function bicara(teks, callback = null) {
+                if (isRedirecting) return;
+                synth.cancel();
+
+                setTimeout(() => {
+                    const utter = new SpeechSynthesisUtterance(teks);
+                    utter.lang = "id-ID";
+                    utter.rate = parseFloat(localStorage.getItem("speechRate")) || 1.0;
+
+                    utter.onstart = () => {
+                        isSpeaking = true;
+                        if(statusDesc) {
+                            statusDesc.innerText = "BERBICARA & MENDENGARKAN";
+                            statusDesc.classList.replace("text-slate-400", "text-blue-600");
+                            statusDesc.classList.replace("text-green-600", "text-blue-600");
+                        }
+                        setWave(true);
+                        mulaiMendengar(); // Mic nyala bersamaan (Barge-in)
+                    };
+
+                    utter.onend = () => {
+                        isSpeaking = false;
+                        setWave(false);
+                        if (!isRedirecting && statusDesc) {
+                            statusDesc.innerText = "MENDENGARKAN";
+                            statusDesc.classList.replace("text-blue-600", "text-green-600");
+                        }
+                        if (callback) callback();
+                    };
+
+                    utter.onerror = (e) => {
+                        isSpeaking = false;
+                        setWave(false);
+                        mulaiMendengar();
+                    };
+
+                    synth.speak(utter);
+                }, 50);
             }
 
             function getPanduanUtama() {
-                const daftarKelasVoice = kelasData.map(k => `${k.nomor} untuk kelas ${k.nama}`).join(", ");
-                let namaPanggilanVoice = "{{ $namaPanggilan }}";
-
-                let orientasi = `Halo ${namaPanggilanVoice}, selamat datang di Dashboard Mahasiswa. Silakan sebutkan angka berikut: `;
-                orientasi += "Satu untuk Daftar Semua Mata Kuliah. Dua untuk Gabung Mata Kuliah. Tiga untuk Daftar Ujian. Empat untuk Gabung Ujian. ";
-                orientasi += "Enam untuk Profil Saya. Tujuh untuk Pemberitahuan. Delapan untuk Pesan Privat. Sembilan untuk Bantuan. ";
-                
-                if (kelasData.length > 0) {
-                    orientasi += "Untuk mengakses kelas yang sedang dipelajari, sebutkan: " + daftarKelasVoice + ". ";
-                } else {
-                    orientasi += "Saat ini Anda belum memiliki kelas yang sedang dipelajari. ";
-                }
-                
-                orientasi += "Nol untuk Keluar dari aplikasi. Katakan Ulang, jika Anda butuh bantuan panduan.";
-                return orientasi;
+                let nama = "{{ $namaPanggilan }}";
+                let panduan = `Halo ${nama}, selamat datang di Dashboard Mahasiswa. Silakan sebutkan angka berikut: `;
+                panduan += "Satu, untuk Daftar Mata Kuliah. ";
+                panduan += "Dua, untuk Daftar Ujian. ";
+                panduan += "Tiga, untuk Profil Saya. ";
+                panduan += "Empat, untuk Pemberitahuan. ";
+                panduan += "Lima, untuk Pesan Privat. ";
+                panduan += "Enam, untuk Bantuan. ";
+                panduan += "Atau Nol untuk Keluar. Katakan Ulang, jika Anda butuh panduan kembali.";
+                return panduan;
             }
 
             function navigasiKe(nomor) {
+                if (isRedirecting) return;
+
                 let tujuan = "";
                 let teks = "";
 
                 if (nomor === 1) {
                     tujuan = "{{ route('courses.index') }}";
-                    teks = "Membuka Daftar Semua Mata Kuliah.";
+                    teks = "Satu. Membuka Daftar Mata Kuliah.";
                 } else if (nomor === 2) {
-                    tujuan = "{{ route('courses.join') }}";
-                    teks = "Membuka halaman Gabung Mata Kuliah.";
-                } else if (nomor === 3) {
                     tujuan = "{{ route('exams') }}";
-                    teks = "Membuka Daftar Ujian.";
-                } else if (nomor === 4) {
-                    tujuan = "{{ route('join.exam') }}";
-                    teks = "Membuka halaman Gabung Ujian.";
-                } else if (nomor === 5) {
-                    teks = "Anda sudah berada di Beranda.";
-                } else if (nomor === 6) {
+                    teks = "Dua. Membuka Daftar Ujian.";
+                } else if (nomor === 3) {
                     tujuan = "{{ route('profile') }}";
-                    teks = "Membuka Profil Saya.";
-                } else if (nomor === 7) {
+                    teks = "Tiga. Membuka Profil Saya.";
+                } else if (nomor === 4) {
                     tujuan = "{{ route('notifications') }}";
-                    teks = "Membuka Pemberitahuan.";
-                } else if (nomor === 8) {
+                    teks = "Empat. Membuka Pemberitahuan.";
+                } else if (nomor === 5) {
                     tujuan = "{{ route('messages') }}";
-                    teks = "Membuka Pesan.";
-                } else if (nomor === 9) {
+                    teks = "Lima. Membuka Pesan.";
+                } else if (nomor === 6) {
                     tujuan = "{{ route('help') }}";
-                    teks = "Membuka Bantuan.";
+                    teks = "Enam. Membuka Bantuan.";
                 } else if (nomor === 0) {
                     tujuan = "{{ route('logout') }}";
-                    teks = "Keluar dari aplikasi. Sampai jumpa.";
-                } else {
-                    const kelas = kelasData.find(k => k.nomor === nomor);
-                    if (kelas) {
-                        tujuan = kelas.url;
-                        teks = "Membuka mata kuliah " + kelas.nama;
+                    teks = "Nol. Keluar dari aplikasi. Sampai jumpa.";
+                }
+
+                if (teks && tujuan) {
+                    isRedirecting = true;
+                    synth.cancel();
+                    if(rec) rec.abort();
+
+                    if(statusDesc) {
+                        statusDesc.innerText = "MENGALIHKAN...";
+                        statusDesc.classList.replace("text-green-600", "text-slate-800");
+                    }
+
+                    bicara(teks, () => {
+                        window.location.href = tujuan;
+                    });
+
+                    // Fallback jika API Text-to-Speech browser hang
+                    setTimeout(() => { window.location.href = tujuan; }, 4000);
+                }
+            }
+
+            if (rec) {
+                rec.onresult = (event) => {
+                    if (isRedirecting) return;
+
+                    let hasil = "";
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        hasil += event.results[i][0].transcript;
+                    }
+                    hasil = hasil.toLowerCase().trim();
+
+                    // ANTI-ECHO PINTAR: Hindari mic mendengar suara bot membaca menu panjang
+                    const omonganBot = [
+                        "selamat datang", "sebutkan angka berikut", "daftar mata kuliah", 
+                        "daftar ujian", "profil saya", "pemberitahuan", "pesan privat", "katakan ulang"
+                    ];
+                    if (omonganBot.some(kalimat => hasil.includes(kalimat))) {
+                        return;
+                    }
+
+                    prosesJawaban(hasil);
+                };
+
+                rec.onend = () => {
+                    isRecActive = false;
+                    if (!isRedirecting) mulaiMendengar();
+                };
+            }
+
+            function prosesJawaban(hasil) {
+                if (hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan")) {
+                    synth.cancel();
+                    if(rec) rec.abort();
+                    bicara(getPanduanUtama());
+                    return;
+                }
+
+                // Cek Angka Langsung ("1", "2")
+                const angka = hasil.match(/\d+/);
+                if (angka && parseInt(angka[0]) >= 0 && parseInt(angka[0]) <= 6) {
+                    navigasiKe(parseInt(angka[0]));
+                    return;
+                }
+
+                // Cek Pengejaan ("Satu", "Dua") dilengkapi variasi salah eja
+                const mapKata = {
+                    satu: 1, sato: 1,
+                    dua: 2, tua: 2, jua: 2,
+                    tiga: 3,
+                    empat: 4,
+                    lima: 5,
+                    enam: 6,
+                    nol: 0, kosong: 0
+                };
+
+                for (const kata in mapKata) {
+                    if (hasil.includes(kata)) {
+                        navigasiKe(mapKata[kata]);
+                        return;
                     }
                 }
-
-                if (teks) {
-                    bicara(teks, () => {
-                        if (tujuan) window.location.href = tujuan;
-                        else { try { rec.start(); } catch(e) {} }
-                    });
-                }
             }
 
-            function mulaiMendengar() {
-                if (!rec) return;
-
-                try {
-                    rec.start();
-                    rec.onresult = (event) => {
-                        const hasil = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
-
-                        if (hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan")) {
-                            bicara(getPanduanUtama(), () => { mulaiMendengar(); });
-                            return;
-                        }
-
-                        const angka = hasil.match(/\d+/);
-                        if (angka) {
-                            navigasiKe(parseInt(angka[0]));
-                            return;
-                        }
-
-                        const mapKata = {
-                            satu: 1, dua: 2, tiga: 3, empat: 4,
-                            lima: 5, enam: 6, tujuh: 7,
-                            delapan: 8, sembilan: 9, nol: 0
-                        };
-
-                        for (const kata in mapKata) {
-                            if (hasil.includes(kata)) {
-                                navigasiKe(mapKata[kata]);
-                                return;
-                            }
-                        }
-
-                        kelasData.forEach(k => {
-                            if (hasil.includes(k.nama.toLowerCase())) {
-                                navigasiKe(k.nomor);
-                            }
-                        });
-                    };
-
-                    rec.onend = () => rec.start();
-                } catch (e) {
-                    console.error("Speech recognition error:", e);
-                }
-            }
-
-            window.onload = () => {
-                document.body.addEventListener("click", () => {}, { once: true });
-                
+            window.addEventListener("load", () => {
                 setTimeout(() => {
-                    bicara(getPanduanUtama(), mulaiMendengar);
+                    mulaiMendengar();
+                    bicara(getPanduanUtama());
                 }, 800);
-            };
+            });
         </script>
     </body>
 </html>

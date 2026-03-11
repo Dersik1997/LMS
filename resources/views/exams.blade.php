@@ -17,24 +17,19 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .safe-fade-in { animation: fadeIn 0.6s ease-out forwards; opacity: 0; }
         
-        /* Voice Wave Animation */
-        @keyframes wave-bounce {
-            0%, 100% { height: 4px; }
-            50% { height: 16px; }
-        }
         .wave-bar { transition: height 0.1s ease; }
     </style>
 </head>
 <body class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] text-slate-800 relative custom-scrollbar flex flex-col h-[100dvh] overflow-hidden">
     
-    {{-- BACKGROUND DEKORASI (Nuansa Biru) --}}
+    {{-- BACKGROUND DEKORASI --}}
     <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
         <div class="absolute top-[-10%] right-[-5%] w-64 md:w-[400px] h-64 md:h-[400px] bg-blue-100/40 rounded-full blur-3xl opacity-50"></div>
         <div class="absolute bottom-[-10%] left-[-10%] w-64 md:w-[400px] h-64 md:h-[400px] bg-indigo-50/40 rounded-full blur-3xl opacity-50"></div>
     </div>
 
     {{-- NAVBAR & VOICE STATUS --}}
-    <header class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-2 sm:py-4 shadow-sm w-full shrink-0">
+    <header class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-2 sm:py-4 shadow-sm w-full shrink-0 cursor-pointer" id="voice-header" title="Ketuk untuk memotong suara sistem">
         <div class="max-w-7xl mx-auto grid grid-cols-3 items-center relative h-10 sm:h-12 md:h-14">
             
             {{-- Kiri: Tombol 0 (Kembali ke Dashboard) --}}
@@ -68,7 +63,7 @@
                     <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
                     <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
                 </div>
-                <span id="status-desc" class="hidden sm:block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest w-12 sm:w-20 text-left">SIAP</span>
+                <span id="status-desc" class="hidden sm:block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest w-12 sm:w-20 text-left">MENYIAPKAN</span>
             </div>
         </div>
     </header>
@@ -91,17 +86,15 @@
                 <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-5 md:gap-6 text-center md:text-left">
                     <div class="flex flex-col md:flex-row items-center gap-4 md:gap-6 w-full md:w-auto">
                         <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/20 border border-white/10 flex items-center justify-center backdrop-blur-md shrink-0">
-                            <svg class="w-7 h-7 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
-                            </svg>
+                            <span class="text-2xl sm:text-3xl font-black tracking-tighter">1</span>
                         </div>
                         <div>
                             <h2 class="text-xl sm:text-2xl font-black tracking-tight">Punya Token Ujian?</h2>
                             <p class="text-blue-50 text-xs sm:text-sm font-medium mt-1">Gabung ujian dadakan atau kuis khusus menggunakan kode dari dosen.</p>
                         </div>
                     </div>
-                    <button class="w-full md:w-auto bg-white text-blue-700 px-6 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest group-hover:bg-blue-50 transition-all shadow-lg flex items-center justify-center md:justify-start gap-2 shrink-0 active:scale-95">
-                        <span class="opacity-50 text-blue-400">1</span> Masukkan Token
+                    <button class="w-full md:w-auto bg-white text-blue-700 px-6 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest group-hover:bg-blue-50 transition-all shadow-lg flex items-center justify-center md:justify-start gap-2 shrink-0 active:scale-95 pointer-events-none">
+                        Masukkan Token
                     </button>
                 </div>
                 <div class="absolute right-0 top-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
@@ -121,6 +114,7 @@
                 <div class="grid grid-cols-1 gap-4 sm:gap-5">
                     @forelse ($exams as $index => $exam)
                         @php
+                            // Penomoran Voice dimulai dari 2, karena 1 untuk Token Ujian
                             $voiceId = $index + 2; 
 
                             $mahasiswaId = Auth::guard('mahasiswa')->id();
@@ -179,7 +173,7 @@
 
                             {{-- Tanggal Box --}}
                             <div class="w-full sm:w-24 py-3 sm:py-0 h-auto sm:h-24 {{ $bgClass }} {{ $dateTextClass }} rounded-[1rem] sm:rounded-[1.5rem] flex flex-row sm:flex-col items-center justify-center gap-2 sm:gap-0 shrink-0 border {{ $borderClass }} relative mt-4 sm:mt-0">
-                                <div class="absolute -top-3 -left-3 w-7 h-7 sm:w-8 sm:h-8 rounded-full {{ $badgeBg }} flex items-center justify-center font-black text-[10px] sm:text-xs border-[3px] border-white shadow-sm z-10">
+                                <div class="absolute -top-3 -left-3 w-7 h-7 sm:w-8 sm:h-8 rounded-full {{ $badgeBg }} flex items-center justify-center font-black text-[10px] sm:text-xs border-[3px] border-white shadow-sm z-10 transition-colors">
                                     {{ $voiceId }}
                                 </div>
                                 <span class="text-[9px] sm:text-[10px] font-black bg-white/60 px-2 py-0.5 rounded-md shadow-sm sm:mb-1 sm:mt-2">{{ $exam->kategori }}</span>
@@ -225,7 +219,7 @@
                                         {{ $status_text }}
                                     </button>
                                 @elseif($status_text == 'Sedang Berlangsung')
-                                    <a href="{{ route('exam.preparation', $exam->id) }}" class="w-full sm:w-auto px-5 py-3 sm:py-3 bg-blue-600 text-white font-black rounded-xl text-[10px] sm:text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-md shadow-blue-200 flex items-center justify-center gap-2">
+                                    <a href="{{ route('exam.preparation', $exam->id) }}" class="w-full sm:w-auto px-5 py-3 sm:py-3 bg-blue-600 text-white font-black rounded-xl text-[10px] sm:text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-md shadow-blue-200 flex items-center justify-center gap-2 pointer-events-none">
                                         <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
                                         Kerjakan
                                     </a>
@@ -255,7 +249,11 @@
         </div>
     </main>
 
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
     <script>
+        AOS.init({ once: true, easing: "ease-out-cubic" });
+
         // --- Logika Filter Tabs ---
         function filterExams(kategori, btnElement) {
             const tabs = document.querySelectorAll('.tab-btn');
@@ -287,8 +285,10 @@
         }
 
         // ==================================================
-        // LOGIKA VOICE ASSISTANT
+        // LOGIKA VOICE ASSISTANT (BARGE-IN & ANTI-HANG)
         // ==================================================
+        
+        // Buat Array Daftar Ujian secara dinamis dari PHP
         const examList = [
             @foreach($exams as $index => $ex)
                 @php 
@@ -297,9 +297,7 @@
                     $nilaiJS = $isSelesaiJS ? rtrim(rtrim(number_format($userRes->nilai, 2, '.', ''), '0'), '.') : '0';
 
                     $isPub = $ex->is_published ?? (isset($ex->status) ? $ex->status != 'draft' : true);
-                    
                     $isActiveVoice = $isPub && (now() >= $ex->waktu_mulai && now() <= $ex->waktu_selesai) && !$isSelesaiJS; 
-                    
                     $alasan = $isSelesaiJS ? "sudah berhasil Anda kerjakan" : "belum dibuka atau sudah berakhir";
                 @endphp
                 {
@@ -320,41 +318,95 @@
         const waveBars = document.querySelectorAll(".wave-bar");
         const synth = window.speechSynthesis;
         const SpeechRec = window.webkitSpeechRecognition || window.SpeechRecognition;
+        
         let rec = null;
-        let interval;
+        let isRecActive = false;
+        let isRedirecting = false;
+        let isSpeaking = false;
+        let waveInterval;
 
         if (SpeechRec) { 
             rec = new SpeechRec(); 
             rec.lang = "id-ID"; 
             rec.continuous = true; 
+            rec.interimResults = true; // Kunci Voice Barge-in
         }
 
         function setWave(active) {
-            if (waveBars.length > 0) {
-                waveBars.forEach((bar) => { 
-                    bar.style.height = active ? `${Math.floor(Math.random() * 12) + 4}px` : "4px"; 
-                });
+            if (active) {
+                if (waveInterval) clearInterval(waveInterval);
+                waveInterval = setInterval(() => {
+                    if (waveBars.length > 0) {
+                        waveBars.forEach((bar) => {
+                            bar.style.height = `${Math.floor(Math.random() * 12) + 4}px`;
+                        });
+                    }
+                }, 100);
+            } else {
+                clearInterval(waveInterval);
+                if (waveBars.length > 0) {
+                    waveBars.forEach((bar) => (bar.style.height = "4px"));
+                }
             }
         }
 
-        function bicara(teks, callback) {
-            synth.cancel();
-            const utter = new SpeechSynthesisUtterance(teks);
-            utter.lang = "id-ID";
-            const savedRate = localStorage.getItem("speechRate");
-            utter.rate = savedRate ? parseFloat(savedRate) : 1.0;
+        // Fitur Cut-Off Manual klik layar
+        document.body.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+            if (isSpeaking && !isRedirecting) {
+                synth.cancel();
+                setWave(false);
+            }
+        });
 
-            utter.onstart = () => { 
-                if (statusDesc) statusDesc.innerText = "BERBICARA..."; 
-                interval = setInterval(() => setWave(true), 150); 
-            };
-            utter.onend = () => { 
-                if (statusDesc) statusDesc.innerText = "MENDENGARKAN..."; 
-                clearInterval(interval); 
-                setWave(false); 
-                if (callback) callback(); 
-            };
-            synth.speak(utter);
+        function mulaiMendengar() {
+            if (!rec || isRedirecting || isRecActive) return;
+            try {
+                rec.start();
+                isRecActive = true;
+            } catch (e) {
+                console.error("Mic error:", e);
+            }
+        }
+
+        function bicara(teks, callback = null) {
+            if (isRedirecting) return;
+            synth.cancel();
+
+            setTimeout(() => {
+                const utter = new SpeechSynthesisUtterance(teks);
+                utter.lang = "id-ID";
+                const savedRate = localStorage.getItem("speechRate");
+                utter.rate = savedRate ? parseFloat(savedRate) : 1.0;
+
+                utter.onstart = () => { 
+                    isSpeaking = true;
+                    if (statusDesc) {
+                        statusDesc.innerText = "BERBICARA...";
+                        statusDesc.classList.replace("text-slate-400", "text-blue-600");
+                    }
+                    setWave(true); 
+                    mulaiMendengar(); // Mic nyala bersamaan (Barge-in)
+                };
+                
+                utter.onend = () => { 
+                    isSpeaking = false;
+                    setWave(false);
+                    if (!isRedirecting && statusDesc) {
+                        statusDesc.innerText = "MENDENGARKAN";
+                        statusDesc.classList.replace("text-blue-600", "text-green-600");
+                    }
+                    if (callback) callback(); 
+                };
+
+                utter.onerror = () => {
+                    isSpeaking = false;
+                    setWave(false);
+                    mulaiMendengar();
+                };
+
+                synth.speak(utter);
+            }, 50);
         }
 
         // FUNGSI PANDUAN UTAMA
@@ -366,57 +418,55 @@
             }
 
             let totalUjian = {{ count($exams) }};
-            teks += "Anda berada di Halaman Daftar Ujian. ";
+            teks += "Halaman Daftar Ujian. ";
             
-            if (totalUjian > 0) {
-                teks += "Sebutkan angka satu untuk memasukkan Token Ujian secara manual. ";
+            if (totalUjian >= 0) {
+                teks += "Sebutkan angka satu untuk memasukkan Token Ujian. ";
                 
                 let activeExams = examList.filter(e => e.isAktif);
                 let finishedExams = examList.filter(e => e.isSelesai);
 
                 if(activeExams.length > 0) {
-                    teks += "Terdapat ujian yang bisa Anda ikuti: ";
+                    teks += "Ujian yang bisa Anda ikuti: ";
                     activeExams.forEach(e => {
-                        // Penyebutan Jenis Ujian dengan lebih eksplisit
-                        teks += `Sebutkan angka ${e.voiceId} untuk mengikuti ${e.kategori} mata kuliah ${e.mataKuliah}, dengan judul ${e.judul}. `;
+                        teks += `Sebutkan angka ${e.voiceId} untuk ujian ${e.judul}. `;
                     });
-                } else {
+                } else if (totalUjian > 0) {
                     teks += "Saat ini tidak ada ujian yang sedang aktif untuk dikerjakan. ";
                 }
 
                 if(finishedExams.length > 0) {
-                    teks += "Berikut adalah ujian yang sudah Anda kerjakan: ";
+                    teks += "Ujian yang sudah Anda kerjakan: ";
                     finishedExams.forEach(e => {
-                        // Penyebutan Jenis Ujian dengan lebih eksplisit
-                        teks += `${e.kategori} mata kuliah ${e.mataKuliah} dengan judul ${e.judul}, nilai Anda adalah ${e.nilai}. `;
+                        teks += `${e.judul}, nilai Anda ${e.nilai}. `;
                     });
                 }
                 
                 teks += "Sebutkan nol untuk kembali ke dashboard utama.";
-            } else {
-                teks += "Saat ini belum ada ujian yang diterbitkan oleh dosen. Sebutkan angka satu untuk memasukkan Token Ujian manual, atau sebutkan nol untuk kembali ke dashboard.";
             }
             
-            teks += " Katakan Ulang, jika Anda butuh mendengarkan panduan ini lagi.";
+            teks += " Katakan Ulang, untuk mendengarkan panduan.";
             return teks;
         }
 
         function navigasiKe(nomor) {
+            if (isRedirecting) return;
+
             let tujuan = "";
             let teks = "";
 
             if (nomor === 0) {
                 tujuan = "{{ route('dashboard') }}"; 
-                teks = "Kembali ke Dashboard utama.";
+                teks = "Nol. Kembali ke Dashboard utama.";
             } else if (nomor === 1) {
                 tujuan = "{{ route('join.exam') }}";
-                teks = "Membuka halaman untuk memasukkan token ujian manual.";
+                teks = "Satu. Membuka halaman untuk memasukkan token ujian.";
             } else if (nomor >= 2) {
                 let examTujuan = examList.find(e => e.voiceId === nomor);
                 
                 if (examTujuan) {
                     if (examTujuan.isAktif) {
-                        teks = `Membuka persiapan untuk ujian ${examTujuan.kategori} mata kuliah ${examTujuan.mataKuliah}.`;
+                        teks = `Membuka persiapan untuk ujian ${examTujuan.judul}.`;
                         const baseUrl = "{{ route('exam.preparation', 'EXAM_ID') }}";
                         tujuan = baseUrl.replace('EXAM_ID', examTujuan.id);
                     } else if (examTujuan.isSelesai) {
@@ -433,74 +483,112 @@
             }
 
             if (teks !== "") {
+                if (tujuan !== "" && tujuan !== "#") {
+                    isRedirecting = true;
+                    synth.cancel();
+                    if(rec) rec.abort();
+
+                    if(statusDesc) {
+                        statusDesc.innerText = "MENGALIHKAN...";
+                        statusDesc.classList.replace("text-green-600", "text-slate-800");
+                    }
+                }
+
                 bicara(teks, () => {
-                    setTimeout(() => {
-                        if (tujuan !== "" && tujuan !== "#") {
-                            window.location.href = tujuan;
-                        } else {
-                            if (rec) rec.start();
-                        }
-                    }, 500);
+                    if (tujuan !== "" && tujuan !== "#") {
+                        window.location.href = tujuan;
+                    }
                 });
+
+                // Fallback Anti-Hang
+                if (tujuan !== "" && tujuan !== "#") {
+                    setTimeout(() => { window.location.href = tujuan; }, 4000);
+                }
             }
         }
 
-        function mulaiMendengar() {
-            if (!rec) return;
-            try {
-                rec.start();
-                rec.onresult = (event) => {
-                    const hasil = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
-                    
-                    // Fitur Ulangi / Panduan
-                    if (hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan")) {
-                        rec.stop();
-                        bicara(getPanduanUtama(false), () => { rec.start(); });
-                        return;
-                    }
+        if (rec) {
+            rec.onresult = (event) => {
+                if (isRedirecting) return;
 
-                    const kataAngka = {
-                        "nol": 0, "satu": 1, "dua": 2, "tiga": 3, "empat": 4, "lima": 5, 
-                        "enam": 6, "tujuh": 7, "delapan": 8, "sembilan": 9, "sepuluh": 10
-                    };
+                let hasil = "";
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    hasil += event.results[i][0].transcript;
+                }
+                hasil = hasil.toLowerCase().trim();
+                
+                // ANTI ECHO: Cegah mik menangkap suara bot sendiri
+                const omonganBot = [
+                    "terima kasih telah mengikuti", "halaman daftar ujian", 
+                    "sebutkan angka satu", "token ujian", "ujian yang bisa anda ikuti", 
+                    "sebutkan angka", "saat ini tidak ada", "ujian yang sudah anda kerjakan", 
+                    "nilai anda", "kembali ke dashboard", "katakan ulang", "sudah anda kerjakan dengan nilai"
+                ];
 
-                    let terdeteksiAngka = null;
-                    const regexAngka = hasil.match(/\d+/);
-                    
-                    if (regexAngka) {
-                        terdeteksiAngka = parseInt(regexAngka[0]);
-                    } else {
-                        for (let kata in kataAngka) {
-                            if (hasil.includes(kata)) { terdeteksiAngka = kataAngka[kata]; break; }
-                        }
-                    }
+                if (omonganBot.some(kalimat => hasil.includes(kalimat))) {
+                    return;
+                }
 
-                    if (terdeteksiAngka !== null) {
-                        rec.stop();
-                        navigasiKe(terdeteksiAngka);
-                    } else if (hasil.includes("kembali") || hasil.includes("dashboard")) { 
-                        rec.stop();
-                        navigasiKe(0); 
-                    } else if (hasil.includes("token")) { 
-                        rec.stop();
-                        navigasiKe(1); 
-                    }
-                };
-                rec.onend = () => { rec.start(); };
-            } catch (e) {
-                console.error("Error recognition:", e);
+                prosesJawaban(hasil);
+            };
+
+            rec.onend = () => { 
+                isRecActive = false;
+                if (!isRedirecting) mulaiMendengar(); 
+            };
+        }
+
+        function prosesJawaban(hasil) {
+            if (hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan")) {
+                synth.cancel();
+                if(rec) rec.abort();
+                bicara(getPanduanUtama(false));
+                return;
+            }
+
+            // Deteksi Angka Langsung
+            const angka = hasil.match(/\d+/);
+            if (angka) {
+                navigasiKe(parseInt(angka[0]));
+                return;
+            }
+
+            // Deteksi Pengejaan
+            const kataAngka = {
+                "nol": 0, "kosong": 0,
+                "satu": 1, "sato": 1, "sate": 1,
+                "dua": 2, "tua": 2, "jua": 2,
+                "tiga": 3,
+                "empat": 4,
+                "lima": 5,
+                "enam": 6,
+                "tujuh": 7, "tuju": 7,
+                "delapan": 8,
+                "sembilan": 9,
+                "sepuluh": 10
+            };
+
+            for (let kata in kataAngka) {
+                if (hasil.includes(kata)) { 
+                    navigasiKe(kataAngka[kata]); 
+                    return;
+                }
+            }
+
+            if (hasil.includes("kembali") || hasil.includes("dashboard")) { 
+                navigasiKe(0); 
+            } else if (hasil.includes("token")) { 
+                navigasiKe(1); 
             }
         }
 
-        window.onload = () => {
+        window.addEventListener("load", () => {
             document.body.addEventListener("click", () => {}, { once: true });
             setTimeout(() => { 
-                // isInitial = true agar session success terbaca pertama kali
-                bicara(getPanduanUtama(true), () => { 
-                    mulaiMendengar(); 
-                }); 
+                mulaiMendengar();
+                bicara(getPanduanUtama(true)); 
             }, 800);
-        };
+        });
     </script>
 </body>
 </html>

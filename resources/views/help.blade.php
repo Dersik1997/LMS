@@ -2,360 +2,125 @@
 <html lang="id">
     <head>
         <meta charset="UTF-8" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <title>Pusat Bantuan | LMS Inklusi UMMI</title>
 
-        <link
-            href="https://unpkg.com/aos@2.3.1/dist/aos.css"
-            rel="stylesheet"
-        />
+        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <link
-            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-            rel="stylesheet"
-        />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
         <style>
-            html {
-                scrollbar-gutter: stable;
-            }
-            .custom-scrollbar::-webkit-scrollbar {
-                width: 5px;
-            }
-            .custom-scrollbar::-webkit-scrollbar-track {
-                background: transparent;
-            }
-            .custom-scrollbar::-webkit-scrollbar-thumb {
-                background-color: #cbd5e1;
-                border-radius: 20px;
-            }
+            html { scrollbar-gutter: stable; }
+            .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+            .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+            .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+            .wave-bar { transition: height 0.1s ease; }
         </style>
     </head>
     
-    <body
-        class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] h-[100dvh] flex flex-col lg:flex-row border-box text-slate-800 overflow-hidden"
-    >
-        <div
-            id="mobileBackdrop"
-            onclick="toggleSidebar()"
-            class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden transition-opacity"
-        ></div>
+    <body class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] h-[100dvh] flex flex-col lg:flex-row border-box text-slate-800 overflow-hidden custom-scrollbar">
+        <div id="mobileBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden transition-opacity"></div>
 
-        <aside
-            id="sidebar"
-            class="fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-[100dvh] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shrink-0"
-        >
-            <div
-                class="p-8 border-b border-slate-100 flex items-center gap-4 shrink-0"
-            >
-                <img
-                    src="{{ asset('images/logo-ummi.png') }}"
-                    class="w-10 h-10 object-contain"
-                    alt="Logo UMMI"
-                    onerror="this.src = 'https://via.placeholder.com/40'"
-                />
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-[100dvh] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shrink-0">
+            <div class="p-8 border-b border-slate-100 flex items-center gap-4 shrink-0">
+                <img src="{{ asset('images/logo-ummi.png') }}" class="w-10 h-10 object-contain" alt="Logo UMMI" onerror="this.src = 'https://via.placeholder.com/40'" />
                 <div>
-                    <h1
-                        class="text-lg font-black text-slate-900 tracking-tight leading-none"
-                    >
-                        LMS Inklusi
-                    </h1>
-                    <p
-                        class="text-[9px] font-bold text-blue-600 uppercase tracking-widest mt-1"
-                    >
-                        Portal Mahasiswa
-                    </p>
+                    <h1 class="text-lg font-black text-slate-900 tracking-tight leading-none">LMS Inklusi</h1>
+                    <p class="text-[9px] font-bold text-blue-600 uppercase tracking-widest mt-1">Portal Mahasiswa</p>
                 </div>
-                <button
-                    onclick="toggleSidebar()"
-                    class="lg:hidden ml-auto text-slate-400 hover:text-slate-600 cursor-pointer p-2 bg-slate-50 rounded-lg"
-                >
-                    <svg
-                        class="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                        ></path>
-                    </svg>
+                <button onclick="toggleSidebar()" class="lg:hidden ml-auto text-slate-400 hover:text-slate-600 cursor-pointer p-2 bg-slate-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
 
             <nav class="flex-1 p-6 space-y-3 overflow-y-auto custom-scrollbar">
-                <a
-                    href="{{ route('dashboard') ?? '#' }}"
-                    onclick="navigasiKe(5)"
-                    class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
-                >
+                <a href="{{ route('dashboard') ?? '#' }}" onclick="navigasiKe(5); return false;" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
                     <div class="flex items-center gap-4">
-                        <svg
-                            class="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                            ></path>
-                        </svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                         <span>Beranda</span>
                     </div>
-                    <span
-                        class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm"
-                        >5</span
-                    >
+                    <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">5</span>
                 </a>
 
-                <a
-                    href="{{ route('profile') ?? '#' }}"
-                    onclick="navigasiKe(6)"
-                    class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
-                >
+                <a href="{{ route('profile') ?? '#' }}" onclick="navigasiKe(6); return false;" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
                     <div class="flex items-center gap-4">
-                        <svg
-                            class="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                            ></path>
-                        </svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                         <span>Profil Saya</span>
                     </div>
-                    <span
-                        class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm"
-                        >6</span
-                    >
+                    <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">6</span>
                 </a>
 
-                <a
-                    href="{{ route('notifications') ?? '#' }}"
-                    onclick="navigasiKe(7)"
-                    class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
-                >
+                <a href="{{ route('notifications') ?? '#' }}" onclick="navigasiKe(7); return false;" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
                     <div class="flex items-center gap-4">
-                        <svg
-                            class="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                            ></path>
-                        </svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                         <span>Pemberitahuan</span>
                     </div>
-                    <span
-                        class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm"
-                        >7</span
-                    >
+                    <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">7</span>
                 </a>
 
-                <a
-                    href="{{ route('messages') ?? '#' }}"
-                    onclick="navigasiKe(8)"
-                    class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all"
-                >
+                <a href="{{ route('messages') ?? '#' }}" onclick="navigasiKe(8); return false;" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
                     <div class="flex items-center gap-4">
-                        <svg
-                            class="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                            ></path>
-                        </svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                         <span>Pesan</span>
                     </div>
-                    <span
-                        class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm"
-                        >8</span
-                    >
+                    <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">8</span>
                 </a>
 
-                <a
-                    href="{{ route('help') ?? '#' }}"
-                    onclick="navigasiKe(9)"
-                    class="flex items-center justify-between p-4 bg-blue-50 text-blue-700 rounded-2xl font-bold transition-all shadow-sm border border-blue-100"
-                >
+                <a href="{{ route('help') ?? '#' }}" onclick="navigasiKe(9); return false;" class="flex items-center justify-between p-4 bg-blue-50 text-blue-700 rounded-2xl font-bold transition-all shadow-sm border border-blue-100">
                     <div class="flex items-center gap-4">
-                        <svg
-                            class="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2.5"
-                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            ></path>
-                        </svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span>Bantuan</span>
                     </div>
-                    <span
-                        class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm"
-                        >9</span
-                    >
+                    <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">9</span>
                 </a>
             </nav>
 
             <div class="p-6 border-t border-slate-100 shrink-0">
-                <button
-                    onclick="navigasiKe(0)"
-                    class="w-full p-4 flex items-center justify-between text-red-600 font-bold bg-red-50 rounded-2xl hover:bg-red-100 transition-all border border-red-100 cursor-pointer"
-                >
+                <button onclick="navigasiKe(0)" class="w-full p-4 flex items-center justify-between text-red-600 font-bold bg-red-50 rounded-2xl hover:bg-red-100 transition-all border border-red-100 cursor-pointer">
                     <div class="flex items-center gap-3">
-                        <svg
-                            class="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2.5"
-                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                            ></path>
-                        </svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                         <span>Keluar</span>
                     </div>
-                    <span
-                        class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm"
-                        >0</span
-                    >
+                    <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">0</span>
                 </button>
             </div>
         </aside>
 
-        <main
-            class="flex-1 flex flex-col h-[100dvh] overflow-y-auto relative lg:ml-80 transition-all duration-300 custom-scrollbar"
-        >
-            <div
-                class="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-blue-50 to-transparent -z-10"
-            ></div>
+        <main class="flex-1 flex flex-col h-[100dvh] overflow-y-auto relative lg:ml-80 transition-all duration-300 custom-scrollbar">
+            <div class="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-blue-50 to-transparent -z-10"></div>
 
-            <header
-                class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 sticky top-0 z-30 shrink-0"
-            >
-                <div class="max-w-7xl mx-auto flex items-center justify-between h-10 sm:h-14">
-                    <div class="flex items-center gap-2 sm:gap-4">
-                        <button
-                            onclick="toggleSidebar()"
-                            class="lg:hidden p-1.5 sm:p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer"
-                        >
-                            <svg
-                                class="w-6 h-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M4 6h16M4 12h16M4 18h16"
-                                ></path>
-                            </svg>
+            <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 sticky top-0 z-30 shrink-0 cursor-pointer" id="voice-header" title="Ketuk untuk memotong suara sistem">
+                <div class="max-w-7xl mx-auto flex items-center justify-between h-10 sm:h-14 pointer-events-none">
+                    <div class="flex items-center gap-2 sm:gap-4 pointer-events-auto">
+                        <button onclick="toggleSidebar()" class="lg:hidden p-1.5 sm:p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                         </button>
                         <div>
-                            <h2
-                                class="text-lg sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-none"
-                            >
-                                Pusat Bantuan
-                            </h2>
-                            <p class="text-[9px] sm:text-sm font-medium text-slate-500 mt-1">
-                                Panduan Penggunaan
-                            </p>
+                            <h2 class="text-lg sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-none">Pusat Bantuan</h2>
+                            <p class="text-[9px] sm:text-sm font-medium text-slate-500 mt-1">Panduan Penggunaan</p>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-2 sm:gap-4">
-                        <div
-                            class="flex items-center gap-1 sm:gap-3 pr-2 sm:pr-4 border-r border-slate-200"
-                        >
-                            <button
-                                onclick="navigasiKe(7)"
-                                class="relative p-1.5 sm:p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer"
-                            >
-                                <svg
-                                    class="w-5 h-5 sm:w-6 h-6"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                                    ></path>
-                                </svg>
+                    <div class="flex items-center gap-2 sm:gap-4 pointer-events-auto">
+                        <div class="flex items-center gap-1 sm:gap-3 pr-2 sm:pr-4 border-r border-slate-200">
+                            <button onclick="navigasiKe(7)" class="relative p-1.5 sm:p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer">
+                                <svg class="w-5 h-5 sm:w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                                 @if(isset($unreadCount) && $unreadCount > 0)
                                 <span class="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
                                 @endif
                             </button>
-                            <button
-                                onclick="navigasiKe(9)"
-                                class="hidden sm:block p-1.5 sm:p-2 text-blue-600 bg-blue-50 hover:text-blue-700 rounded-xl transition-all cursor-pointer"
-                            >
-                                <svg
-                                    class="w-5 h-5 sm:w-6 h-6"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2.5"
-                                        d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                    ></path>
-                                </svg>
+                            <button onclick="navigasiKe(9)" class="hidden sm:block p-1.5 sm:p-2 text-blue-600 bg-blue-50 hover:text-blue-700 rounded-xl transition-all cursor-pointer">
+                                <svg class="w-5 h-5 sm:w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </button>
                         </div>
 
                         <div class="flex items-center gap-1.5 sm:gap-3 pl-1 sm:pl-2 w-[90px] sm:w-[130px] justify-start shrink-0">
-                            <div
-                                id="wave-container"
-                                class="flex items-center gap-[2px] h-4 w-4 sm:w-6 justify-center shrink-0"
-                            >
+                            <div id="wave-container" class="flex items-center gap-[2px] h-4 w-4 sm:w-6 justify-center shrink-0">
                                 <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
                                 <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
                                 <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
                             </div>
-                            <span
-                                id="status-desc"
-                                class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest text-left w-16 sm:w-24 truncate"
-                                >Siap</span
-                            >
+                            <span id="status-desc" class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest text-left w-16 sm:w-24 truncate">MENYIAPKAN</span>
                         </div>
                     </div>
                 </div>
@@ -363,10 +128,7 @@
 
             <div class="p-4 sm:p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-6 sm:space-y-8">
                 
-                <div
-                    data-aos="fade-up"
-                    class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 text-white shadow-xl shadow-blue-200 relative overflow-hidden"
-                >
+                <div data-aos="fade-up" class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 text-white shadow-xl shadow-blue-200 relative overflow-hidden">
                     <div class="relative z-10 flex flex-col lg:flex-row gap-6 sm:gap-8 items-center">
                         <div class="w-full">
                             <h3 class="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tighter mb-2 sm:mb-4 text-center lg:text-left">
@@ -407,66 +169,38 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 pb-6 sm:pb-10">
-                    <div
-                        data-aos="fade-up"
-                        data-aos-delay="100"
-                        class="bg-white p-5 sm:p-6 md:p-8 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
-                    >
+                    <div data-aos="fade-up" data-aos-delay="100" class="bg-white p-5 sm:p-6 md:p-8 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group">
                         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-orange-50 text-orange-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
-                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-1 sm:mb-2">
-                            Suara Tidak Terdeteksi?
-                        </h4>
-                        <p class="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
-                            Pastikan Anda telah memberikan izin (Allow) pada browser untuk mengakses mikrofon.
-                        </p>
+                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-1 sm:mb-2">Suara Tidak Terdeteksi?</h4>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">Pastikan Anda telah memberikan izin (Allow) pada browser untuk mengakses mikrofon.</p>
                     </div>
 
-                    <div
-                        data-aos="fade-up"
-                        data-aos-delay="200"
-                        class="bg-white p-5 sm:p-6 md:p-8 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
-                    >
+                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-5 sm:p-6 md:p-8 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group">
                         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 text-blue-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
                         </div>
-                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-1 sm:mb-2">
-                            Cara Kirim Tugas?
-                        </h4>
-                        <p class="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
-                            Masuk ke menu Penugasan, pilih tugas aktif, lalu ikuti instruksi yang diucapkan asisten suara.
-                        </p>
+                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-1 sm:mb-2">Cara Kirim Tugas?</h4>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">Masuk ke menu Penugasan, pilih tugas aktif, lalu ikuti instruksi yang diucapkan asisten suara.</p>
                     </div>
 
-                    <div
-                        data-aos="fade-up"
-                        data-aos-delay="300"
-                        class="bg-white p-5 sm:p-6 md:p-8 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group"
-                    >
+                    <div data-aos="fade-up" data-aos-delay="300" class="bg-white p-5 sm:p-6 md:p-8 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group">
                         <div class="w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 text-slate-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                             </svg>
                         </div>
-                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-1 sm:mb-2">
-                            Lupa Password?
-                        </h4>
-                        <p class="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
-                            Hubungi Admin UPT TIK di Gedung A Lantai 2 untuk mereset password SIAK Anda.
-                        </p>
+                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-1 sm:mb-2">Lupa Password?</h4>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">Hubungi Admin UPT TIK di Gedung A Lantai 2 untuk mereset password SIAK Anda.</p>
                     </div>
                 </div>
 
-                <div
-                    data-aos="fade-up"
-                    data-aos-delay="400"
-                    class="bg-white rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] p-5 sm:p-6 md:p-8 border border-slate-100 flex flex-col md:flex-row items-center md:items-center justify-between gap-4 sm:gap-6 shadow-sm mb-10"
-                >
+                <div data-aos="fade-up" data-aos-delay="400" class="bg-white rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] p-5 sm:p-6 md:p-8 border border-slate-100 flex flex-col md:flex-row items-center md:items-center justify-between gap-4 sm:gap-6 shadow-sm mb-10">
                     <div class="flex flex-col md:flex-row items-center gap-3 sm:gap-4 md:gap-6 text-center md:text-left">
                         <div class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-slate-900 text-white rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-slate-200 shrink-0">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -474,12 +208,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h4 class="text-base sm:text-lg md:text-xl font-black text-slate-900 tracking-tight">
-                                Butuh Bantuan Lebih?
-                            </h4>
-                            <p class="text-[10px] sm:text-xs md:text-sm text-slate-500 font-medium mt-0.5 sm:mt-1">
-                                Tim IT Inklusi UMMI siap membantu Anda.
-                            </p>
+                            <h4 class="text-base sm:text-lg md:text-xl font-black text-slate-900 tracking-tight">Butuh Bantuan Lebih?</h4>
+                            <p class="text-[10px] sm:text-xs md:text-sm text-slate-500 font-medium mt-0.5 sm:mt-1">Tim IT Inklusi UMMI siap membantu Anda.</p>
                         </div>
                     </div>
                     <button class="w-full md:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-blue-600 text-white rounded-lg sm:rounded-xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 cursor-pointer">
@@ -500,121 +230,230 @@
                 backdrop.classList.toggle("hidden");
             }
 
+            // ==========================================
+            // LOGIKA VOICE ASSISTANT (BARGE-IN & ANTI-HANG)
+            // ==========================================
             const statusDesc = document.getElementById("status-desc");
             const waveBars = document.querySelectorAll(".wave-bar");
             const synth = window.speechSynthesis;
             const SpeechRec = window.webkitSpeechRecognition || window.SpeechRecognition;
+            
             let rec = null;
+            let waveInterval;
+            let isRecActive = false;
+            let isRedirecting = false;
+            let isSpeaking = false;
 
             if (SpeechRec) {
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
                 rec.continuous = true;
+                rec.interimResults = true; // Kunci Voice Barge-in
             }
 
             function setWave(active) {
-                if (waveBars.length > 0) {
-                    waveBars.forEach((bar) => {
-                        bar.style.height = active ? `${Math.floor(Math.random() * 12) + 4}px` : "4px";
-                    });
+                if (active) {
+                    if (waveInterval) clearInterval(waveInterval);
+                    waveInterval = setInterval(() => {
+                        if (waveBars.length > 0) {
+                            waveBars.forEach((bar) => {
+                                bar.style.height = `${Math.floor(Math.random() * 12) + 4}px`;
+                            });
+                        }
+                    }, 100);
+                } else {
+                    clearInterval(waveInterval);
+                    if (waveBars.length > 0) {
+                        waveBars.forEach((bar) => (bar.style.height = "4px"));
+                    }
                 }
             }
 
-            let interval;
-            function bicara(teks, callback) {
-                synth.cancel();
-                const utter = new SpeechSynthesisUtterance(teks);
-                utter.lang = "id-ID";
-                const savedRate = localStorage.getItem("speechRate");
-                utter.rate = savedRate ? parseFloat(savedRate) : 1.0;
-
-                utter.onstart = () => {
-                    if (statusDesc) statusDesc.innerText = "BERBICARA...";
-                    interval = setInterval(() => setWave(true), 150);
-                };
-
-                utter.onend = () => {
-                    if (statusDesc) statusDesc.innerText = "MENDENGARKAN...";
-                    clearInterval(interval);
+            // Fitur Cut-Off Manual dengan tap layar
+            document.body.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.closest('button') || e.target.closest('a')) return;
+                if (isSpeaking && !isRedirecting) {
+                    synth.cancel();
                     setWave(false);
-                    if (callback) callback();
-                };
+                }
+            });
 
-                synth.speak(utter);
+            function mulaiMendengar() {
+                if (!rec || isRedirecting || isRecActive) return;
+                try {
+                    rec.start();
+                    isRecActive = true;
+                } catch (e) {
+                    console.error("Mic error:", e);
+                }
+            }
+
+            function bicara(teks, callback = null) {
+                if (isRedirecting) return;
+                synth.cancel();
+
+                // setTimeout mencegah hang (anti-hang) pada Chrome
+                setTimeout(() => {
+                    const utter = new SpeechSynthesisUtterance(teks);
+                    utter.lang = "id-ID";
+                    const savedRate = localStorage.getItem("speechRate");
+                    utter.rate = savedRate ? parseFloat(savedRate) : 1.0;
+
+                    utter.onstart = () => {
+                        isSpeaking = true;
+                        if (statusDesc) {
+                            statusDesc.innerText = "BERBICARA...";
+                            statusDesc.classList.replace("text-slate-400", "text-blue-600");
+                        }
+                        setWave(true);
+                        mulaiMendengar(); // Microphone dinyalakan bersamaan bot berbicara (Barge-in)
+                    };
+
+                    utter.onend = () => {
+                        isSpeaking = false;
+                        setWave(false);
+                        if (!isRedirecting && statusDesc) {
+                            statusDesc.innerText = "MENDENGARKAN";
+                            statusDesc.classList.replace("text-blue-600", "text-green-600");
+                        }
+                        if (callback) callback();
+                    };
+
+                    utter.onerror = () => {
+                        isSpeaking = false;
+                        setWave(false);
+                        mulaiMendengar();
+                    };
+
+                    synth.speak(utter);
+                }, 50);
             }
 
             function getPanduanUtama() {
-                let teks =
-                    "Halo, ini adalah Pusat Bantuan. Anda dapat membaca panduan atau melihat solusi dari masalah umum. ";
-                teks +=
-                    "Silakan sebutkan angka berikut untuk memilih menu navigasi: ";
-                teks +=
-                    "Lima untuk Beranda. Enam untuk Profil Saya. Tujuh untuk Pemberitahuan. Delapan untuk Pesan. Sembilan untuk tetap di Bantuan. Nol untuk Keluar. ";
-                teks +=
-                    "Katakan Ulang, kapanpun Anda butuh mendengarkan panduan ini lagi.";
-
+                let teks = "Halo, ini adalah Pusat Bantuan. Anda dapat membaca panduan atau melihat solusi dari masalah umum. ";
+                teks += "Silakan ucapkan angka lima untuk Beranda, enam untuk Profil, tujuh untuk Pemberitahuan, delapan untuk Pesan, dan nol untuk Keluar. ";
+                teks += "Katakan Ulang, jika butuh panduan ini dibacakan kembali.";
                 return teks;
             }
 
             function navigasiKe(nomor) {
+                if (isRedirecting) return;
+
                 let tujuan = ""; let teks = "";
 
-                if (nomor === 5) { tujuan = "{{ route('dashboard') ?? '#' }}"; teks = "Kembali ke Beranda."; }
-                else if (nomor === 6) { tujuan = "{{ route('profile') ?? '#' }}"; teks = "Membuka Profil Saya."; }
-                else if (nomor === 7) { tujuan = "{{ route('notifications') ?? '#' }}"; teks = "Membuka Pemberitahuan."; }
-                else if (nomor === 8) { tujuan = "{{ route('messages') ?? '#' }}"; teks = "Membuka Pesan."; }
-                else if (nomor === 9) { teks = "Anda sudah berada di halaman Bantuan."; }
-                else if (nomor === 0) { tujuan = "{{ route('logout') ?? '#' }}"; teks = "Keluar akun. Sampai jumpa."; }
+                if (nomor === 5) { tujuan = "{{ route('dashboard') ?? '#' }}"; teks = "Lima. Kembali ke Beranda."; }
+                else if (nomor === 6) { tujuan = "{{ route('profile') ?? '#' }}"; teks = "Enam. Membuka Profil Saya."; }
+                else if (nomor === 7) { tujuan = "{{ route('notifications') ?? '#' }}"; teks = "Tujuh. Membuka Pemberitahuan."; }
+                else if (nomor === 8) { tujuan = "{{ route('messages') ?? '#' }}"; teks = "Delapan. Membuka Pesan."; }
+                else if (nomor === 9) { teks = "Sembilan. Anda sudah berada di halaman Bantuan."; }
+                else if (nomor === 0) { tujuan = "{{ route('logout') ?? '#' }}"; teks = "Nol. Keluar akun. Sampai jumpa."; }
 
                 if (teks !== "") {
+                    if (tujuan !== "" && tujuan !== "#") {
+                        isRedirecting = true;
+                        synth.cancel();
+                        if(rec) rec.abort();
+
+                        if(statusDesc) {
+                            statusDesc.innerText = "MENGALIHKAN...";
+                            statusDesc.classList.replace("text-green-600", "text-slate-800");
+                        }
+                    }
+
                     bicara(teks, () => {
                         if (tujuan !== "" && tujuan !== "#") {
-                            setTimeout(() => { window.location.href = tujuan; }, 1500);
+                            window.location.href = tujuan;
                         } else {
                             try { rec.start(); } catch (e) {}
                         }
                     });
+
+                    // Fallback Anti-Hang untuk perpindahan halaman
+                    if (tujuan !== "" && tujuan !== "#") {
+                        setTimeout(() => { window.location.href = tujuan; }, 4000);
+                    }
                 }
             }
 
-            function mulaiMendengar() {
-                if (!rec) return;
-                try {
-                    rec.start();
-                    rec.onresult = (event) => {
-                        const hasil = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
+            if (rec) {
+                rec.onresult = (event) => {
+                    if (isRedirecting) return;
 
-                        if (hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan")) {
-                            rec.stop();
-                            bicara(getPanduanUtama(), () => { rec.start(); });
-                            return;
-                        }
+                    let hasil = "";
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        hasil += event.results[i][0].transcript;
+                    }
+                    hasil = hasil.toLowerCase().trim();
 
-                        const angka = hasil.match(/\d+/);
+                    // ANTI ECHO (Mencegah bot memotong suaranya sendiri)
+                    const omonganBot = [
+                        "halo ini adalah pusat bantuan", "membaca panduan", "solusi dari masalah umum",
+                        "ucapkan angka lima", "enam untuk profil", "tujuh untuk pemberitahuan",
+                        "delapan untuk pesan", "nol untuk keluar", "katakan ulang", "sudah berada"
+                    ];
 
-                        if (angka) navigasiKe(parseInt(angka[0]));
-                        else if (hasil.includes("lima") || hasil.includes("beranda")) navigasiKe(5);
-                        else if (hasil.includes("enam") || hasil.includes("profil")) navigasiKe(6);
-                        else if (hasil.includes("tujuh") || hasil.includes("pemberitahuan")) navigasiKe(7);
-                        else if (hasil.includes("delapan") || hasil.includes("pesan")) navigasiKe(8);
-                        else if (hasil.includes("sembilan")) navigasiKe(9);
-                        else if (hasil.includes("nol") || hasil.includes("keluar") || hasil.includes("kembali")) navigasiKe(0);
-                    };
+                    if (omonganBot.some(kalimat => hasil.includes(kalimat))) {
+                        return;
+                    }
 
-                    rec.onend = () => { rec.start(); };
-                } catch (e) {
-                    console.error("Error recognition:", e);
-                }
+                    prosesJawaban(hasil);
+                };
+
+                rec.onend = () => { 
+                    isRecActive = false;
+                    if (!isRedirecting) mulaiMendengar(); 
+                };
             }
 
-            window.onload = () => {
+            function prosesJawaban(hasil) {
+                if (hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan")) {
+                    synth.cancel();
+                    if(rec) rec.abort();
+                    bicara(getPanduanUtama(), () => { mulaiMendengar(); });
+                    return;
+                }
+
+                const angka = hasil.match(/\d+/);
+                if (angka) {
+                    synth.cancel();
+                    if(rec) rec.abort();
+                    navigasiKe(parseInt(angka[0]));
+                    return;
+                }
+
+                // Deteksi Pengejaan
+                const kataAngka = {
+                    "nol": 0, "kosong": 0,
+                    "lima": 5,
+                    "enam": 6,
+                    "tujuh": 7, "tuju": 7,
+                    "delapan": 8,
+                    "sembilan": 9
+                };
+
+                for (let kata in kataAngka) {
+                    if (hasil.includes(kata)) {
+                        synth.cancel();
+                        if(rec) rec.abort();
+                        navigasiKe(kataAngka[kata]); 
+                        return;
+                    }
+                }
+
+                // Alias
+                if (hasil.includes("kembali") || hasil.includes("beranda")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(5); }
+                else if (hasil.includes("profil")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(6); }
+                else if (hasil.includes("pemberitahuan")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(7); }
+                else if (hasil.includes("pesan")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(8); }
+                else if (hasil.includes("keluar") || hasil.includes("logout")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(0); }
+            }
+
+            window.addEventListener("load", () => {
                 document.body.addEventListener("click", () => {}, { once: true });
                 setTimeout(() => {
-                    bicara(getPanduanUtama(), () => {
-                        mulaiMendengar();
-                    });
+                    bicara(getPanduanUtama());
                 }, 800);
-            };
+            });
         </script>
     </body>
 </html>

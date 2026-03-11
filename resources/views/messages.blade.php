@@ -76,6 +76,7 @@
             @keyframes pulse-border { 0% { border-color: #3b82f6; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); } 70% { border-color: #60a5fa; box-shadow: 0 0 0 6px rgba(59, 130, 246, 0); } 100% { border-color: #3b82f6; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
             .dictating-active { animation: pulse-border 1.5s infinite; background-color: #eff6ff !important; }
             .confirming-active { background-color: #fef3c7 !important; border-color: #f59e0b !important; }
+            .wave-bar { transition: height 0.1s ease; }
         </style>
     </head>
     <body class="m-0 font-['Plus_Jakarta_Sans'] bg-slate-50 text-slate-800 antialiased h-[100dvh] flex overflow-hidden">
@@ -94,7 +95,7 @@
             </div>
 
             <nav class="flex-1 p-6 space-y-3 overflow-y-auto custom-scrollbar">
-                <a href="{{ url('/dashboard') }}" onclick="navigasiKe(5)" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
+                <a href="{{ url('/dashboard') }}" onclick="navigasiKe(5); return false;" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
                     <div class="flex items-center gap-4">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                         <span>Beranda</span>
@@ -102,7 +103,7 @@
                     <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">5</span>
                 </a>
 
-                <a href="{{ url('/mahasiswa/profile') }}" onclick="navigasiKe(6)" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
+                <a href="{{ url('/mahasiswa/profile') }}" onclick="navigasiKe(6); return false;" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
                     <div class="flex items-center gap-4">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                         <span>Profil Saya</span>
@@ -110,7 +111,7 @@
                     <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">6</span>
                 </a>
 
-                <a href="{{ url('/pemberitahuan') }}" onclick="navigasiKe(7)" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
+                <a href="{{ url('/pemberitahuan') }}" onclick="navigasiKe(7); return false;" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
                     <div class="flex items-center gap-4">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                         <span>Pemberitahuan</span>
@@ -118,7 +119,7 @@
                     <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">7</span>
                 </a>
 
-                <a href="{{ url('/pesan') }}" onclick="navigasiKe(8)" class="flex items-center justify-between p-4 bg-blue-50 text-blue-700 rounded-2xl font-bold transition-all shadow-sm border border-blue-100">
+                <a href="{{ url('/pesan') }}" onclick="navigasiKe(8); return false;" class="flex items-center justify-between p-4 bg-blue-50 text-blue-700 rounded-2xl font-bold transition-all shadow-sm border border-blue-100">
                     <div class="flex items-center gap-4">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                         <span>Pesan</span>
@@ -126,7 +127,7 @@
                     <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">8</span>
                 </a>
 
-                <a href="{{ url('/bantuan') }}" onclick="navigasiKe(9)" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
+                <a href="{{ url('/bantuan') }}" onclick="navigasiKe(9); return false;" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
                     <div class="flex items-center gap-4">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span>Bantuan</span>
@@ -148,9 +149,9 @@
 
         <main class="flex-1 flex flex-col h-[100dvh] relative min-w-0 bg-[#f8fafc] overflow-hidden">
             
-            <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 shrink-0 z-20">
-                <div class="max-w-7xl mx-auto flex items-center justify-between h-10 sm:h-14">
-                    <div class="flex items-center gap-2 sm:gap-4">
+            <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 shrink-0 z-20 cursor-pointer" id="voice-header" title="Ketuk untuk memotong suara sistem">
+                <div class="max-w-7xl mx-auto flex items-center justify-between h-10 sm:h-14 pointer-events-none">
+                    <div class="flex items-center gap-2 sm:gap-4 pointer-events-auto">
                         <button onclick="toggleSidebar()" class="lg:hidden p-1.5 sm:p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 rounded-lg transition-all focus:outline-none cursor-pointer">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                         </button>
@@ -160,7 +161,7 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-2 sm:gap-4">
+                    <div class="flex items-center gap-2 sm:gap-4 pointer-events-auto">
                         <div class="flex items-center gap-1 sm:gap-3">
                             <button onclick="navigasiKe(7)" class="relative p-1.5 sm:p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer">
                                 <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
@@ -177,7 +178,7 @@
                                 <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
                                 <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
                             </div>
-                            <span id="status-desc" class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest text-left truncate flex-1">Siap</span>
+                            <span id="status-desc" class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest text-left truncate flex-1">MENYIAPKAN</span>
                         </div>
                     </div>
                 </div>
@@ -347,7 +348,6 @@
 
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
-            // SCRIPT IDENTIK DENGAN PESAN SEBELUMNYA 100% (LOGIKA VOICE, RECORDER, WAVESURFER, AJAX)
             const listDosenVA = [
                 @php $vId = 15; @endphp
                 @foreach($listPercakapan as $d_id => $msgs)
@@ -375,6 +375,7 @@
 
             let isAutoPlaying = false; 
 
+            // Initialize Wavesurfer UI
             const wavesurfers = {};
             function initWaveSurfer(containerId, audioUrl, isMe) {
                 const ws = WaveSurfer.create({
@@ -388,10 +389,15 @@
                     document.getElementById('btn-' + containerId).innerHTML = '▶'; 
                     if(isAutoPlaying) {
                         isAutoPlaying = false;
-                        setTimeout(() => { bicara("Audio selesai. Selanjutnya mau apa? Sebutkan satu untuk ketik, dua untuk gambar, atau tiga untuk merekam suara. Delapan untuk kembali.", () => { mulaiMendengar(); }); }, 800);
+                        setTimeout(() => { 
+                            bicara("Audio selesai. Selanjutnya mau apa? Sebutkan satu untuk ketik, dua untuk gambar, atau tiga untuk merekam suara. Lima untuk kembali.", () => { 
+                                mulaiMendengar(); 
+                            }); 
+                        }, 800);
                     }
                 });
             }
+            
             function togglePlay(containerId) {
                 const ws = wavesurfers[containerId];
                 const btn = document.getElementById('btn-' + containerId);
@@ -407,6 +413,7 @@
                     initWaveSurfer(el.id, el.getAttribute('data-audio'), el.parentElement.classList.contains('border-white/30') || el.parentElement.classList.contains('bg-white/20'));
                 });
 
+                // Laravel Echo for Real-time Messaging
                 if(window.Echo && isActiveChat) {
                     window.Echo.private(`chat.mahasiswa.${mahasiswaId}`)
                         .listen('.message.sent', (e) => {
@@ -444,6 +451,7 @@
                         });
                 }
 
+                // Logika Form & UI Media Upload
                 let searchInput = document.getElementById("searchInput");
                 let contactList = document.getElementById("contactList");
                 let originalContactHTML = contactList ? contactList.innerHTML : '';
@@ -599,6 +607,7 @@
                     });
                 }
 
+                // Submit Form Ajax
                 let form = document.getElementById("chatForm");
                 if(form) {
                     form.addEventListener("submit", async function(e){
@@ -642,7 +651,8 @@
                                 chatBox.insertAdjacentHTML('beforeend', html); scrollBottom();
                                 if(data.message.voice_path) setTimeout(() => initWaveSurfer(uniqueWaveId, `/storage/${data.message.voice_path}`, true), 100);
                                 
-                                bicara("Pesan telah terkirim. Selanjutnya mau apa? Sebutkan satu untuk ketik, dua untuk gambar, atau tiga untuk merekam suara. Delapan untuk kembali.", () => { mulaiMendengar(); });
+                                // Setelah terkirim, mesin akan bilang konfirmasi
+                                bicara("Pesan telah terkirim. Selanjutnya mau apa? Sebutkan satu untuk ketik, dua untuk gambar, atau tiga untuk merekam suara. Lima untuk kembali.", () => { mulaiMendengar(); });
                             } else { alert("Gagal mengirim pesan."); }
                         } catch (err) { alert("Koneksi bermasalah."); } finally {
                             btnSubmit.disabled = false; document.getElementById('sendLoading').classList.add('hidden'); document.getElementById('sendIcon').classList.remove('hidden');
@@ -652,7 +662,7 @@
             });
 
             // ==========================================
-            // VOICE ASSISTANT SYSTEM
+            // VOICE ASSISTANT SYSTEM (BARGE-IN READY)
             // ==========================================
             const statusDesc = document.getElementById("status-desc");
             const waveBars = document.querySelectorAll(".wave-bar");
@@ -664,27 +674,88 @@
             let menungguKonfirmasiKirim = false;
             let menungguKonfirmasiVoice = false;
             let jedaKetikTimer = null;
+            let isRecActive = false;
+            let isRedirecting = false;
+            let isSpeaking = false;
 
-            if (SpeechRec) { rec = new SpeechRec(); rec.lang = "id-ID"; rec.continuous = true; }
-
-            function setWave(active) {
-                if (waveBars.length > 0) waveBars.forEach((bar) => { bar.style.height = active ? `${Math.floor(Math.random() * 12) + 4}px` : "4px"; });
+            if (SpeechRec) { 
+                rec = new SpeechRec(); 
+                rec.lang = "id-ID"; 
+                rec.continuous = true; 
+                rec.interimResults = true; // Kunci Barge-In
             }
 
-            let interval;
-            function bicara(teks, callback) {
+            function setWave(active) {
+                if (waveBars.length > 0) {
+                    waveBars.forEach((bar) => { 
+                        bar.style.height = active ? `${Math.floor(Math.random() * 12) + 4}px` : "4px"; 
+                    });
+                }
+            }
+
+            // Fitur Cut-Off Manual klik layar
+            document.body.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'A' || e.target.closest('button') || e.target.closest('a')) return;
+                if (isSpeaking && !isRedirecting) {
+                    synth.cancel();
+                    setWave(false);
+                }
+            });
+
+            function mulaiMendengar() {
+                if (!rec || isRedirecting || isRecActive) return;
+                try {
+                    rec.start();
+                    isRecActive = true;
+                } catch (e) {
+                    console.error("Mic error:", e);
+                }
+            }
+
+            function bicara(teks, callback = null) {
+                if (isRedirecting) return;
                 synth.cancel();
-                const utter = new SpeechSynthesisUtterance(teks); utter.lang = "id-ID";
-                utter.rate = localStorage.getItem("speechRate") ? parseFloat(localStorage.getItem("speechRate")) : 1.0;
-                utter.onstart = () => { if (statusDesc) statusDesc.innerText = "BERBICARA..."; interval = setInterval(() => setWave(true), 150); };
-                utter.onend = () => { if (statusDesc) statusDesc.innerText = "MENDENGARKAN..."; clearInterval(interval); setWave(false); if (callback) callback(); };
-                synth.speak(utter);
+
+                setTimeout(() => {
+                    const utter = new SpeechSynthesisUtterance(teks);
+                    utter.lang = "id-ID";
+                    const savedRate = localStorage.getItem("speechRate");
+                    utter.rate = savedRate ? parseFloat(savedRate) : 1.0;
+
+                    utter.onstart = () => { 
+                        isSpeaking = true;
+                        if (statusDesc) {
+                            statusDesc.innerText = "BERBICARA...";
+                            statusDesc.classList.replace("text-slate-400", "text-blue-600");
+                        }
+                        setWave(true); 
+                        mulaiMendengar(); // Microphone dinyalakan bersamaan bot berbicara
+                    };
+
+                    utter.onend = () => { 
+                        isSpeaking = false;
+                        setWave(false);
+                        if (!isRedirecting && statusDesc) {
+                            statusDesc.innerText = "MENDENGARKAN";
+                            statusDesc.classList.replace("text-blue-600", "text-green-600");
+                        }
+                        if (callback) callback(); 
+                    };
+
+                    utter.onerror = () => {
+                        isSpeaking = false;
+                        setWave(false);
+                        mulaiMendengar();
+                    };
+
+                    synth.speak(utter);
+                }, 50);
             }
 
             // LOGIKA PEMBACAAN PESAN TERAKHIR
             function getPanduanUtama(isUlang = false) {
                 let sapaan = "";
-                let navigasiTeks = "Sebutkan angka satu untuk mengetik pesan, dua untuk upload gambar, atau tiga untuk merekam suara. Empat untuk kirim. Delapan untuk menutup chat.";
+                let navigasiTeks = "Sebutkan angka satu untuk mengetik pesan, dua untuk upload gambar, atau tiga untuk merekam suara. Empat untuk kirim. Lima untuk menutup chat.";
                 
                 if (!isActiveChat) {
                     sapaan = "Halo, Anda berada di halaman Pesan. ";
@@ -706,7 +777,9 @@
                         } else if (isLastMsgImage && lastMessageText === 'Mengirim gambar') {
                             sapaan += `Pesan terakhir dikirim oleh ${lastMessageSender} berupa gambar. ${navigasiTeks}`;
                         } else {
-                            sapaan += `Pesan terakhir dari ${lastMessageSender}: ${lastMessageText}. ${navigasiTeks}`;
+                            // Filter karakter aneh agar teks bisa diucapkan dengan lancar
+                            let cleanText = lastMessageText.replace(/[^A-Za-z0-9 \.,\?]/g, '');
+                            sapaan += `Pesan terakhir dari ${lastMessageSender}: ${cleanText}. ${navigasiTeks}`;
                         }
                     } else {
                         sapaan += navigasiTeks;
@@ -726,20 +799,24 @@
             }
 
             function navigasiKe(nomor) {
-                let tujuan = ""; let teks = "";
-
-                if (nomor === 5) { tujuan = "{{ url('/dashboard') }}"; teks = "Kembali ke Beranda."; }
-                else if (nomor === 6) { tujuan = "{{ url('/mahasiswa/profile') }}"; teks = "Membuka Profil Saya."; }
-                else if (nomor === 7) { tujuan = "{{ url('/pemberitahuan') }}"; teks = "Membuka Pemberitahuan."; }
-                else if (nomor === 8) { 
-                    if(isActiveChat) { tujuan = "{{ url('/pesan') }}"; teks = "Menutup obrolan dan kembali ke daftar pesan."; }
-                    else { teks = "Anda sudah di Halaman Pesan."; }
-                }
-                else if (nomor === 9) { tujuan = "{{ url('/bantuan') }}"; teks = "Membuka Bantuan."; }
-                else if (nomor === 0) { tujuan = "{{ url('/logout') }}"; teks = "Keluar."; }
+                if (isRedirecting) return;
                 
+                let tujuan = ""; let teks = ""; let isAction = false;
+
+                if (nomor === 5) { tujuan = "{{ url('/dashboard') }}"; teks = "Lima. Kembali ke Beranda."; }
+                else if (nomor === 6) { tujuan = "{{ url('/mahasiswa/profile') }}"; teks = "Enam. Membuka Profil Saya."; }
+                else if (nomor === 7) { tujuan = "{{ url('/pemberitahuan') }}"; teks = "Tujuh. Membuka Pemberitahuan."; }
+                else if (nomor === 8) { 
+                    if(isActiveChat) { tujuan = "{{ url('/pesan') }}"; teks = "Delapan. Menutup obrolan dan kembali ke daftar pesan."; }
+                    else { teks = "Delapan. Anda sudah di Halaman Pesan."; isAction = true; }
+                }
+                else if (nomor === 9) { tujuan = "{{ url('/bantuan') }}"; teks = "Sembilan. Membuka Bantuan."; }
+                else if (nomor === 0) { tujuan = "{{ url('/logout') }}"; teks = "Nol. Keluar akun. Sampai jumpa."; }
+                
+                // AKSI FORM CHAT
                 else if (nomor === 1) {
                     if (!isActiveChat) return;
+                    isAction = true;
                     modeKetikSuara = true;
                     menungguKonfirmasiKirim = false;
                     document.getElementById('normalInputWrapper').classList.add('dictating-active');
@@ -747,10 +824,11 @@
                     document.getElementById('cancelVoiceToTextBtn').classList.remove('hidden');
                     document.getElementById("messageInput").value = "";
                     document.getElementById("messageInput").placeholder = "Mendengarkan teks...";
-                    teks = "Mode ketik aktif. Silakan berbicara. Sistem akan menjeda dan bertanya jika Anda selesai.";
+                    teks = "Satu. Mode ketik aktif. Silakan berbicara. Sistem akan menjeda dan bertanya jika Anda diam.";
                 } else if (nomor === 2) {
                     if (!isActiveChat) return;
-                    teks = "Membuka galeri. Pilih gambar, lalu sebutkan kirim atau angka empat.";
+                    isAction = true;
+                    teks = "Dua. Membuka galeri. Pilih gambar, lalu sebutkan kirim, atau empat.";
                     bicara(teks, () => { 
                         document.getElementById('imageInput').click(); 
                         menungguKonfirmasiVoice = true;
@@ -758,18 +836,20 @@
                     return;
                 } else if (nomor === 3) {
                     if (!isActiveChat) return;
+                    isAction = true;
                     const recordBtn = document.getElementById('recordBtn');
                     if (!recordBtn.classList.contains('text-white')) {
-                        teks = "Merekam suara. Silakan bicara setelah suara bip. Untuk berhenti, sebutkan kata Selesai.";
+                        teks = "Tiga. Merekam suara. Silakan bicara setelah suara bip. Untuk berhenti, sebutkan kata Selesai.";
                         bicara(teks, () => { recordBtn.click(); });
                         return;
                     } else {
                         recordBtn.click(); 
                         menungguKonfirmasiVoice = true; 
-                        teks = "Suara disimpan. Sebutkan kirim, atau batal.";
+                        teks = "Tiga. Suara disimpan. Sebutkan kirim, atau batal.";
                     }
                 } else if (nomor === 4) {
                     if (!isActiveChat) return;
+                    isAction = true;
                     window.batalKetikSuara();
                     const textVal = document.getElementById("messageInput").value.trim();
                     const imgVal = document.getElementById("imageInput").files.length;
@@ -777,120 +857,203 @@
 
                     if (textVal !== "" || imgVal > 0 || voiceVal > 0 || textVal === "Voice note siap dikirim.") {
                         document.getElementById("sendChatBtn").click(); return; 
-                    } else { teks = "Pesan chat kosong."; }
+                    } else { teks = "Pesan kosong."; }
                 }
                 else if (nomor >= 15) {
                     let targetLink = document.querySelector(`a[data-voice-id="${nomor}"]`);
                     if (targetLink) { teks = "Membuka obrolan."; tujuan = targetLink.getAttribute("href"); }
                 }
 
-                if (teks !== "") { bicara(teks, () => { if (tujuan !== "" && tujuan !== "#") window.location.href = tujuan; else { try { rec.start(); } catch(e){} } }); }
+                if (teks !== "") {
+                    if (!isAction && tujuan !== "") {
+                        isRedirecting = true;
+                        synth.cancel();
+                        if(rec) rec.abort();
+                        if(statusDesc) {
+                            statusDesc.innerText = "MENGALIHKAN...";
+                            statusDesc.classList.replace("text-green-600", "text-slate-800");
+                        }
+                    }
+
+                    bicara(teks, () => { 
+                        if (!isAction && tujuan !== "") window.location.href = tujuan; 
+                        else { try { rec.start(); } catch(e){} } 
+                    });
+
+                    // Fallback Anti Hang
+                    if (!isAction && tujuan !== "") {
+                        setTimeout(() => { window.location.href = tujuan; }, 4000);
+                    }
+                }
             }
 
-            function mulaiMendengar() {
-                if (!rec) return;
-                try {
-                    rec.start();
-                    rec.onresult = (event) => {
-                        const hasil = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
+            if (rec) {
+                rec.onresult = (event) => {
+                    if (isRedirecting) return;
+
+                    let hasil = "";
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        hasil += event.results[i][0].transcript;
+                    }
+                    hasil = hasil.toLowerCase().trim();
+                    
+                    // ANTI ECHO (Pengecualian Bot Voice)
+                    const omonganBot = [
+                        "anda berada di halaman pesan", "anda memiliki riwayat", "untuk chat dengan",
+                        "sebutkan cari", "diikuti nama dosen", "sebutkan angka satu", "mengetik pesan",
+                        "dua untuk upload gambar", "tiga untuk merekam suara", "delapan untuk menutup",
+                        "halaman obrolan dengan", "pesan terakhir dikirim", "memutar pesan sekarang",
+                        "mode ketik aktif", "sistem akan menjeda", "membuka galeri", "merekam suara",
+                        "setelah suara bip", "suara disimpan", "mau dikirim atau tidak", "pesan anda adalah",
+                        "ditemukan", "sebutkan nomor di layar", "pesan dibatalkan", "selanjutnya mau apa"
+                    ];
+
+                    if (omonganBot.some(kalimat => hasil.includes(kalimat))) {
+                        return;
+                    }
+
+                    prosesJawaban(hasil);
+                };
+
+                rec.onend = () => { 
+                    isRecActive = false;
+                    if (!isRedirecting) mulaiMendengar(); 
+                };
+            }
+
+            function prosesJawaban(hasil) {
+                // LOGIKA 1: KONFIRMASI KIRIM PESAN TEKS
+                if (menungguKonfirmasiKirim) {
+                    if (hasil.includes("kirim") || hasil.includes("ya") || hasil.includes("iya") || hasil.includes("empat")) { 
+                        menungguKonfirmasiKirim = false; 
+                        synth.cancel();
+                        document.getElementById('normalInputWrapper').classList.remove('confirming-active');
+                        document.getElementById('cancelVoiceToTextBtn').classList.add('hidden');
+                        document.getElementById("sendChatBtn").click(); 
+                        return; 
+                    }
+                    if (hasil.includes("batal") || hasil.includes("tidak") || hasil.includes("engga")) { 
+                        window.batalKetikSuara(); 
+                        bicara("Pesan dibatalkan. Sebutkan satu, dua, atau tiga untuk opsi lainnya.", () => { mulaiMendengar(); });
+                        return; 
+                    }
+                    return; 
+                }
+
+                // LOGIKA 2: SEDANG DIKTE MENDENGARKAN TEKS (Continuous)
+                if (modeKetikSuara) {
+                    if (hasil === "batal" || hasil === "batalkan") { 
+                        window.batalKetikSuara(); 
+                        bicara("Ketik pesan dibatalkan. Sebutkan satu, dua, atau tiga untuk opsi lainnya.", () => { mulaiMendengar(); }); 
+                        return; 
+                    }
+                    
+                    let inputEl = document.getElementById("messageInput");
+                    inputEl.value += (inputEl.value === "" ? "" : " ") + hasil;
+                    
+                    // Jeda cerdas (debounce), jika dalam 2 detik diam, maka konfirmasi
+                    clearTimeout(jedaKetikTimer);
+                    jedaKetikTimer = setTimeout(() => {
+                        modeKetikSuara = false;
+                        menungguKonfirmasiKirim = true;
+                        if(rec) rec.abort(); // Reset mic agar tidak bocor
+                        document.getElementById('normalInputWrapper').classList.remove('dictating-active');
+                        document.getElementById('normalInputWrapper').classList.add('confirming-active');
                         
-                        if (menungguKonfirmasiKirim) {
-                            if (hasil.includes("kirim") || hasil.includes("ya") || hasil.includes("iya")) { 
-                                menungguKonfirmasiKirim = false; 
-                                document.getElementById('normalInputWrapper').classList.remove('confirming-active');
-                                document.getElementById('cancelVoiceToTextBtn').classList.add('hidden');
-                                document.getElementById("sendChatBtn").click(); 
-                                return; 
-                            }
-                            if (hasil.includes("batal") || hasil.includes("tidak") || hasil.includes("engga")) { 
-                                window.batalKetikSuara(); 
-                                bicara("Pesan dibatalkan. Sebutkan satu, dua, atau tiga untuk opsi lainnya.", () => { mulaiMendengar(); });
-                                return; 
-                            }
-                            return; 
-                        }
+                        // Batasi pembacaan agar tidak terlalu lama jika pesannya panjang
+                        let teksBaca = inputEl.value;
+                        if(teksBaca.length > 50) teksBaca = teksBaca.substring(0, 50) + "...";
+                        
+                        bicara(`Pesan Anda: ${teksBaca}. Mau dikirim? Sebutkan kirim, atau batal.`, () => { mulaiMendengar(); });
+                    }, 2000); 
+                    
+                    return; 
+                }
 
-                        if (modeKetikSuara) {
-                            if (hasil === "batal" || hasil === "batalkan") { 
-                                window.batalKetikSuara(); 
-                                bicara("Ketik pesan dibatalkan. Sebutkan satu, dua, atau tiga untuk opsi lainnya.", () => { mulaiMendengar(); }); 
-                                return; 
-                            }
-                            
-                            let inputEl = document.getElementById("messageInput");
-                            inputEl.value += (inputEl.value === "" ? "" : " ") + hasil;
-                            
-                            clearTimeout(jedaKetikTimer);
-                            jedaKetikTimer = setTimeout(() => {
-                                modeKetikSuara = false;
-                                menungguKonfirmasiKirim = true;
-                                document.getElementById('normalInputWrapper').classList.remove('dictating-active');
-                                document.getElementById('normalInputWrapper').classList.add('confirming-active');
-                                bicara(`Pesan Anda adalah: ${inputEl.value}. Mau dikirim atau tidak? Sebutkan kirim, atau batal.`, () => { mulaiMendengar(); });
-                            }, 3000); 
-                            
-                            return; 
-                        }
+                // LOGIKA 3: KONFIRMASI VOICE NOTE / GAMBAR
+                if (menungguKonfirmasiVoice) {
+                    if (hasil.includes("kirim") || hasil.includes("ya") || hasil.includes("iya") || hasil.includes("empat")) {
+                        menungguKonfirmasiVoice = false;
+                        synth.cancel();
+                        document.getElementById("sendChatBtn").click();
+                        return;
+                    }
+                    if (hasil.includes("batal") || hasil.includes("tidak")) {
+                        menungguKonfirmasiVoice = false;
+                        document.getElementById('cancelVoiceBtn').click(); 
+                        bicara("Dibatalkan. Silakan sebutkan angka satu, dua, atau tiga.", () => { mulaiMendengar(); });
+                        return;
+                    }
+                    return; 
+                }
 
-                        if(hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan")) {
-                            bicara(getPanduanUtama(true), () => { mulaiMendengar(); });
-                            return;
-                        }
+                // LOGIKA 4: SEDANG MEREKAM SUARA LALU DIHENTIKAN
+                const recordBtn = document.getElementById('recordBtn');
+                if (recordBtn && recordBtn.classList.contains('text-white')) {
+                    if (hasil.includes("selesai")) {
+                        recordBtn.click();
+                        menungguKonfirmasiVoice = true;
+                        bicara("Suara telah disimpan. Sebutkan kirim, atau batal.", () => { mulaiMendengar(); });
+                    }
+                    return; 
+                }
 
-                        if (menungguKonfirmasiVoice) {
-                            if (hasil.includes("kirim") || hasil.includes("ya") || hasil.includes("iya")) {
-                                menungguKonfirmasiVoice = false;
-                                document.getElementById("sendChatBtn").click();
-                                return;
-                            }
-                            if (hasil.includes("batal") || hasil.includes("tidak")) {
-                                menungguKonfirmasiVoice = false;
-                                document.getElementById('cancelVoiceBtn').click(); 
-                                bicara("Dibatalkan. Silakan sebutkan angka satu, dua, atau tiga.", () => { mulaiMendengar(); });
-                                return;
-                            }
-                            return; 
-                        }
+                // LOGIKA 5: FITUR PENCARIAN DOSEN
+                if (hasil.startsWith("cari ")) {
+                    let namaDosen = hasil.replace("cari ", "").trim();
+                    document.getElementById("searchInput").value = namaDosen; 
+                    window.lakukanPencarian(namaDosen); 
+                    return;
+                }
 
-                        const recordBtn = document.getElementById('recordBtn');
-                        if (recordBtn && recordBtn.classList.contains('text-white')) {
-                            if (hasil.includes("selesai")) {
-                                recordBtn.click();
-                                menungguKonfirmasiVoice = true;
-                                bicara("Suara telah disimpan. Sebutkan kirim, atau batal.", () => { mulaiMendengar(); });
-                            }
-                            return; 
-                        }
+                // LOGIKA 6: NAVIGASI DASAR (Barge-in)
+                if(hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan")) {
+                    synth.cancel(); if(rec) rec.abort();
+                    bicara(getPanduanUtama(true), () => { mulaiMendengar(); });
+                    return;
+                }
 
-                        if (hasil.startsWith("cari ")) {
-                            let namaDosen = hasil.replace("cari ", "").trim();
-                            document.getElementById("searchInput").value = namaDosen; window.lakukanPencarian(namaDosen); return;
-                        }
+                const angka = hasil.match(/\d+/);
+                if (angka) {
+                    synth.cancel(); if(rec) rec.abort(); navigasiKe(parseInt(angka[0])); return;
+                }
+                
+                // Deteksi Pengejaan Kata
+                const kataAngka = {
+                    "nol": 0, "kosong": 0,
+                    "satu": 1, "sato": 1, "sate": 1, "ketik": 1,
+                    "dua": 2, "tua": 2, "jua": 2, "gambar": 2, "lampiran": 2,
+                    "tiga": 3, "suara": 3, "rekam": 3,
+                    "empat": 4, "kirim": 4, "send": 4,
+                    "lima": 5,
+                    "enam": 6,
+                    "tujuh": 7, "tuju": 7,
+                    "delapan": 8,
+                    "sembilan": 9
+                };
 
-                        const angka = hasil.match(/\d+/);
-                        if (angka) navigasiKe(parseInt(angka[0]));
-                        else if (hasil.includes("lima") || hasil.includes("beranda")) navigasiKe(5);
-                        else if (hasil.includes("enam") || hasil.includes("profil")) navigasiKe(6);
-                        else if (hasil.includes("tujuh") || hasil.includes("pemberitahuan")) navigasiKe(7);
-                        else if (hasil.includes("delapan") || hasil.includes("pesan")) navigasiKe(8);
-                        else if (hasil.includes("sembilan")) navigasiKe(9);
-                        else if (hasil.includes("satu") || hasil.includes("ketik")) navigasiKe(1);
-                        else if (hasil.includes("dua") || hasil.includes("gambar") || hasil.includes("lampiran")) navigasiKe(2);
-                        else if (hasil.includes("tiga") || hasil.includes("suara") || hasil.includes("voice") || hasil.includes("rekam")) navigasiKe(3);
-                        else if (hasil.includes("empat") || hasil.includes("kirim") || hasil.includes("send")) navigasiKe(4);
-                        else if (hasil.includes("nol") || hasil.includes("keluar") || hasil.includes("kembali")) navigasiKe(0);
-                    };
-                    rec.onend = () => { rec.start(); };
-                } catch (e) { console.error("Error recognition:", e); }
+                for (let kata in kataAngka) {
+                    if (hasil.includes(kata)) {
+                        synth.cancel(); if(rec) rec.abort(); navigasiKe(kataAngka[kata]); return;
+                    }
+                }
+
+                // Alias
+                if (hasil.includes("kembali") || hasil.includes("beranda")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(5); }
+                else if (hasil.includes("profil")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(6); }
+                else if (hasil.includes("pemberitahuan")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(7); }
+                else if (hasil.includes("pesan")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(8); }
+                else if (hasil.includes("keluar") || hasil.includes("logout")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(0); }
             }
 
-            window.onload = () => {
+            window.addEventListener("load", () => {
                 document.body.addEventListener("click", () => {}, { once: true });
 
                 setTimeout(() => {
                     let teksAwal = getPanduanUtama(false);
                     
                     bicara(teksAwal, () => {
+                        // Fitur Auto Play Voice Note
                         if (isActiveChat && isLastMsgVoice) {
                             isAutoPlaying = true; 
                             const waveId = "{{ $lastWaveId }}";
@@ -901,7 +1064,7 @@
                                         document.getElementById('btn-' + waveId).innerHTML = '⏸';
                                     }).catch(error => {
                                         isAutoPlaying = false;
-                                        bicara("Browser memblokir pemutaran otomatis. Silakan ketuk layar sekali untuk memulai.", () => { mulaiMendengar(); });
+                                        bicara("Browser memblokir pemutaran otomatis. Silakan ketuk layar untuk memulai.", () => { mulaiMendengar(); });
                                     });
                                 }
                             } else { mulaiMendengar(); }
@@ -910,7 +1073,7 @@
                         }
                     });
                 }, 800);
-            };
+            });
         </script>
     </body>
 </html>

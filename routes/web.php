@@ -58,23 +58,23 @@ Route::get('/login', function () { return view('login'); })->name('login');
 Route::post('/login-process', [AuthController::class, 'loginMahasiswa'])->name('login.post');
 Route::post('/login/mahasiswa', [MahasiswaAuthController::class, 'login'])->name('login.mahasiswa.post');
 
-// [PERBAIKAN LOGOUT] Smart Logout
+// [PERBAIKAN LOGOUT] Smart Logout -> Kembali ke halaman pertama
 Route::get('/logout', function () {
     // Cek jika yang logout adalah Dosen
     if (Auth::guard('dosen')->check()) {
         Auth::guard('dosen')->logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
-        // Redirect ke Login Dosen
-        return redirect()->route('login.dosen');
+        // Redirect ke Halaman Pertama (choose_role)
+        return redirect()->route('choose_role');
     }
 
     // Jika yang logout adalah Mahasiswa
     Auth::guard('mahasiswa')->logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
-    // Redirect ke Setup Voice
-    return redirect()->route('setup.voice');
+    // Redirect ke Halaman Pertama (choose_role)
+    return redirect()->route('choose_role');
 })->name('logout');
 
 // --- Auth Dosen ---
@@ -85,11 +85,12 @@ Route::post('/login/dosen', [DosenAuthController::class, 'login'])->name('login.
 Route::get('/login/dosen/google', [DosenAuthController::class, 'redirectToGoogle'])->name('login.dosen.google');
 Route::get('/login/dosen/google/callback', [DosenAuthController::class, 'handleGoogleCallback']);
 
+// Logout Khusus Dosen -> Kembali ke halaman pertama
 Route::get('/logout-dosen', function () {
     Auth::guard('dosen')->logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
-    return redirect()->route('login.dosen');
+    return redirect()->route('choose_role');
 })->name('logout.dosen');
 
 

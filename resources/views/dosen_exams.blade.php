@@ -88,7 +88,6 @@
                 <span>Profil Saya</span>
             </a>
         </nav>
-
         <div class="p-6 border-t border-slate-100 shrink-0">
             <a href="{{ route('logout.dosen') }}" class="w-full p-4 flex items-center justify-between text-red-600 font-bold bg-red-50 rounded-2xl hover:bg-red-100 transition-all border border-red-100">
                 <div class="flex items-center gap-3">
@@ -101,7 +100,7 @@
 
     <main class="flex-1 flex flex-col h-[100dvh] relative min-w-0 bg-[#f8fafc] overflow-y-auto custom-scrollbar">
         
-        {{-- BACKGROUND DEKORASI (Nuansa Biru) --}}
+        {{-- BACKGROUND DEKORASI --}}
         <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
             <div class="absolute top-[-10%] right-[-5%] w-[400px] h-[400px] bg-blue-100/40 rounded-full blur-3xl opacity-50"></div>
             <div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-indigo-50/40 rounded-full blur-3xl opacity-50"></div>
@@ -145,7 +144,7 @@
                 </div>
             @endif
 
-            {{-- KARTU STATISTIK (Responsive Grid) --}}
+            {{-- KARTU STATISTIK --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                 <div class="bg-gradient-to-br from-emerald-50 to-white p-5 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-emerald-100 shadow-sm flex items-center justify-between safe-fade-in hover:-translate-y-1 transition-transform" style="animation-delay: 0.1s">
                     <div>
@@ -212,7 +211,7 @@
                             }
                         @endphp
 
-                        <div class="exam-card group bg-white p-4 sm:p-5 rounded-[1.5rem] sm:rounded-[2rem] border {{ $exam->status_text == 'Draft' ? 'border-dashed border-2 '.$borderClass : 'border border-slate-200' }} shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col lg:flex-row items-center gap-4 sm:gap-6 {{ $exam->status_text == 'Selesai' ? 'opacity-70 hover:opacity-100' : '' }} safe-fade-in" data-kategori="{{ $exam->kategori }}" style="animation-delay: 0.6s">
+                        <div class="exam-card group bg-white p-4 sm:p-5 rounded-[1.5rem] sm:rounded-[2rem] border {{ $exam->status_text == 'Draft' ? 'border-dashed border-2 '.$borderClass : 'border border-slate-200' }} shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col lg:flex-row items-center gap-4 sm:gap-6 {{ $exam->status_text == 'Selesai' ? 'opacity-80 hover:opacity-100' : '' }} safe-fade-in" data-kategori="{{ $exam->kategori }}" style="animation-delay: 0.6s">
                             
                             {{-- Tanggal Box --}}
                             <div class="w-full lg:w-24 h-20 sm:h-24 {{ $bgClass }} {{ $dateTextClass }} rounded-[1rem] sm:rounded-[1.5rem] flex flex-col items-center justify-center shrink-0 border {{ $borderClass }}">
@@ -234,7 +233,7 @@
                                 <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-[10px] sm:text-xs lg:text-sm text-slate-500 font-medium justify-center lg:justify-start">
                                     <span class="flex items-center justify-center lg:justify-start gap-1 sm:gap-1.5">
                                         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                                        {{ $exam->kelas->mataKuliah->nama ?? 'Kelas' }} <span class="text-slate-400/70">({{ $exam->kelas->kode_kelas ?? '-' }})</span>
+                                        {{ $exam->kelas->mataKuliah->nama ?? 'Mata Kuliah' }} <span class="text-slate-400/70">(Kelas {{ $exam->kelas->nama_kelas ?? '-' }})</span>
                                     </span>
                                     <span class="hidden sm:inline text-slate-300">•</span>
                                     <span class="flex items-center justify-center lg:justify-start gap-1 sm:gap-1.5">
@@ -294,15 +293,17 @@
                                         </button>
                                     </form>
                                 
-                                {{-- JIKA SELESAI / DIHENTIKAN --}}
+                                {{-- JIKA SELESAI / DIHENTIKAN (TOMBOL ARSIP DITAMBAHKAN) --}}
                                 @else
                                     <a href="{{ route('dosen.exams.results', $exam->id) }}" class="flex-1 lg:flex-none justify-center px-3 sm:px-4 py-2 bg-blue-50 text-blue-600 border border-blue-200 rounded-lg sm:rounded-xl font-bold text-[10px] sm:text-xs hover:bg-blue-100 transition-all flex items-center gap-1.5 sm:gap-2">
                                         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                                        Hasil
+                                        Lihat Hasil
                                     </a>
-                                    <a href="{{ route('dosen.exams.questions', $exam->id) }}" class="flex-1 lg:flex-none justify-center px-3 sm:px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg sm:rounded-xl font-bold text-[10px] sm:text-xs hover:bg-slate-50 transition-all flex items-center gap-1.5 sm:gap-2 shadow-sm">
-                                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                        Tinjau
+                                    
+                                    {{-- TOMBOL TINJAU DIUBAH MENJADI ARSIP SOAL --}}
+                                    <a href="{{ route('dosen.exams.questions', $exam->id) }}" class="flex-1 lg:flex-none justify-center px-3 sm:px-4 py-2 bg-slate-50 border border-slate-200 text-slate-500 rounded-lg sm:rounded-xl font-bold text-[10px] sm:text-xs hover:bg-slate-100 transition-all flex items-center gap-1.5 sm:gap-2 shadow-sm" title="Lihat arsip soal ujian ini">
+                                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                        Arsip Soal
                                     </a>
                                 @endif
 
@@ -368,7 +369,8 @@
                         <select name="kelas_id" required class="w-full bg-slate-50 border border-slate-200 rounded-lg sm:rounded-xl p-3 sm:p-3.5 font-bold text-slate-800 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer hover:border-blue-300 transition-colors shadow-sm">
                             <option value="">-- Pilih Kelas --</option>
                             @foreach($listKelas ?? [] as $kls)
-                                <option value="{{ $kls->id }}">{{ $kls->mataKuliah->nama ?? 'Kelas' }} ({{ $kls->kode_kelas }})</option>
+                                {{-- IMPLEMENTASI NAMA KELAS TANPA KODE --}}
+                                <option value="{{ $kls->id }}">Kelas {{ $kls->nama_kelas }} - {{ $kls->mataKuliah->nama ?? 'Mata Kuliah' }}</option>
                             @endforeach
                         </select>
                     </div>

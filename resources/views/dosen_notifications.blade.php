@@ -135,30 +135,10 @@
                         @php
                             $colorStr = $notif->type == 'warning' ? 'orange' : ($notif->type == 'success' ? 'blue' : 'slate');
                             $opacity = $notif->is_read ? 'opacity-75 hover:opacity-100 bg-slate-50' : 'bg-white shadow-sm';
-                            
-                            // MENGATUR TARGET URL BERDASARKAN TIPE NOTIFIKASI
-                            $targetUrl = route('dosen.notifications.read.single', $notif->id); // Default/Fallback
-                            
-                            $notifData = is_string($notif->data) ? json_decode($notif->data, true) : $notif->data;
-                            
-                            if (isset($notifData['url'])) {
-                                $targetUrl = url($notifData['url']);
-                            } elseif (isset($notifData['type'])) {
-                                // Jika notifikasi adalah pesan masuk dari mahasiswa
-                                if ($notifData['type'] == 'pesan' && isset($notifData['mahasiswa_id'])) {
-                                    $targetUrl = route('dosen.messages.show', ['mahasiswa' => $notifData['mahasiswa_id']]);
-                                } 
-                                // Jika notifikasi adalah balasan/postingan di ruang diskusi
-                                elseif ($notifData['type'] == 'diskusi' && isset($notifData['diskusi_id'])) {
-                                    // Pastikan route diskusi ini sesuai dengan yang ada di web.php Anda
-                                    $targetUrl = route('dosen.discussions.show', $notifData['diskusi_id']); 
-                                }
-                            }
                         @endphp
                         
-                        {{-- Onclick fetch ditambahkan agar saat link ditekan, sistem tetap menandai notifikasi sebagai "Telah Dibaca" --}}
-                        <a href="{{ $targetUrl }}" 
-                           onclick="markNotifAsRead(event, '{{ route('dosen.notifications.read.single', $notif->id) }}', '{{ $targetUrl }}')"
+                        {{-- CUKUP PANGGIL ROUTE SAJA, TIDAK PERLU JAVASCRIPT --}}
+                        <a href="{{ route('dosen.notifications.read.single', $notif->id) }}" 
                            data-aos="fade-up" 
                            data-aos-delay="100" 
                            class="{{ $opacity }} p-4 sm:p-6 md:p-8 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] border-l-[6px] sm:border-l-8 border-{{ $colorStr }}-500 hover:shadow-md transition-all flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-5 md:gap-6 cursor-pointer group no-underline decoration-transparent">
@@ -225,25 +205,6 @@
                 const backdrop = document.getElementById("mobileBackdrop");
                 sidebar.classList.toggle("-translate-x-full");
                 backdrop.classList.toggle("hidden");
-            }
-            
-            // FUNGSI UNTUK MARK AS READ KETIKA DIKLIK DAN REDIRECT KE HALAMAN SPESIFIK
-            function markNotifAsRead(event, readUrl, targetUrl) {
-                event.preventDefault();
-                
-                fetch(readUrl, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                }).catch(error => {
-                    console.error('Gagal memproses status notifikasi:', error);
-                }).finally(() => {
-                    // Setelah status berubah (sukses atau gagal), arahkan ke halaman aslinya
-                    window.location.href = targetUrl;
-                });
             }
         </script>
     </body>

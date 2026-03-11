@@ -106,22 +106,26 @@
                 </button>
                 <div class="min-w-0 flex-1">
                     <h2 class="text-base sm:text-2xl font-black text-slate-900 tracking-tight truncate">Input Nilai Kelas</h2>
+                    
+                    {{-- IMPLEMENTASI NAMA KELAS TANPA KODE PADA HEADER --}}
                     <p class="text-[9px] sm:text-sm font-medium text-slate-500 truncate">
-                        {{ isset($kelas) ? 'Kelas ' . $kelas->kode_kelas . ' - ' . ($kelas->mataKuliah->nama ?? '') : 'Pilih kelas untuk menilai' }}
+                        {{ isset($kelas) ? 'Kelas ' . $kelas->nama_kelas . ' - ' . ($kelas->mataKuliah->nama ?? '') : 'Pilih kelas untuk menilai' }}
                     </p>
                 </div>
             </div>
 
             <div class="relative w-full sm:w-auto min-w-[200px] sm:min-w-[250px]">
-                <select onchange="changeClass(this.value)" class="appearance-none w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 sm:px-5 sm:py-3 font-bold text-xs sm:text-sm outline-none focus:ring-2 focus:ring-blue-500 shadow-sm text-slate-700 cursor-pointer">
+                <select onchange="changeClass(this.value)" class="appearance-none w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 sm:px-5 sm:py-3 font-bold text-[10px] sm:text-sm outline-none focus:ring-2 focus:ring-blue-500 shadow-sm text-slate-700 cursor-pointer pr-10">
+                    <option value="">-- Pilih Kelas --</option>
                     @if(isset($listKelas) && $listKelas->count() > 0)
                         @foreach($listKelas as $k)
+                            {{-- IMPLEMENTASI NAMA KELAS TANPA KODE PADA DROPDOWN --}}
                             <option value="{{ $k->id }}" {{ (isset($kelas) && $kelas->id == $k->id) ? 'selected' : '' }}>
-                                {{ $k->mataKuliah->nama ?? 'Kelas' }} - {{ $k->kode_kelas }}
+                                Kelas {{ $k->nama_kelas }} - {{ $k->mataKuliah->nama ?? 'Mata Kuliah' }}
                             </option>
                         @endforeach
                     @else
-                        <option value="">Belum ada kelas</option>
+                        <option value="" disabled>Belum ada kelas</option>
                     @endif
                 </select>
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
@@ -230,7 +234,7 @@
                         <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                     </div>
                     <h3 class="font-black text-slate-800 text-base sm:text-lg mb-1">Pilih Kelas Terlebih Dahulu</h3>
-                    <p class="text-slate-500 font-medium text-xs sm:text-sm">Gunakan dropdown di sudut kanan atas untuk memilih kelas yang ingin dinilai.</p>
+                    <p class="text-slate-500 font-medium text-xs sm:text-sm">Gunakan dropdown di atas untuk memilih kelas yang ingin dinilai.</p>
                 </div>
             @endif
         </div>
@@ -281,7 +285,6 @@
     @endif
 
     <script>
-        // FUNGSI GANTI KELAS DARI DROPDOWN
         function changeClass(kelasId) {
             if(kelasId) window.location.href = '?kelas_id=' + kelasId;
         }

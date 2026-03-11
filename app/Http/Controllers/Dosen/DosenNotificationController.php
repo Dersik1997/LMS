@@ -23,7 +23,6 @@ class DosenNotificationController extends Controller
     {
         $dosenId = Auth::guard('dosen')->id();
 
-        // Diperbarui agar menggunakan DosenNotification sesuai dengan tabel Anda
         DosenNotification::where('dosen_id', $dosenId)
             ->update(['is_read' => true]);
 
@@ -41,32 +40,12 @@ class DosenNotificationController extends Controller
             $notif->update(['is_read' => true]);
         }
 
-        // Ubah data menjadi array agar mudah dibaca (menangani string JSON maupun Object)
-        $notifData = is_string($notif->data) ? json_decode($notif->data, true) : (array) $notif->data;
-
-        // 1. JIKA NOTIFIKASI PESAN (Cek apakah ada 'mahasiswa_id')
-        if (isset($notifData['mahasiswa_id'])) {
-            return redirect()->route('dosen.messages.show', ['mahasiswa' => $notifData['mahasiswa_id']]);
+        // [PERBAIKAN] Langsung cek ke kolom URL, jika ada isinya langsung redirect!
+        if (!empty($notif->url)) {
+            return redirect($notif->url);
         }
 
-        // 2. JIKA NOTIFIKASI DISKUSI/MATERI (Cek apakah ada 'session_id' atau 'diskusi_id')
-        if (isset($notifData['session_id'])) {
-            return redirect()->route('dosen.course.session.detail', $notifData['session_id']);
-        } elseif (isset($notifData['diskusi_id'])) {
-            return redirect()->route('dosen.course.session.detail', $notifData['diskusi_id']);
-        }
-
-        // 3. JIKA ADA URL LANGSUNG DARI DATABASE
-        if (isset($notifData['url'])) {
-            return redirect($notifData['url']);
-        }
-
-        // --- DEBUGGING (Hapus tanda // di bawah ini jika masih lari ke dashboard) ---
-        // dd("Sistem tidak tahu harus dialihkan ke mana. Isi data notifikasi Anda:", $notifData);
-
-        // Fallback: Jika tidak ada data yang cocok sama sekali
+        // Fallback: Jika URL benar-benar kosong (misal data lama)
         return redirect()->route('dosen.dashboard');
     }
-
-   
 }

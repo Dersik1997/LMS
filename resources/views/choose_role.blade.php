@@ -63,7 +63,7 @@
 
         <div
             id="voice-status-bar"
-            class="fixed bottom-8 lg:bottom-auto lg:top-8 left-1/2 transform -translate-x-1/2 w-max max-w-[85%] bg-white/95 backdrop-blur-xl px-4 py-2.5 sm:px-6 sm:py-3 rounded-2xl shadow-xl border border-slate-200 z-50 flex items-center justify-center gap-3 hidden transition-all duration-500 opacity-0 translate-y-10 lg:-translate-y-10"
+            class="fixed bottom-8 lg:bottom-auto lg:top-8 left-1/2 transform -translate-x-1/2 w-max max-w-[85%] bg-white/95 backdrop-blur-xl px-4 py-2.5 sm:px-6 sm:py-3 rounded-2xl shadow-xl border border-slate-200 z-50 flex items-center justify-center gap-3 hidden transition-all duration-500 opacity-0 translate-y-10 lg:-translate-y-10 cursor-pointer"
         >
             <div
                 id="wave-container"
@@ -88,8 +88,9 @@
             <span
                 id="status-text"
                 class="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-widest"
-                >Menunggu</span
             >
+                MENDENGARKAN
+            </span>
         </div>
 
         <div
@@ -130,7 +131,6 @@
                         >
                             1
                         </div>
-
                         <div
                             class="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-blue-100 to-blue-50 rounded-[1.5rem] flex items-center justify-center mb-5 sm:mb-6 group-hover:from-blue-600 group-hover:to-blue-500 transition-all duration-300 shadow-inner"
                         >
@@ -154,7 +154,6 @@
                                 ></path>
                             </svg>
                         </div>
-
                         <div class="flex-grow flex flex-col justify-center">
                             <h2
                                 class="text-xl sm:text-2xl font-bold text-slate-800 mb-2 sm:mb-3"
@@ -168,12 +167,6 @@
                                 bimbingan kepada mahasiswa.
                             </p>
                         </div>
-
-                        <div
-                            class="mt-6 sm:mt-8 text-blue-600 font-bold text-sm sm:text-base inline-flex items-center group-hover:translate-x-2 transition-transform bg-blue-50 py-2 px-4 rounded-full group-hover:bg-blue-100"
-                        >
-                            Masuk sebagai Dosen <span class="ml-2">→</span>
-                        </div>
                     </a>
 
                     <a
@@ -186,7 +179,6 @@
                         >
                             2
                         </div>
-
                         <div
                             class="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-indigo-100 to-indigo-50 rounded-[1.5rem] flex items-center justify-center mb-5 sm:mb-6 group-hover:from-indigo-600 group-hover:to-indigo-500 transition-all duration-300 shadow-inner"
                         >
@@ -204,7 +196,6 @@
                                 ></path>
                             </svg>
                         </div>
-
                         <div class="flex-grow flex flex-col justify-center">
                             <h2
                                 class="text-xl sm:text-2xl font-bold text-slate-800 mb-2 sm:mb-3"
@@ -218,16 +209,9 @@
                                 perkembangan belajar Anda.
                             </p>
                         </div>
-
-                        <div
-                            class="mt-6 sm:mt-8 text-indigo-600 font-bold text-sm sm:text-base inline-flex items-center group-hover:translate-x-2 transition-transform bg-indigo-50 py-2 px-4 rounded-full group-hover:bg-indigo-100"
-                        >
-                            Masuk sebagai Mahasiswa <span class="ml-2">→</span>
-                        </div>
                     </a>
                 </div>
             </div>
-
             <footer
                 class="w-full text-center py-4 text-slate-400 text-xs sm:text-sm italic mt-auto relative z-10 bg-white/50 backdrop-blur-md border-t border-slate-200/50"
             >
@@ -247,6 +231,8 @@
                 window.webkitSpeechRecognition || window.SpeechRecognition;
             let rec = null;
             let isRecActive = false;
+            let isRedirecting = false;
+            let isSpeaking = false;
 
             const savedRate =
                 parseFloat(localStorage.getItem("speechRate")) || 1.0;
@@ -255,12 +241,13 @@
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
                 rec.continuous = true;
-                rec.interimResults = false;
+                rec.interimResults = true;
             }
 
             let waveInterval;
             function setWave(active) {
                 if (active) {
+                    if (waveInterval) clearInterval(waveInterval);
                     waveInterval = setInterval(() => {
                         waveBars.forEach((bar) => {
                             const h = Math.floor(Math.random() * 16) + 4;
@@ -273,84 +260,132 @@
                 }
             }
 
+            function mulaiMendengar() {
+                if (!rec || isRedirecting || isRecActive) return;
+                try {
+                    rec.start();
+                    isRecActive = true;
+                } catch (e) {
+                    console.error("Mic error:", e);
+                }
+            }
+
             function bicara(teks, callback = null) {
+                if (isRedirecting) return;
                 synth.cancel();
                 const utter = new SpeechSynthesisUtterance(teks);
                 utter.lang = "id-ID";
                 utter.rate = savedRate;
 
                 utter.onstart = () => {
-                    statusText.innerText = "BERBICARA";
+                    isSpeaking = true;
+                    statusText.innerText = "BERBICARA & MENDENGARKAN";
                     statusText.classList.replace(
                         "text-green-600",
                         "text-blue-600",
                     );
-                    if (isRecActive && rec) {
-                        rec.stop();
-                        isRecActive = false;
-                    }
                     setWave(true);
+                    mulaiMendengar();
                 };
 
                 utter.onend = () => {
+                    isSpeaking = false;
                     setWave(false);
+                    if (!isRedirecting) {
+                        statusText.innerText = "MENDENGARKAN";
+                        statusText.classList.replace(
+                            "text-blue-600",
+                            "text-green-600",
+                        );
+                    }
                     if (callback) callback();
                 };
                 synth.speak(utter);
             }
 
-            function mulaiMendengar() {
-                if (!rec) return;
-                try {
-                    statusText.innerText = "MENDENGARKAN";
-                    statusText.classList.replace(
-                        "text-blue-600",
-                        "text-green-600",
-                    );
-                    rec.start();
-                    isRecActive = true;
+            if (rec) {
+                rec.onresult = (event) => {
+                    if (isRedirecting) return;
 
-                    rec.onresult = (event) => {
-                        const hasil = event.results[
-                            event.results.length - 1
-                        ][0].transcript
-                            .toLowerCase()
-                            .trim();
+                    let hasil = "";
+                    let isFinal = false; // Penanda untuk mengecek apakah ucapan sudah selesai
+
+                    for (
+                        let i = event.resultIndex;
+                        i < event.results.length;
+                        ++i
+                    ) {
+                        hasil += event.results[i][0].transcript;
+                        // Cek apakah Google memvalidasi bahwa kata/kalimat sudah final
+                        if (event.results[i].isFinal) {
+                            isFinal = true;
+                        }
+                    }
+
+                    hasil = hasil.toLowerCase().trim();
+
+                    // CEGAH PANTULAN SUARA (Bot mendengar suaranya sendiri)
+                    if (
+                        hasil.includes("silakan pilih") ||
+                        hasil.includes("peran anda")
+                    ) {
+                        return;
+                    }
+
+                    // HANYA proses fungsi jawaban JIKA user sudah selesai bicara
+                    if (isFinal) {
                         prosesJawaban(hasil);
-                    };
+                    }
+                };
 
-                    rec.onend = () => {
-                        if (isRecActive) rec.start();
-                    };
-                } catch (e) {
-                    console.error(e);
-                }
+                rec.onend = () => {
+                    isRecActive = false;
+                    if (!isRedirecting) {
+                        mulaiMendengar();
+                    }
+                };
             }
 
             function prosesJawaban(hasil) {
-                if (
-                    hasil.includes("satu") ||
-                    hasil.includes("1") ||
-                    hasil.includes("dosen")
-                ) {
-                    isRecActive = false;
+                const polaSatu = ["satu", "1", "sato"];
+                const polaDua = [
+                    "dua",
+                    "2",
+                    "tua",
+                    "jua",
+                    "buah",
+                    "duwa",
+                    "do a",
+                ];
+
+                const pilihSatu = polaSatu.some((kata) => hasil.includes(kata));
+                const pilihDua = polaDua.some((kata) => hasil.includes(kata));
+
+                if (pilihSatu && !pilihDua) {
+                    synth.cancel();
+                    isRedirecting = true;
                     rec.stop();
+                    setWave(false);
+
                     document
                         .getElementById("btn-dosen")
                         .classList.add("ring-4", "ring-blue-400", "scale-105");
-                    bicara(
-                        "Anda memilih masuk sebagai Dosen. Mengalihkan halaman.",
-                        () => {
-                            window.location.href = "{{ route('login.dosen') }}";
-                        },
+                    statusText.innerText = "MENGALIHKAN...";
+
+                    const utterKonfirm = new SpeechSynthesisUtterance(
+                        "Satu. Anda masuk sebagai Dosen.",
                     );
-                } else if (
-                    hasil.includes("dua") ||
-                    hasil.includes("2") ||
-                    hasil.includes("mahasiswa")
-                ) {
-                    isRecActive = false;
+                    utterKonfirm.lang = "id-ID";
+                    utterKonfirm.onend = () => {
+                        window.location.href = "{{ route('login.dosen') }}";
+                    };
+                    synth.speak(utterKonfirm);
+                } else if (pilihDua && !pilihSatu) {
+                    synth.cancel();
+                    isRedirecting = true;
                     rec.stop();
+                    setWave(false);
+
                     document
                         .getElementById("btn-mahasiswa")
                         .classList.add(
@@ -358,24 +393,25 @@
                             "ring-indigo-400",
                             "scale-105",
                         );
-                    bicara(
-                        "Anda memilih masuk sebagai Mahasiswa. Mengalihkan halaman.",
-                        () => {
-                            window.location.href = "{{ route('setup.voice') }}";
-                        },
+                    statusText.innerText = "MENGALIHKAN...";
+
+                    const utterKonfirm = new SpeechSynthesisUtterance(
+                        "Dua. Anda masuk sebagai Mahasiswa.",
                     );
-                } else {
-                    bicara(
-                        "Maaf, perintah tidak dikenali. Silakan sebutkan satu untuk Dosen, atau dua untuk Mahasiswa.",
-                        () => {
-                            mulaiMendengar();
-                        },
-                    );
+                    utterKonfirm.lang = "id-ID";
+                    utterKonfirm.onend = () => {
+                        window.location.href = "{{ route('setup.voice') }}";
+                    };
+                    synth.speak(utterKonfirm);
+                } else if (!isSpeaking && hasil.length > 2) {
+                    bicara("Maaf, sebutkan angka satu, atau dua.");
                 }
             }
 
             overlay.addEventListener("click", () => {
                 overlay.classList.add("opacity-0", "pointer-events-none");
+                mulaiMendengar();
+
                 setTimeout(() => {
                     overlay.classList.add("hidden");
                     mainContent.classList.remove("hidden");
@@ -395,10 +431,7 @@
 
                     setTimeout(() => {
                         bicara(
-                            "Silakan pilih peran Anda. Sebutkan satu untuk masuk sebagai Dosen. Atau sebutkan dua untuk masuk sebagai Mahasiswa.",
-                            () => {
-                                mulaiMendengar();
-                            },
+                            "Silakan pilih peran Anda. Dosen, angka satu. Mahasiswa, angka dua.",
                         );
                     }, 500);
                 }, 700);

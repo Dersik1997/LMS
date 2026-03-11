@@ -77,7 +77,6 @@ class MahasiswaMessageController extends Controller
             $request->validate([
                 'receiver_id' => 'required',
                 'body'        => 'nullable|string',
-                // [PERBAIKAN] Mendukung semua format gambar dan ukuran hingga 5MB
                 'image'       => 'nullable|file|mimes:jpg,jpeg,png,gif,webp,svg,bmp,heic,heif|max:5120',
                 'voice'       => 'nullable|mimes:webm,mp3,wav,ogg|max:5120'
             ]);
@@ -109,11 +108,12 @@ class MahasiswaMessageController extends Controller
             ]);
 
             try {
+                // [PERBAIKAN] Langsung menyimpan ke kolom 'url' sesuai Model DosenNotification
                 DosenNotification::create([
                     'dosen_id' => $request->receiver_id,
                     'type'     => 'info',
-                    'title'    => 'Pesan',
-                    'message'  => 'Ada 1 pesan masuk.',
+                    'title'    => 'Pesan Masuk',
+                    'message'  => 'Ada pesan masuk dari ' . ($mahasiswa->nama ?? 'Mahasiswa'),
                     'url'      => route('dosen.messages.show', ['mahasiswa' => $mahasiswa->id]),
                     'is_read'  => false,
                 ]);
