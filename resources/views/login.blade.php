@@ -206,18 +206,17 @@
             let isRecActive = false;
             let isRedirecting = false;
             let isSpeaking = false;
+            let timerSalahKata; // Timer untuk mengoreksi omongan tak jelas
 
-            let currentStep = "ASK_NIM"; // Status pengisian form
-
-            // Timer untuk mendeteksi kapan pengguna selesai bicara angka
+            let currentStep = "ASK_NIM";
             let typingTimer;
-            const waktuTungguJeda = 2000; // 2 Detik menunggu sebelum deklarasi "Benar atau Ulang"
+            const waktuTungguJeda = 1200; // Sangat cepat menangkap angka
 
             if (SpeechRec) {
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
                 rec.continuous = true;
-                rec.interimResults = true;
+                rec.interimResults = true; // Langsung tangkap agar gesit
             }
 
             let waveInterval;
@@ -236,7 +235,16 @@
                 }
             }
 
-            // Fitur Cut-Off Manual klik layar
+            function resetMicSession() {
+                if (rec) {
+                    try {
+                        rec.abort();
+                    } catch (e) {}
+                    isRecActive = false;
+                }
+            }
+
+            // Fitur sentuh layar untuk skip instruksi bot
             document.body.addEventListener("click", (e) => {
                 if (
                     e.target.tagName === "INPUT" ||
@@ -246,21 +254,26 @@
                 if (isSpeaking && !isRedirecting) {
                     synth.cancel();
                     setWave(false);
+                    isSpeaking = false;
                 }
+                if (!isRecActive && !isRedirecting) mulaiMendengar();
             });
 
             function mulaiMendengar() {
-                if (!rec || isRedirecting || isRecActive) return;
+                if (!rec || isRedirecting || isSpeaking || isRecActive) return;
                 try {
                     rec.start();
                     isRecActive = true;
-                } catch (e) {
-                    console.error("Mic error:", e);
-                }
+                } catch (e) {}
             }
 
             function bicara(teks, callback = null) {
                 if (isRedirecting) return;
+
+                // MURNI WALKIE-TALKIE: Matikan mic 100% saat bot bicara
+                isSpeaking = true;
+                resetMicSession();
+                synth.resume();
                 synth.cancel();
 
                 setTimeout(() => {
@@ -270,21 +283,22 @@
                     utter.rate = savedRate ? parseFloat(savedRate) : 1.0;
 
                     utter.onstart = () => {
-                        isSpeaking = true;
                         voiceHeader.classList.remove("opacity-0");
                         if (statusDesc) {
-                            statusDesc.innerText = "BERBICARA & MENDENGARKAN";
+                            statusDesc.innerText = "SISTEM BERBICARA";
                             statusDesc.classList.replace(
                                 "text-slate-800",
                                 "text-blue-600",
                             );
+                            statusDesc.classList.replace(
+                                "text-green-600",
+                                "text-blue-600",
+                            );
                         }
                         setWave(true);
-                        mulaiMendengar();
                     };
 
                     utter.onend = () => {
-                        isSpeaking = false;
                         setWave(false);
                         if (!isRedirecting && statusDesc) {
                             statusDesc.innerText = "MENDENGARKAN";
@@ -293,10 +307,16 @@
                                 "text-green-600",
                             );
                         }
-                        if (callback) callback();
+
+                        // Jeda 400ms memastikan gema speaker hilang sebelum telinga dibuka
+                        setTimeout(() => {
+                            isSpeaking = false;
+                            mulaiMendengar();
+                            if (callback) callback();
+                        }, 400);
                     };
 
-                    utter.onerror = (e) => {
+                    utter.onerror = () => {
                         isSpeaking = false;
                         setWave(false);
                         mulaiMendengar();
@@ -309,134 +329,169 @@
 
             if (rec) {
                 rec.onresult = (event) => {
-                    if (isRedirecting) return;
+                    // PENGAMAN MUTLAK: Mode tuli saat bicara (Mustahil merespons diri sendiri)
+                    if (isRedirecting || isSpeaking) return;
 
                     let hasil = "";
-                    // Iterasi dari 0 memastikan angka/huruf panjang terangkai penuh dari awal sampai akhir tanpa terpotong
-                    for (let i = 0; i < event.results.length; ++i) {
+                    for (
+                        let i = event.resultIndex;
+                        i < event.results.length;
+                        ++i
+                    ) {
                         hasil += event.results[i][0].transcript + " ";
                     }
-                    hasil = hasil.toLowerCase().trim();
+                    let bersih = hasil.toLowerCase().trim();
 
-                    prosesJawaban(hasil);
+                    // ==========================================
+                    // PERINTAH MUTLAK (REGEX)
+                    // ==========================================
+                    const pilihBenar = bersih.match(
+                        /\b(benar|bener|ya|betul|sesuai|lanjut|oke)\b/,
+                    );
+                    const pilihSalah = bersih.match(
+                        /\b(salah|bukan|ulang|ulangi|ganti|hapus)\b/,
+                    );
+                    const angkaMasuk = kataKeAngka(bersih);
+
+                    if (currentStep === "ASK_NIM") {
+                        if (angkaMasuk.length > 0) {
+                            inputNim.value = angkaMasuk;
+                            clearTimeout(typingTimer);
+                            clearTimeout(timerSalahKata);
+
+                            typingTimer = setTimeout(() => {
+                                if (currentStep !== "ASK_NIM") return;
+                                currentStep = "CONFIRM_NIM";
+                                resetMicSession();
+                                const spokenNim = inputNim.value
+                                    .split("")
+                                    .join(" ");
+
+                                // Micro-Prompt
+                                bicara(`NIM, ${spokenNim}. Benar, atau Salah?`);
+                            }, waktuTungguJeda);
+                        } else if (bersih.length > 2) {
+                            clearTimeout(timerSalahKata);
+                            timerSalahKata = setTimeout(() => {
+                                if (!isRedirecting && !isSpeaking)
+                                    bicara("Sebutkan NIM.");
+                            }, 1200);
+                        }
+                    } else if (currentStep === "CONFIRM_NIM") {
+                        if (pilihBenar && !pilihSalah) {
+                            clearTimeout(typingTimer);
+                            clearTimeout(timerSalahKata);
+                            flowPassword();
+                        } else if (pilihSalah && !pilihBenar) {
+                            clearTimeout(typingTimer);
+                            clearTimeout(timerSalahKata);
+                            inputNim.value = "";
+                            currentStep = "ASK_NIM";
+
+                            // Micro-Prompt
+                            bicara("Sebutkan ulang NIM.");
+                        } else if (
+                            angkaMasuk.length > 0 &&
+                            angkaMasuk !== inputNim.value
+                        ) {
+                            // User langsung koreksi dengan nyebut angka baru saat bot diam
+                            inputNim.value = angkaMasuk;
+                            currentStep = "ASK_NIM";
+                            clearTimeout(typingTimer);
+                            clearTimeout(timerSalahKata);
+
+                            typingTimer = setTimeout(() => {
+                                if (currentStep !== "ASK_NIM") return;
+                                currentStep = "CONFIRM_NIM";
+                                resetMicSession();
+                                const spokenNim = inputNim.value
+                                    .split("")
+                                    .join(" ");
+                                bicara(`NIM, ${spokenNim}. Benar, atau Salah?`);
+                            }, waktuTungguJeda);
+                        } else if (bersih.length > 2) {
+                            clearTimeout(timerSalahKata);
+                            timerSalahKata = setTimeout(() => {
+                                if (!isRedirecting && !isSpeaking)
+                                    bicara("Benar, atau Salah?");
+                            }, 1200);
+                        }
+                    } else if (currentStep === "ASK_PASS") {
+                        if (angkaMasuk.length > 0) {
+                            inputPass.value = angkaMasuk;
+                            clearTimeout(typingTimer);
+                            clearTimeout(timerSalahKata);
+
+                            typingTimer = setTimeout(() => {
+                                if (currentStep !== "ASK_PASS") return;
+                                currentStep = "CONFIRM_PASS";
+                                resetMicSession();
+                                const passSpoken = inputPass.value
+                                    .split("")
+                                    .join(" ");
+
+                                // Micro-Prompt
+                                bicara(
+                                    `Sandi, ${passSpoken}. Benar, atau Salah?`,
+                                );
+                            }, waktuTungguJeda);
+                        } else if (bersih.length > 2) {
+                            clearTimeout(timerSalahKata);
+                            timerSalahKata = setTimeout(() => {
+                                if (!isRedirecting && !isSpeaking)
+                                    bicara("Sebutkan Sandi.");
+                            }, 1200);
+                        }
+                    } else if (currentStep === "CONFIRM_PASS") {
+                        if (pilihBenar && !pilihSalah) {
+                            clearTimeout(typingTimer);
+                            clearTimeout(timerSalahKata);
+                            validasiAkhir();
+                        } else if (pilihSalah && !pilihBenar) {
+                            clearTimeout(typingTimer);
+                            clearTimeout(timerSalahKata);
+                            inputPass.value = "";
+                            currentStep = "ASK_PASS";
+
+                            // Micro-Prompt
+                            bicara("Sebutkan ulang sandi.");
+                        } else if (
+                            angkaMasuk.length > 0 &&
+                            angkaMasuk !== inputPass.value
+                        ) {
+                            inputPass.value = angkaMasuk;
+                            currentStep = "ASK_PASS";
+                            clearTimeout(typingTimer);
+                            clearTimeout(timerSalahKata);
+
+                            typingTimer = setTimeout(() => {
+                                if (currentStep !== "ASK_PASS") return;
+                                currentStep = "CONFIRM_PASS";
+                                resetMicSession();
+                                const passSpoken = inputPass.value
+                                    .split("")
+                                    .join(" ");
+                                bicara(
+                                    `Sandi, ${passSpoken}. Benar, atau Salah?`,
+                                );
+                            }, waktuTungguJeda);
+                        } else if (bersih.length > 2) {
+                            clearTimeout(timerSalahKata);
+                            timerSalahKata = setTimeout(() => {
+                                if (!isRedirecting && !isSpeaking)
+                                    bicara("Benar, atau Salah?");
+                            }, 1200);
+                        }
+                    }
                 };
 
                 rec.onend = () => {
                     isRecActive = false;
-                    if (!isRedirecting) mulaiMendengar();
+                    // Terus bangunkan mic jika tidak sedang loading atau bicara
+                    if (!isRedirecting && !isSpeaking) {
+                        setTimeout(mulaiMendengar, 300);
+                    }
                 };
-            }
-
-            function prosesJawaban(hasil) {
-                if (currentStep === "ASK_NIM") {
-                    const nimFix = hasil.replace(/[^0-9]/g, "");
-                    if (nimFix.length > 0) {
-                        synth.cancel(); // Matikan suara bot jika sedang ngoceh "Sebutkan NIM..."
-                        inputNim.value = nimFix; // Input akan diketik secara real-time di layar
-
-                        // Reset timer penunggu jeda bicara
-                        clearTimeout(typingTimer);
-                        typingTimer = setTimeout(() => {
-                            if (rec) rec.abort(); // Reset mikrofon agar kalimat bot "Benar" tidak nyambung dengan angka sebelumnya
-                            currentStep = "CONFIRM_NIM";
-                            const spokenNim = inputNim.value
-                                .split("")
-                                .join(" ");
-                            bicara(
-                                `NIM anda adalah ${spokenNim}. Katakan Benar, atau Ulang.`,
-                            );
-                        }, waktuTungguJeda);
-                    }
-                } else if (currentStep === "CONFIRM_NIM") {
-                    // Blokir Anti-Echo agar tidak memicu perintahnya sendiri
-                    if (
-                        hasil.includes("katakan benar") ||
-                        hasil.includes("atau ulang")
-                    )
-                        return;
-
-                    const pilihBenar =
-                        hasil.includes("benar") ||
-                        hasil.includes("ya") ||
-                        hasil.includes("betul");
-                    const pilihUlang =
-                        hasil.includes("ulang") ||
-                        hasil.includes("salah") ||
-                        hasil.includes("bukan");
-
-                    if (pilihBenar && !pilihUlang) {
-                        clearTimeout(typingTimer);
-                        synth.cancel();
-                        if (rec) rec.abort();
-                        flowPassword();
-                    } else if (pilihUlang && !pilihBenar) {
-                        clearTimeout(typingTimer);
-                        synth.cancel();
-                        if (rec) rec.abort();
-                        inputNim.value = "";
-                        currentStep = "ASK_NIM";
-                        bicara(
-                            "Mari ulangi. Silakan sebutkan kembali NIM anda.",
-                        );
-                    } else if (!isSpeaking && hasil.length > 2) {
-                        bicara(
-                            "Maaf, perintah tidak sesuai. Katakan BENAR, atau ULANG.",
-                        );
-                    }
-                } else if (currentStep === "ASK_PASS") {
-                    const passFix = kataKeAngka(hasil);
-                    if (passFix && passFix.length > 0) {
-                        synth.cancel();
-                        inputPass.value = passFix;
-
-                        // Reset timer penunggu jeda bicara
-                        clearTimeout(typingTimer);
-                        typingTimer = setTimeout(() => {
-                            if (rec) rec.abort();
-                            currentStep = "CONFIRM_PASS";
-                            const passSpoken = inputPass.value
-                                .split("")
-                                .join(" ");
-                            bicara(
-                                `Kata sandi anda ${passSpoken}. Katakan Benar, atau Ulang.`,
-                            );
-                        }, waktuTungguJeda);
-                    }
-                } else if (currentStep === "CONFIRM_PASS") {
-                    // Blokir Anti-Echo
-                    if (
-                        hasil.includes("katakan benar") ||
-                        hasil.includes("atau ulang")
-                    )
-                        return;
-
-                    const pilihBenar =
-                        hasil.includes("benar") ||
-                        hasil.includes("ya") ||
-                        hasil.includes("betul");
-                    const pilihUlang =
-                        hasil.includes("ulang") ||
-                        hasil.includes("salah") ||
-                        hasil.includes("bukan");
-
-                    if (pilihBenar && !pilihUlang) {
-                        clearTimeout(typingTimer);
-                        synth.cancel();
-                        if (rec) rec.abort();
-                        validasiAkhir();
-                    } else if (pilihUlang && !pilihBenar) {
-                        clearTimeout(typingTimer);
-                        synth.cancel();
-                        if (rec) rec.abort();
-                        inputPass.value = "";
-                        currentStep = "ASK_PASS";
-                        bicara("Mari ulangi pengisian kata sandi.");
-                    } else if (!isSpeaking && hasil.length > 2) {
-                        bicara(
-                            "Maaf, perintah tidak sesuai. Katakan BENAR, atau ULANG.",
-                        );
-                    }
-                }
             }
 
             function startFlow() {
@@ -446,7 +501,9 @@
                     "bg-white",
                     "shadow-md",
                 );
-                bicara("Halaman Login. Silakan sebutkan NIM anda.");
+
+                // Micro-Prompt
+                bicara("Login Mahasiswa. Sebutkan NIM.");
             }
 
             function flowPassword() {
@@ -462,7 +519,9 @@
                     "bg-white",
                     "shadow-md",
                 );
-                bicara("Silakan sebutkan kata sandi anda.");
+
+                // Micro-Prompt
+                bicara("Sebutkan sandi.");
             }
 
             function validasiAkhir() {
@@ -471,10 +530,10 @@
                 const nim = inputNim.value;
                 const pass = inputPass.value;
 
-                synth.cancel();
-                if (rec) rec.abort();
+                resetMicSession();
 
-                bicara("Sedang memeriksa data anda.", () => {
+                // Micro-Prompt
+                bicara("Memeriksa data.", () => {
                     fetch("{{ route('login.mahasiswa.post') }}", {
                         method: "POST",
                         headers: {
@@ -491,43 +550,37 @@
 
                             if (res.ok && data.success) {
                                 isRedirecting = true;
-                                bicara(
-                                    "Akses diterima. Membuka dashboard mahasiswa.",
-                                    () => {
-                                        window.location.href = data.redirect;
-                                    },
-                                );
-                                // Fallback jika API Text-To-Speech hang
+                                // Micro-Prompt
+                                bicara("Berhasil. Membuka dasbor.", () => {
+                                    window.location.href = data.redirect;
+                                });
                                 setTimeout(() => {
                                     window.location.href = data.redirect;
                                 }, 4000);
                             } else {
                                 currentStep = "ASK_PASS";
                                 inputPass.value = "";
+                                // Micro-Prompt
                                 bicara(
                                     data.message ||
-                                        "Login gagal. Silakan sebutkan ulang kata sandi anda.",
-                                    () => {
-                                        mulaiMendengar();
-                                    },
+                                        "Gagal. Sebutkan ulang sandi.",
                                 );
                             }
                         })
                         .catch(() => {
                             currentStep = "ASK_PASS";
-                            bicara(
-                                "Terjadi kesalahan sistem. Silakan coba kembali kata sandi anda.",
-                            );
+                            // Micro-Prompt
+                            bicara("Error. Sebutkan ulang sandi.");
                         });
                 });
             }
 
-            // Fungsi cerdas yang bisa mengubah teks menjadi angka agar password huruf/angka tersaring dengan baik
             function kataKeAngka(teks) {
                 if (!teks) return "";
                 const map = {
                     nol: "0",
                     kosong: "0",
+                    o: "0",
                     satu: "1",
                     dua: "2",
                     tiga: "3",
@@ -543,7 +596,6 @@
                 let tokens = hasil.split(/\s+/);
                 let finalNum = "";
 
-                // Ekstrak angka baik yang berwujud nomor ("12") atau tulisan ("dua")
                 for (let token of tokens) {
                     if (/\d/.test(token)) {
                         finalNum += token.replace(/\D/g, "");
@@ -553,6 +605,13 @@
                 }
                 return finalNum;
             }
+
+            // PENJAGA MALAM (Watchdog): Menghidupkan mic paksa jika browser ketiduran
+            setInterval(() => {
+                if (!isRecActive && !isRedirecting && !isSpeaking) {
+                    mulaiMendengar();
+                }
+            }, 1500);
 
             window.addEventListener("load", () => {
                 setTimeout(() => {

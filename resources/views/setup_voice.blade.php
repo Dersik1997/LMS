@@ -202,11 +202,13 @@
             let currentStep = 1;
             let isRedirecting = false;
             let isSpeaking = false;
+            let timerSalahKata;
 
             if (SpeechRec) {
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
                 rec.continuous = true;
+                // Tetap true agar sangat responsif
                 rec.interimResults = true;
             }
 
@@ -226,6 +228,16 @@
                 }
             }
 
+            // Fungsi reset memori mic (Mencegah penumpukan)
+            function resetMicSession() {
+                if (rec) {
+                    try {
+                        rec.abort();
+                    } catch (e) {}
+                    isRecActive = false;
+                }
+            }
+
             function hitungRate(val) {
                 return 0.5 + (val - 1) * (1.5 / 99);
             }
@@ -238,13 +250,14 @@
                 if (isRedirecting) return;
                 const newRate = hitungRate(parseInt(this.value));
                 currentStep = 2;
+                resetMicSession();
+
                 instructionText.innerHTML =
                     "Sebutkan <strong class='text-blue-600'>Lanjut</strong> atau <strong class='text-red-600'>Ulang</strong>.";
 
+                // Micro-Prompt
                 bicara(
-                    "Kecepatan diatur ke " +
-                        this.value +
-                        ". Sebutkan lanjut, atau ulang.",
+                    "Kecepatan " + this.value + ". Lanjut, atau ulang?",
                     newRate,
                 );
             });
@@ -258,45 +271,45 @@
                 if (isSpeaking && !isRedirecting) {
                     synth.cancel();
                     setWave(false);
+                    isSpeaking = false;
                 }
+                if (!isRecActive && !isRedirecting) mulaiMendengar();
             });
 
             function mulaiMendengar() {
-                if (!rec || isRedirecting || isRecActive) return;
+                if (!rec || isRedirecting || isSpeaking || isRecActive) return;
                 try {
                     rec.start();
                     isRecActive = true;
-                } catch (e) {
-                    console.error("Mic error:", e);
-                }
+                } catch (e) {}
             }
 
             function bicara(teks, rateValue = null, callback = null) {
                 if (isRedirecting) return;
 
-                synth.cancel(); // Hentikan suara sebelumnya
+                // MURNI WALKIE-TALKIE: Matikan mic 100% saat bot bicara
+                isSpeaking = true;
+                resetMicSession();
+                synth.resume();
+                synth.cancel();
 
-                // Jeda 50ms untuk mencegah bug Chrome Web Speech API yang sering "nge-hang"
                 setTimeout(() => {
                     const utter = new SpeechSynthesisUtterance(teks);
                     utter.lang = "id-ID";
                     utter.rate = rateValue !== null ? rateValue : 1.0;
 
                     utter.onstart = () => {
-                        isSpeaking = true;
                         if (statusDesc) {
-                            statusDesc.innerText = "BERBICARA & MENDENGARKAN";
+                            statusDesc.innerText = "SISTEM BERBICARA";
                             statusDesc.classList.replace(
-                                "text-slate-800",
+                                "text-green-600",
                                 "text-blue-600",
                             );
                         }
                         setWave(true);
-                        mulaiMendengar();
                     };
 
                     utter.onend = () => {
-                        isSpeaking = false;
                         setWave(false);
                         if (!isRedirecting && statusDesc) {
                             statusDesc.innerText = "MENDENGARKAN";
@@ -305,14 +318,20 @@
                                 "text-green-600",
                             );
                         }
-                        if (callback) callback();
+
+                        // Jeda agar suara bot tidak memantul ke mic
+                        setTimeout(() => {
+                            isSpeaking = false;
+                            mulaiMendengar();
+                            if (callback) callback();
+                        }, 400);
                     };
 
-                    utter.onerror = (e) => {
+                    utter.onerror = () => {
                         isSpeaking = false;
                         setWave(false);
                         mulaiMendengar();
-                        if (callback) callback(); // Pastikan callback tetap jalan meskipun error
+                        if (callback) callback();
                     };
 
                     synth.speak(utter);
@@ -321,7 +340,8 @@
 
             if (rec) {
                 rec.onresult = (event) => {
-                    if (isRedirecting) return;
+                    // PENGAMAN MUTLAK: Jika bot bicara, jangan proses suara apapun
+                    if (isRedirecting || isSpeaking) return;
 
                     let hasil = "";
                     for (
@@ -329,175 +349,178 @@
                         i < event.results.length;
                         ++i
                     ) {
-                        hasil += event.results[i][0].transcript;
+                        hasil += event.results[i][0].transcript + " ";
                     }
                     hasil = hasil.toLowerCase().trim();
-
-                    const omonganBot = [
-                        "selamat datang",
-                        "kecepatan diatur",
-                        "sebutkan lanjut",
-                        "sebutkan kembali",
-                        "ini adalah contoh",
-                        "untuk melanjutkan",
-                        "mengatur ulang",
-                        "pengaturan disimpan",
-                    ];
-                    if (omonganBot.some((kalimat) => hasil.includes(kalimat))) {
-                        return;
-                    }
 
                     prosesJawaban(hasil);
                 };
 
                 rec.onend = () => {
                     isRecActive = false;
-                    if (!isRedirecting) {
-                        mulaiMendengar();
+                    if (!isRedirecting && !isSpeaking) {
+                        setTimeout(mulaiMendengar, 300);
                     }
                 };
             }
 
             function prosesJawaban(hasil) {
                 if (currentStep === 1) {
-                    const kataKeAngka = {
-                        satu: 1,
-                        dua: 2,
-                        tiga: 3,
-                        empat: 4,
-                        lima: 5,
-                        enam: 6,
-                        tujuh: 7,
-                        delapan: 8,
-                        sembilan: 9,
-                        sepuluh: 10,
-                        seratus: 100,
-                    };
-
-                    let angkaDeteksi = hasil.match(/\d+/);
-                    let nilaiAngka = angkaDeteksi
-                        ? parseInt(angkaDeteksi[0])
-                        : null;
-
-                    if (!nilaiAngka) {
-                        for (let kata in kataKeAngka) {
-                            if (hasil.includes(kata)) {
-                                nilaiAngka = kataKeAngka[kata];
-                                break;
-                            }
-                        }
-                    }
+                    let nilaiAngka = ubahTeksKeAngka(hasil);
 
                     if (
                         nilaiAngka !== null &&
                         nilaiAngka >= 1 &&
                         nilaiAngka <= 100
                     ) {
+                        clearTimeout(timerSalahKata);
                         slider.value = nilaiAngka;
                         display.innerText = nilaiAngka;
-                        const newRate = hitungRate(nilaiAngka);
 
+                        currentStep = 2;
+                        resetMicSession();
+
+                        const newRate = hitungRate(nilaiAngka);
                         instructionText.innerHTML =
                             "Sebutkan <strong class='text-blue-600'>Lanjut</strong> atau <strong class='text-red-600'>Ulang</strong>.";
-                        currentStep = 2;
 
-                        const teksKonfirmasi =
-                            "Kecepatan diatur ke " +
-                            nilaiAngka +
-                            ". Ini adalah contoh kecepatan suara Anda. Sebutkan LANJUT untuk melanjutkan, atau ULANG untuk mengatur ulang.";
-                        bicara(teksKonfirmasi, newRate);
-                    } else if (!isSpeaking && hasil.length > 2) {
+                        // Micro-Prompt
                         bicara(
-                            "Maaf, sebutkan angka dari satu sampai seratus.",
-                            1.0,
+                            "Kecepatan " + nilaiAngka + ". Lanjut, atau ulang?",
+                            newRate,
                         );
+                    } else if (hasil.length > 2) {
+                        // Jika bicara gak jelas, tunggu bentar, baru bot bereaksi
+                        clearTimeout(timerSalahKata);
+                        timerSalahKata = setTimeout(() => {
+                            if (!isRedirecting && !isSpeaking) {
+                                // Micro-Prompt
+                                bicara("Sebut angka satu sampai seratus.", 1.0);
+                            }
+                        }, 1200);
                     }
                 } else if (currentStep === 2) {
-                    const polaLanjut = [
-                        "lanjut",
-                        "lanju",
-                        "lanjot",
-                        "lajut",
-                        "lanjutkan",
-                        "maju",
-                        "terus",
-                    ];
-                    const polaUlang = [
-                        "ulang",
-                        "ulangi",
-                        "pulang",
-                        "urang",
-                        "tulang",
-                        "kembali",
-                        "ulank",
-                        "kurang",
-                    ];
+                    // KAMUS PERINTAH MUTLAK
+                    const polaLanjut =
+                        /\b(lanjut|lanju|lanjot|lajut|lanjutkan|maju|terus|oke|ya)\b/;
+                    const polaUlang =
+                        /\b(ulang|ulangi|pulang|urang|tulang|kembali|ulank|kurang|ganti|salah)\b/;
 
-                    const pilihLanjut = polaLanjut.some((kata) =>
-                        hasil.includes(kata),
-                    );
-                    const pilihUlang = polaUlang.some((kata) =>
-                        hasil.includes(kata),
-                    );
+                    const pilihLanjut = hasil.match(polaLanjut);
+                    const pilihUlang = hasil.match(polaUlang);
 
                     if (pilihLanjut && !pilihUlang) {
-                        if (rec) rec.stop();
+                        clearTimeout(timerSalahKata);
+                        resetMicSession();
 
-                        // Sistem akan ngomong dulu, baru pindah halaman
+                        // Micro-Prompt
                         bicara(
-                            "Pengaturan disimpan. Mengalihkan ke halaman login.",
+                            "Disimpan. Mengalihkan.",
                             hitungRate(parseInt(slider.value)),
                             () => {
                                 simpanDanLanjut();
                             },
                         );
 
-                        // FALLBACK DARURAT: Jika suara nge-hang, paksa pindah dalam 3.5 detik
+                        // Fallback
                         setTimeout(() => {
                             simpanDanLanjut();
                         }, 3500);
                     } else if (pilihUlang && !pilihLanjut) {
+                        clearTimeout(timerSalahKata);
+                        resetMicSession();
                         currentStep = 1;
                         slider.value = 50;
                         display.innerText = "50";
                         instructionText.innerHTML =
                             "Sebutkan angka <strong class='text-blue-600'>1 sampai 100</strong> untuk mengatur kecepatan asisten suara.";
 
-                        bicara(
-                            "Silakan sebutkan kembali angka kecepatan dari satu sampai seratus.",
-                            1.0,
-                        );
-                    } else if (!isSpeaking && hasil.length > 2) {
-                        bicara(
-                            "Maaf, perintah tidak dikenali. Sebutkan LANJUT, atau ULANG.",
-                            hitungRate(parseInt(slider.value)),
-                        );
+                        // Micro-Prompt
+                        bicara("Ulangi. Sebut angka.", 1.0);
+                    } else if (hasil.length > 2) {
+                        clearTimeout(timerSalahKata);
+                        timerSalahKata = setTimeout(() => {
+                            if (!isRedirecting && !isSpeaking) {
+                                // Micro-Prompt
+                                bicara(
+                                    "Lanjut, atau ulang?",
+                                    hitungRate(parseInt(slider.value)),
+                                );
+                            }
+                        }, 1200);
                     }
                 }
             }
 
+            function ubahTeksKeAngka(teks) {
+                let matchRegex = teks.match(/\d+/);
+                if (matchRegex) return parseInt(matchRegex[0]);
+
+                const kamusAngka = {
+                    satu: 1,
+                    dua: 2,
+                    tiga: 3,
+                    empat: 4,
+                    lima: 5,
+                    enam: 6,
+                    tujuh: 7,
+                    delapan: 8,
+                    sembilan: 9,
+                    sepuluh: 10,
+                    sebelas: 11,
+                    seratus: 100,
+                };
+
+                let kataKata = teks.split(/\s+/);
+                let angkaKetemu = 0;
+                let lagiNgitung = false;
+
+                for (let kata of kataKata) {
+                    if (kamusAngka[kata] !== undefined) {
+                        lagiNgitung = true;
+                        angkaKetemu += kamusAngka[kata];
+                    } else if (kata === "belas" && lagiNgitung) {
+                        angkaKetemu += 10;
+                    } else if (kata === "puluh" && lagiNgitung) {
+                        angkaKetemu *= 10;
+                    } else if (lagiNgitung) {
+                        break;
+                    }
+                }
+
+                return lagiNgitung ? angkaKetemu : null;
+            }
+
             function simpanDanLanjut() {
-                if (isRedirecting) return; // Mencegah fungsi jalan dua kali
+                if (isRedirecting) return;
                 isRedirecting = true;
 
-                synth.cancel(); // Matikan semua suara saat pindah
+                synth.cancel();
 
                 const finalRate = hitungRate(parseInt(slider.value));
                 localStorage.setItem("speechRate", finalRate);
                 localStorage.setItem("speechSpeedDisplay", slider.value);
 
-                // Pastikan route ini menuju halaman Login Mahasiswa
                 window.location.href = "{{ route('login') }}";
             }
+
+            // PENJAGA MALAM (Watchdog) - Memastikan mic selalu hidup
+            setInterval(() => {
+                if (!isRecActive && !isRedirecting && !isSpeaking) {
+                    mulaiMendengar();
+                }
+            }, 1500);
 
             window.addEventListener("load", () => {
                 AOS.init({ once: true, easing: "ease-out-cubic" });
                 mulaiMendengar();
 
                 setTimeout(() => {
-                    const introText =
-                        "Selamat datang di LMS Inklusi UMMI. Silakan sebutkan angka dari satu sampai seratus untuk mengatur kecepatan suara.";
-                    bicara(introText, 1.0);
+                    // Micro-Prompt saat awal buka halaman
+                    bicara(
+                        "Atur kecepatan suara. Sebut satu sampai seratus.",
+                        1.0,
+                    );
                 }, 1000);
             });
         </script>
