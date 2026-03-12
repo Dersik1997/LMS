@@ -61,23 +61,23 @@
             <div class="absolute bottom-[-10%] left-[-10%] w-64 md:w-[400px] h-64 md:h-[400px] bg-indigo-50/40 rounded-full blur-3xl opacity-50"></div>
         </div>
 
-        <main class="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar relative">
+        <main class="flex-1 flex flex-col h-full overflow-y-scroll custom-scrollbar relative">
             
             {{-- NAVBAR --}}
-            <div class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-3 sm:py-4 shadow-sm transition-all w-full cursor-pointer" id="voice-header" title="Ketuk layar untuk potong suara bot">
+            <div class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-3 sm:py-4 shadow-sm transition-all w-full cursor-pointer" id="voice-header" title="Ketuk layar 2x untuk potong suara bot">
                 <div class="max-w-7xl mx-auto flex items-center justify-between relative h-10 sm:h-12 md:h-14 pointer-events-none">
                     
                     <div class="flex items-center gap-2 sm:gap-4 relative z-10 w-auto justify-start pointer-events-auto">
-                        <button onclick="navigasiKe(0)" class="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95 shrink-0">
+                        <button data-menu="0" class="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95 shrink-0">
                             <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
                             </svg>
                             <span class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[8px] sm:text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white shadow-sm">0</span>
                         </button>
 
-                        <div class="hidden sm:block text-left cursor-pointer group shrink-0" onclick="navigasiKe(0)">
-                            <span class="block text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-widest">Navigasi Suara</span>
-                            <span class="block text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors">0 - Kembali</span>
+                        <div class="hidden sm:block text-left cursor-pointer group shrink-0" data-menu="0">
+                            <span class="block text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-widest pointer-events-none">Navigasi Suara</span>
+                            <span class="block text-[10px] sm:text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors pointer-events-none">0 - Kembali</span>
                         </div>
                     </div>
 
@@ -92,7 +92,7 @@
                             <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
                             <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
                         </div>
-                        <span id="status-desc" class="hidden md:block text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest text-left w-12 sm:w-20">MENYIAPKAN</span>
+                        <span id="status-desc" class="hidden md:block text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest text-left w-12 sm:w-20 pointer-events-none">MENYIAPKAN</span>
                     </div>
                 </div>
             </div>
@@ -154,8 +154,8 @@
                 <div class="bg-white rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-6 lg:p-8 border border-slate-200 shadow-sm relative overflow-hidden" data-aos="fade-up" data-aos-duration="600">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
                         <h3 class="text-base sm:text-lg font-black text-slate-900 uppercase tracking-tight">Instruksi Tugas</h3>
-                        <button onclick="navigasiKe(1)" class="w-fit flex items-center gap-2 bg-blue-50 text-blue-600 px-2.5 sm:px-3 py-1.5 rounded-lg text-[8px] sm:text-[9px] font-bold uppercase tracking-widest hover:bg-blue-100 transition-all cursor-pointer active:scale-95 group border border-blue-100">
-                            <span class="bg-blue-500 text-white w-4 h-4 rounded-md flex items-center justify-center font-black group-hover:bg-blue-600">1</span> Dengar Soal
+                        <button data-menu="1" class="w-fit flex items-center gap-2 bg-blue-50 text-blue-600 px-2.5 sm:px-3 py-1.5 rounded-lg text-[8px] sm:text-[9px] font-bold uppercase tracking-widest hover:bg-blue-100 transition-all cursor-pointer active:scale-95 group border border-blue-100">
+                            <span class="bg-blue-500 text-white w-4 h-4 rounded-md flex items-center justify-center font-black group-hover:bg-blue-600 pointer-events-none">1</span> <span class="pointer-events-none">Dengar Soal</span>
                         </button>
                     </div>
                     
@@ -218,8 +218,8 @@
 
                         @if(now() <= $assignment->deadline)
                         <div class="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-emerald-200/60 flex justify-end">
-                            <button onclick="navigasiKe(5)" class="w-full sm:w-auto bg-white border-2 border-emerald-300 text-emerald-700 font-bold text-[10px] sm:text-xs uppercase tracking-widest hover:bg-emerald-100 transition-all flex justify-center sm:justify-start items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl cursor-pointer active:scale-95 group shadow-sm">
-                                <span class="bg-emerald-500 text-white w-4 h-4 sm:w-5 sm:h-5 rounded flex items-center justify-center text-[9px] sm:text-[10px] shadow-sm">5</span> Kirim Ulang Jawaban
+                            <button data-menu="5" class="w-full sm:w-auto bg-white border-2 border-emerald-300 text-emerald-700 font-bold text-[10px] sm:text-xs uppercase tracking-widest hover:bg-emerald-100 transition-all flex justify-center sm:justify-start items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl cursor-pointer active:scale-95 group shadow-sm">
+                                <span class="bg-emerald-500 text-white w-4 h-4 sm:w-5 sm:h-5 rounded flex items-center justify-center text-[9px] sm:text-[10px] shadow-sm pointer-events-none">5</span> <span class="pointer-events-none">Kirim Ulang Jawaban</span>
                             </button>
                         </div>
                         @endif
@@ -238,10 +238,10 @@
                                     </label>
                                     <div onclick="document.getElementById('file-upload').click()" class="border-2 border-dashed border-slate-300 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all group bg-slate-50 active:scale-[0.99] h-24 sm:h-32 flex flex-col justify-center">
                                         <input type="file" name="file" id="file-upload" class="hidden" onchange="handleFileSelect(this)" />
-                                        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-1 sm:mb-2 group-hover:scale-110 transition-transform shadow-sm">
-                                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-1 sm:mb-2 group-hover:scale-110 transition-transform shadow-sm pointer-events-none">
+                                            <svg class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                                         </div>
-                                        <span id="file-label" class="text-[10px] sm:text-xs font-bold text-slate-700 group-hover:text-blue-700 block line-clamp-1">Klik Pilih File</span>
+                                        <span id="file-label" class="text-[10px] sm:text-xs font-bold text-slate-700 group-hover:text-blue-700 block line-clamp-1 pointer-events-none">Klik Pilih File</span>
                                     </div>
                                 </div>
 
@@ -293,8 +293,8 @@
                             <h3 class="text-sm sm:text-base md:text-lg font-black text-slate-900 uppercase tracking-tight">Diskusi Tugas Privat</h3>
                             <p class="text-[8px] sm:text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Tanya jawab terkait tugas ini dengan Dosen</p>
                         </div>
-                        <button onclick="navigasiKe(9)" class="w-fit text-[8px] sm:text-[9px] font-bold bg-blue-100 text-blue-700 px-2.5 sm:px-3 py-1.5 rounded-full flex items-center gap-1.5 cursor-pointer hover:bg-blue-200 transition-colors">
-                            <span class="bg-blue-500 text-white w-4 h-4 rounded-md flex items-center justify-center font-black">9</span> Baca Chat
+                        <button data-menu="9" class="w-fit text-[8px] sm:text-[9px] font-bold bg-blue-100 text-blue-700 px-2.5 sm:px-3 py-1.5 rounded-full flex items-center gap-1.5 cursor-pointer hover:bg-blue-200 transition-colors">
+                            <span class="bg-blue-500 text-white w-4 h-4 rounded-md flex items-center justify-center font-black pointer-events-none">9</span> <span class="pointer-events-none">Baca Chat</span>
                         </button>
                     </div>
 
@@ -555,7 +555,7 @@
                             bicara("Anda belum mengisi form tugas. Silakan sebut dua untuk upload file, tiga untuk ketik, atau empat untuk merekam suara.");
                         }
                     }
-                }, 15000); // 15 detik batas waktu nganggur
+                }, 15000);
             }
 
             function resetTimerIdle() {
@@ -575,36 +575,67 @@
                 }
             }
 
+            // ==========================================
+            // LOGIKA SECURE DOUBLE CLICK & DATA-MENU
+            // ==========================================
+            let clickTimer = null;
+            const clickDelay = 300; 
+
             document.body.addEventListener('click', (e) => {
-                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'A' || e.target.closest('button')) return;
-                
-                if (synth.speaking || isSpeaking || (statusDesc && statusDesc.innerText === 'BERBICARA...')) {
-                    synth.cancel();
-                    isSpeaking = false;
-                    setWave(false);
-                    if (statusDesc) {
-                        statusDesc.innerText = "MENDENGARKAN";
-                        statusDesc.classList.replace("text-blue-600", "text-green-600");
+                // Abaikan klik form atau elemen native agar berfungsi normal
+                if ((e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'AUDIO') && !e.target.closest('[data-menu]')) {
+                    return;
+                }
+
+                const navElement = e.target.closest('[data-menu]');
+
+                if (navElement) {
+                    e.preventDefault(); 
+                }
+
+                if (clickTimer !== null) {
+                    // DOUBLE CLICK: Potong suara bot sepenuhnya
+                    clearTimeout(clickTimer);
+                    clickTimer = null;
+
+                    if (!isRedirecting) {
+                        synth.cancel(); 
+                        isSpeaking = false;
+                        setWave(false);
+                        if (statusDesc) {
+                            statusDesc.innerText = "MENDENGARKAN";
+                            statusDesc.classList.replace("text-blue-600", "text-green-600");
+                            statusDesc.classList.replace("text-slate-400", "text-green-600");
+                        }
+                        if (rec) { try { rec.abort(); } catch(err){} isRecActive = false; }
+                        setTimeout(() => { mulaiMendengar(); }, 50);
                     }
-                    if(!isRecordingVoice) mulaiMendengar();
+                } else {
+                    // SINGLE CLICK
+                    clickTimer = setTimeout(() => {
+                        clickTimer = null;
+                        if (navElement && !isRedirecting) {
+                            const menuId = parseInt(navElement.getAttribute('data-menu'));
+                            window.navigasiKe(menuId);
+                        }
+                    }, clickDelay);
                 }
             });
 
             function mulaiMendengar() {
                 if (!rec || isRedirecting || isDictatingChat || isDictatingTugas) return;
-                if (isRecActive) return; // Cegah error jika sudah aktif
+                if (isRecActive) return; 
                 try {
                     rec.start();
                     isRecActive = true;
                 } catch (e) {}
             }
 
-            // PERBAIKAN FITUR BARGE-IN (BISA MENGAKSES NAVIGASI SAAT SISTEM BICARA)
             function bicara(teks, callback = null) {
                 if (isRedirecting) return;
                 synth.cancel();
                 
-                window.currentBotText = teks; // Simpan teks untuk Dynamic Echo Cancellation
+                window.currentBotText = teks; 
 
                 if(dikteChatRec) { try { dikteChatRec.abort(); } catch(e){} }
                 if(dikteTugasRec) { try { dikteTugasRec.abort(); } catch(e){} }
@@ -612,16 +643,17 @@
                 setTimeout(() => {
                     const utter = new SpeechSynthesisUtterance(teks);
                     utter.lang = "id-ID";
-                    utter.rate = parseFloat(localStorage.getItem("speechRate")) || 1.0;
+                    utter.rate = parseFloat(localStorage.getItem("speechRate")) || 1.1;
                     
                     utter.onstart = () => { 
                         isSpeaking = true;
                         if (statusDesc) {
-                            statusDesc.innerText = "BERBICARA...";
+                            statusDesc.innerText = "SISTEM BERBICARA";
                             statusDesc.classList.replace("text-slate-400", "text-blue-600");
+                            statusDesc.classList.replace("text-green-600", "text-blue-600");
                         }
                         setWave(true); 
-                        // Nyalakan Mic secara paksa saat bicara untuk mendeteksi Barge-in (Interupsi User)
+                        
                         if(!isRecordingVoice && !isDictatingChat && !isDictatingTugas) {
                             mulaiMendengar();
                         }
@@ -631,11 +663,11 @@
                         setWave(false); 
                         if (!isRedirecting && statusDesc) {
                             statusDesc.innerText = "MENDENGARKAN";
+                            statusDesc.classList.replace("text-slate-400", "text-green-600");
                             statusDesc.classList.replace("text-blue-600", "text-green-600");
                         }
                         if (callback) callback(); 
                         
-                        // FLUSH STT BUFFER setelah bot bicara (mencegah gema nyangkut)
                         if (!isRecordingVoice && !isDictatingChat && !isDictatingTugas) {
                             try { rec.stop(); } catch(e){}
                             setTimeout(() => { mulaiMendengar(); }, 150);
@@ -648,7 +680,7 @@
                     };
 
                     synth.speak(utter);
-                }, 100);
+                }, 50);
             }
 
             function stopBicara() {
@@ -656,10 +688,6 @@
                 isSpeaking = false;
                 let globalAudio = document.getElementById('globalAudioPlayer');
                 if(globalAudio) { globalAudio.pause(); globalAudio.currentTime = 0; }
-            }
-
-            function arahkanSingkat(pesanAwal) {
-                bicara(pesanAwal + ". Katakan Ulang, jika butuh panduan.");
             }
 
             window.batalSemuaTugas = function(speak = true) {
@@ -693,7 +721,7 @@
                     
                     stIcon.classList.add('bg-emerald-500', 'text-white', 'shadow-md');
                     stIcon.classList.remove('bg-slate-100', 'text-slate-500');
-                    stIcon.innerHTML = `<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>`;
+                    stIcon.innerHTML = `<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>`;
                     
                     stTitle.classList.add('text-emerald-700');
                     stTitle.classList.remove('text-slate-400');
@@ -702,7 +730,7 @@
                     document.getElementById("status-text").classList.remove('text-slate-800');
                     document.getElementById("status-text").innerText = "Sudah Dikumpulkan";
 
-                    if(speak) bicara("Kirim ulang dibatalkan. Tugas Anda kembali pada jawaban sebelumnya. Sebut 6 untuk membuka diskusi.");
+                    if(speak) bicara("Kirim ulang dibatalkan. Tugas Anda kembali pada jawaban sebelumnya. Sebut 6 untuk diskusi dengan dosen.");
                 } else {
                     if(speak) bicara("Form tugas dibatalkan. Sebut angka 3 untuk mengetik, atau 4 merekam suara.");
                 }
@@ -1001,7 +1029,7 @@
                 return teks;
             }
 
-            function navigasiKe(nomor) {
+            window.navigasiKe = function(nomor) {
                 if (isRedirecting || isDictatingChat || isDictatingTugas) return;
                 let teks = ""; let tujuan = ""; let isAction = false;
 
@@ -1082,7 +1110,7 @@
                 }
                 else if (nomor === 9) {
                     isAction = true;
-                    let chats = document.querySelectorAll('#chatContainer .chat-bubble-new');
+                    let chats = document.querySelectorAll('#chatContainer .chat-bubble-new, #chatContainer .chat-bubble');
                     if(chats.length === 0) {
                         bicara("Belum ada riwayat diskusi.");
                     } else {
@@ -1091,9 +1119,26 @@
                     return; 
                 }
 
-                if (teks !== "") bicara(teks, () => {
-                    if (tujuan !== "" && tujuan !== "#") window.location.href = tujuan; 
-                });
+                if (teks !== "") {
+                    if (!isAction && tujuan !== "" && tujuan !== "#") {
+                        isRedirecting = true;
+                        synth.cancel();
+                        if(rec) rec.abort();
+
+                        if(statusDesc) {
+                            statusDesc.innerText = "MENGALIHKAN...";
+                            statusDesc.classList.replace("text-green-600", "text-slate-800");
+                            statusDesc.classList.replace("text-blue-600", "text-slate-800");
+                        }
+                        
+                        bicara(teks);
+                        setTimeout(() => { window.location.href = tujuan; }, 500);
+                    } else {
+                        bicara(teks, () => {
+                            try { rec.start(); } catch(e){}
+                        });
+                    }
+                }
             }
 
             if (rec) {
@@ -1106,33 +1151,21 @@
                     }
                     hasil = hasil.replace(/[.,!?]/g, '').toLowerCase().trim();
 
-                    // ==========================================
-                    // DYNAMIC ECHO CANCELLATION 
-                    // Mencegah bot bereaksi pada suaranya sendiri
-                    // ==========================================
                     if (isSpeaking) {
                         let botText = (window.currentBotText || "").replace(/[.,!?]/g, '').toLowerCase().trim();
-                        // Jika STT menangkap suara bot sendiri (Echo), kita cek dulu
                         if (botText.includes(hasil)) {
-                            // Daftar kata perintah penting yang TIDAK BOLEH diabaikan (Whitelist)
                             let perintahPenting = ["kirim", "batal", "selesai", "stop", "berhenti", "iya", "ya", "tidak", "lanjut", "oke", "ulang"];
-                            
-                            // Cek apakah hasil ucapan mengandung salah satu dari perintah penting
                             let isPerintah = perintahPenting.some(cmd => hasil === cmd || hasil.includes(cmd));
                             
-                            // Jika BUKAN perintah penting, abaikan (anggap sebagai echo)
                             if (!isPerintah) {
                                 return; 
                             } else {
-                                // Jika itu perintah penting, berarti user memotong ucapan bot (Barge-in).
-                                // Hentikan suara bot agar sistem bisa langsung memproses perintah.
                                 synth.cancel();
                                 isSpeaking = false;
                             }
                         }
                     }
 
-                    // STATE 1: SEDANG MEREKAM SUARA
                     if (isRecordingVoice) {
                         if (hasil.includes("selesai") || hasil.includes("berhenti") || hasil.includes("stop")) {
                             const recChatBtn = document.getElementById('recordBtn');
@@ -1149,12 +1182,10 @@
                         return;
                     }
 
-                    // STATE 2: MENUNGGU KONFIRMASI KIRIM / BATAL
                     if (menungguKonfirmasiTugasTeks || menungguKonfirmasiTugasVoice || menungguKonfirmasiTugasFile || menungguKonfirmasiKirim || menungguKonfirmasiVoiceChat || menungguKonfirmasiImageChat) {
                         
                         let cleanHasil = hasil;
                         
-                        // Aksi Kirim
                         if (cleanHasil.includes("kirim") || cleanHasil.includes("iya") || cleanHasil.includes("ya") || cleanHasil.includes("oke") || cleanHasil.includes("lanjut")) { 
                             synth.cancel();
                             if (menungguKonfirmasiTugasTeks || menungguKonfirmasiTugasVoice || menungguKonfirmasiTugasFile) {
@@ -1170,7 +1201,6 @@
                             return;
                         }
 
-                        // Aksi Batal
                         if (cleanHasil.includes("batal") || cleanHasil.includes("tidak") || cleanHasil.includes("ganti") || cleanHasil.includes("ulang")) {
                             synth.cancel();
                             if (menungguKonfirmasiTugasTeks || menungguKonfirmasiTugasVoice || menungguKonfirmasiTugasFile) {
@@ -1183,17 +1213,14 @@
                             }
                             return;
                         }
-
                         return; 
                     }
 
-                    // STATE 3: NAVIGASI NORMAL & TIMER IDLE
                     prosesJawabanNormal(hasil);
                 };
 
                 rec.onend = () => { 
                     isRecActive = false;
-                    // Auto-restart STT (termasuk saat isSpeaking, demi menjaga Voice Barge-in tetap aktif)
                     if (!isRedirecting && !isDictatingChat && !isDictatingTugas && !isRecordingVoice) mulaiMendengar(); 
                 };
             }
@@ -1257,7 +1284,6 @@
                 }
             }
 
-            // Dikte text chat
             if(dikteChatRec) {
                 dikteChatRec.onresult = (event) => {
                     if (!isDictatingChat) return;
@@ -1289,7 +1315,6 @@
                 dikteChatRec.onend = () => { if(isDictatingChat) dikteChatRec.start(); };
             }
 
-            // Dikte text jawaban tugas
             if(dikteTugasRec) {
                 dikteTugasRec.onresult = (event) => {
                     if (isDictatingTugas) {
@@ -1330,7 +1355,7 @@
                     let utter = new SpeechSynthesisUtterance(text);
                     utter.lang = "id-ID";
                     utter.rate = parseFloat(localStorage.getItem("speechRate")) || 1.0;
-                    utter.onstart = () => { if (statusDesc) statusDesc.innerText = "BERBICARA..."; interval = setInterval(() => setWave(true), 150); mulaiMendengar(); };
+                    utter.onstart = () => { if (statusDesc) { statusDesc.innerText = "SISTEM BERBICARA"; statusDesc.classList.replace("text-slate-400", "text-blue-600"); statusDesc.classList.replace("text-green-600", "text-blue-600"); } interval = setInterval(() => setWave(true), 150); mulaiMendengar(); };
                     utter.onend = () => { clearInterval(interval); setWave(false); try { rec.stop(); } catch(e){} setTimeout(() => { mulaiMendengar(); }, 150); resolve(); };
                     utter.onerror = () => { clearInterval(interval); setWave(false); resolve(); };
                     synth.speak(utter);

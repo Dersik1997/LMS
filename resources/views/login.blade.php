@@ -266,7 +266,8 @@
                     else if (step === "CONFIRM_NIM" || step === "CONFIRM_PASS")
                         bicara(
                             "Sistem menunggu konfirmasi Anda. Jawab dengan kata, benar, atau salah?",
-                        ); // DIKEMBALIKAN KE BENAR/SALAH
+                        );
+                    // DIKEMBALIKAN KE BENAR/SALAH
                     else if (step === "PASS")
                         bicara(
                             "Waktu tunggu habis. Silakan sebutkan kata sandi Anda untuk melanjutkan.",

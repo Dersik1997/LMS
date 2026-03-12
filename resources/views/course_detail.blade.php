@@ -28,21 +28,23 @@
 
         <main class="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar relative">
             
-            <div class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-3 sm:py-4 shadow-sm transition-all w-full cursor-pointer" id="voice-header" title="Ketuk untuk memotong suara sistem">
+            <div class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-3 sm:py-4 shadow-sm transition-all w-full cursor-pointer" id="voice-header" title="Ketuk 2x untuk memotong suara sistem">
                 <div class="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-3 lg:gap-6 relative pointer-events-none">
                     
                     <div class="flex items-center justify-between w-full lg:w-auto gap-3 relative z-10 pointer-events-auto">
                         <div class="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
-                            <button onclick="navigasiKe(0)" class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm shrink-0 group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95">
+                            
+                            {{-- TOMBOL 0 - KEMBALI --}}
+                            <button data-menu="0" class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm shrink-0 group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95">
                                 <svg class="w-5 h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
                                 </svg>
                                 <span class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white shadow-sm">0</span>
                             </button>
                             
-                            <div class="hidden sm:block text-left cursor-pointer group shrink-0" onclick="navigasiKe(0)">
-                                <span class="block text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest">Navigasi Suara</span>
-                                <span class="block text-[10px] md:text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors">0 - Kembali</span>
+                            <div class="hidden sm:block text-left cursor-pointer group shrink-0" data-menu="0">
+                                <span class="block text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest pointer-events-none">Navigasi Suara</span>
+                                <span class="block text-[10px] md:text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors pointer-events-none">0 - Kembali</span>
                             </div>
                             
                             <div class="hidden lg:block w-px h-10 bg-slate-200 mx-1 md:mx-2"></div>
@@ -57,7 +59,8 @@
                             </div>
                         </div>
 
-                        <div class="flex lg:hidden items-center justify-end gap-1.5 shrink-0 pl-2">
+                        {{-- Wave Bar Mobile --}}
+                        <div class="flex lg:hidden items-center justify-end gap-1.5 shrink-0 pl-2 pointer-events-none">
                             <div class="flex items-center gap-[2px] h-4 w-6 justify-center" id="wave-container-mobile">
                                 <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
                                 <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
@@ -68,20 +71,22 @@
 
                     <div class="flex items-center justify-between lg:justify-end gap-2 md:gap-4 w-full lg:w-auto pointer-events-auto">
                         <nav class="w-full lg:w-auto flex p-1.5 bg-slate-100/80 rounded-xl overflow-x-auto scrollbar-hide snap-x gap-1 border border-slate-200/50">
-                            <button onclick="navigasiKe(1)" class="cursor-pointer active:scale-95 snap-start shrink-0 px-4 md:px-5 py-1.5 md:py-2 rounded-lg bg-white text-blue-700 font-bold text-[9px] md:text-[10px] uppercase tracking-widest shadow-sm border border-slate-200 whitespace-nowrap transition-all">
+                            {{-- NAVIGASI TAB DIMULAI DARI 1 --}}
+                            <button data-menu="1" class="cursor-pointer active:scale-95 snap-start shrink-0 px-4 md:px-5 py-1.5 md:py-2 rounded-lg bg-white text-blue-700 font-bold text-[9px] md:text-[10px] uppercase tracking-widest shadow-sm border border-slate-200 whitespace-nowrap transition-all">
                                 1. Pembelajaran
                             </button>
-                            <button onclick="navigasiKe(2)" class="cursor-pointer active:scale-95 snap-start shrink-0 px-4 md:px-5 py-1.5 md:py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/50 font-bold text-[9px] md:text-[10px] uppercase tracking-widest border border-transparent whitespace-nowrap transition-all">
+                            <button data-menu="2" class="cursor-pointer active:scale-95 snap-start shrink-0 px-4 md:px-5 py-1.5 md:py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/50 font-bold text-[9px] md:text-[10px] uppercase tracking-widest border border-transparent whitespace-nowrap transition-all">
                                 2. Presensi
                             </button>
-                            <button onclick="navigasiKe(3)" class="cursor-pointer active:scale-95 snap-start shrink-0 px-4 md:px-5 py-1.5 md:py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/50 font-bold text-[9px] md:text-[10px] uppercase tracking-widest border border-transparent whitespace-nowrap transition-all">
+                            <button data-menu="3" class="cursor-pointer active:scale-95 snap-start shrink-0 px-4 md:px-5 py-1.5 md:py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/50 font-bold text-[9px] md:text-[10px] uppercase tracking-widest border border-transparent whitespace-nowrap transition-all">
                                 3. Penugasan
                             </button>
-                            <button onclick="navigasiKe(4)" class="cursor-pointer active:scale-95 snap-start shrink-0 px-4 md:px-5 py-1.5 md:py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/50 font-bold text-[9px] md:text-[10px] uppercase tracking-widest border border-transparent whitespace-nowrap transition-all">
+                            <button data-menu="4" class="cursor-pointer active:scale-95 snap-start shrink-0 px-4 md:px-5 py-1.5 md:py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/50 font-bold text-[9px] md:text-[10px] uppercase tracking-widest border border-transparent whitespace-nowrap transition-all">
                                 4. Anggota
                             </button>
                         </nav>
                         
+                        {{-- Wave Bar Desktop --}}
                         <div class="hidden lg:flex items-center gap-3 pl-4 border-l border-slate-200 relative z-10 justify-end shrink-0 w-32 pointer-events-none">
                             <div class="flex items-center gap-[2px] h-4 w-10 justify-center" id="wave-container-desktop">
                                 <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
@@ -106,7 +111,7 @@
                                 </div>
                             </div>
                             
-                            <div class="flex-1 space-y-2 sm:space-y-3 w-full">
+                            <div class="flex-1 space-y-2 sm:space-y-3 w-full pointer-events-none">
                                 <h2 class="text-base sm:text-lg md:text-xl font-black text-slate-900 leading-tight">
                                     {{ $kelas->mataKuliah->nama }}
                                 </h2>
@@ -121,7 +126,7 @@
 
                         <div data-aos="fade-up" data-aos-duration="600" data-aos-delay="100" class="bg-blue-600 rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-8 text-white relative overflow-hidden shadow-lg shadow-blue-200/50">
                             <div class="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 sm:gap-4">
-                                <div>
+                                <div class="pointer-events-none w-full">
                                     <p class="text-blue-200 text-[8px] sm:text-[10px] font-bold uppercase tracking-widest mb-1">Progres Belajar Anda</p>
                                     @php
                                         $totalSesi = $kelas->courseSessions->count();
@@ -144,18 +149,6 @@
                                     <h3 class="text-2xl sm:text-3xl font-black tracking-tight">{{ $persenProgres }}% Selesai</h3>
                                     <p class="text-[9px] sm:text-[10px] text-blue-200 font-bold mt-1">{{ floor($sesiSelesai) }} dari {{ $totalSesi }} pertemuan penuh</p>
                                 </div>
-                                
-                                @php
-                                    $currentSession = $kelas->courseSessions->first(function($s) {
-                                        return true; 
-                                    }) ?? $kelas->courseSessions->last();
-                                @endphp
-
-                                @if ($currentSession)
-                                    <button onclick="navigasiKe(5)" class="cursor-pointer active:scale-95 bg-white text-blue-600 px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-blue-50 transition-all shadow-md w-full sm:w-auto text-center mt-2 sm:mt-0">
-                                        Lanjut (Pert. {{ $currentSession->urutan }})
-                                    </button>
-                                @endif
                             </div>
                             
                             <div class="absolute -right-6 -bottom-10 opacity-20 pointer-events-none">
@@ -167,14 +160,15 @@
                     </div>
 
                     <div data-aos="fade-up" data-aos-duration="600" data-aos-delay="200" class="bg-white p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-slate-200 shadow-sm h-fit">
-                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                        <div class="flex items-center justify-between mb-4 sm:mb-6 pointer-events-none">
                             <h3 class="text-xs sm:text-sm font-black text-slate-900 uppercase tracking-widest">Alur Belajar</h3>
                             <span class="text-[8px] sm:text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">{{ $totalSesi }} Pertemuan</span>
                         </div>
 
                         <div class="relative space-y-0 pl-1 sm:pl-2">
-                            <div class="absolute top-4 left-[15px] sm:left-[19px] bottom-4 w-[2px] bg-slate-100"></div>
+                            <div class="absolute top-4 left-[15px] sm:left-[19px] bottom-4 w-[2px] bg-slate-100 pointer-events-none"></div>
 
+                            {{-- MENGGUNAKAN DATA-MENU DIMULAI DARI 5 --}}
                             @php $voiceId = 5; @endphp 
                             @forelse ($kelas->courseSessions as $index => $sess)
                                 @php
@@ -183,16 +177,16 @@
                                     $isSelesai = $adaMateri && $adaDiskusi; 
                                 @endphp
 
-                                <div onclick="bukaSession({{ $sess->id }})" class="relative pl-8 sm:pl-10 py-2 sm:py-3 group cursor-pointer active:scale-[0.98] transition-transform">
+                                <div data-menu="{{ $voiceId }}" class="relative pl-8 sm:pl-10 py-2 sm:py-3 group cursor-pointer active:scale-[0.98] transition-transform">
                                     
-                                    <div class="absolute left-[6px] sm:left-[10px] top-4 sm:top-5 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-4 border-white shadow-sm z-10 flex items-center justify-center 
+                                    <div class="absolute left-[6px] sm:left-[10px] top-4 sm:top-5 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-4 border-white shadow-sm z-10 flex items-center justify-center pointer-events-none
                                         {{ $isSelesai ? 'bg-emerald-500' : 'bg-blue-600 animate-pulse' }}">
                                         @if ($isSelesai)
                                             <svg class="w-2 h-2 sm:w-2.5 sm:h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7" /></svg>
                                         @endif
                                     </div>
 
-                                    <div class="bg-white border border-blue-100 sm:border-blue-200 shadow-sm sm:shadow-md shadow-blue-50 transform group-hover:scale-[1.02] p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all">
+                                    <div class="bg-white border border-blue-100 sm:border-blue-200 shadow-sm sm:shadow-md shadow-blue-50 transform group-hover:scale-[1.02] p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all pointer-events-none">
                                         <div class="flex justify-between items-start">
                                             <span class="text-[8px] sm:text-[9px] font-black uppercase tracking-wider mb-1 block {{ $isSelesai ? 'text-emerald-600' : 'text-blue-600' }}">
                                                 Pertemuan {{ $sess->urutan }}
@@ -211,7 +205,7 @@
                                 </div>
                                 @php $voiceId++; @endphp
                             @empty
-                                <div class="text-center py-4 text-[10px] sm:text-xs font-bold text-slate-400 border border-dashed border-slate-200 rounded-xl">Belum ada sesi pertemuan.</div>
+                                <div class="text-center py-4 text-[10px] sm:text-xs font-bold text-slate-400 border border-dashed border-slate-200 rounded-xl pointer-events-none">Belum ada sesi pertemuan.</div>
                             @endforelse
                         </div>
                     </div>
@@ -242,7 +236,7 @@
             const urlPresensi = "{{ $session ? route('course.attendance', ['id' => $session->id]) : '#' }}";
 
             // ==========================================
-            // LOGIKA VOICE ASSISTANT (BARGE-IN & ANTI-HANG)
+            // LOGIKA VOICE ASSISTANT & SECURE DOUBLE CLICK
             // ==========================================
             const statusDesc = document.getElementById("status-desc");
             const waveBarsDesktop = document.querySelectorAll("#wave-container-desktop .wave-bar");
@@ -260,7 +254,7 @@
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
                 rec.continuous = true;
-                rec.interimResults = true; // Kunci Voice Barge-in
+                rec.interimResults = true; 
             }
 
             function setWave(active) {
@@ -268,10 +262,10 @@
                     if (waveInterval) clearInterval(waveInterval);
                     waveInterval = setInterval(() => {
                         if (waveBarsDesktop.length > 0) {
-                            waveBarsDesktop.forEach((bar) => { bar.style.height = `${Math.floor(Math.random() * 12) + 4}px`; });
+                            waveBarsDesktop.forEach((bar) => { bar.style.height = `${Math.floor(Math.random() * 16) + 4}px`; });
                         }
                         if (waveBarsMobile.length > 0) {
-                            waveBarsMobile.forEach((bar) => { bar.style.height = `${Math.floor(Math.random() * 12) + 4}px`; });
+                            waveBarsMobile.forEach((bar) => { bar.style.height = `${Math.floor(Math.random() * 16) + 4}px`; });
                         }
                     }, 100);
                 } else {
@@ -285,19 +279,43 @@
                 }
             }
 
-            // Fitur Cut-Off Manual klik layar
+            let clickTimer = null;
+            const clickDelay = 300; 
+
             document.body.addEventListener('click', (e) => {
-                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.closest('button') || e.target.closest('a')) return;
-                if (isSpeaking && !isRedirecting) {
-                    synth.cancel();
-                    setWave(false);
+                const navElement = e.target.closest('[data-menu]');
+
+                if (navElement) {
+                    e.preventDefault(); 
+                }
+
+                if (clickTimer !== null) {
+                    clearTimeout(clickTimer);
+                    clickTimer = null;
+
+                    if (!isRedirecting) {
+                        synth.cancel(); 
+                        isSpeaking = false;
+                        setWave(false);
+                        if (statusDesc) {
+                            statusDesc.innerText = "MENDENGARKAN";
+                            statusDesc.classList.replace("text-blue-600", "text-green-600");
+                            statusDesc.classList.replace("text-slate-400", "text-green-600");
+                        }
+                        if (rec) { try { rec.abort(); } catch(err){} isRecActive = false; }
+                        setTimeout(() => { mulaiMendengar(); }, 50);
+                    }
+                } else {
+                    clickTimer = setTimeout(() => {
+                        clickTimer = null;
+
+                        if (navElement && !isRedirecting) {
+                            const menuId = parseInt(navElement.getAttribute('data-menu'));
+                            window.navigasiKe(menuId);
+                        }
+                    }, clickDelay);
                 }
             });
-
-            function bukaSession(sessionId) {
-                const url = "{{ route('topic.detail', ['kelas' => $kelas->id, 'session' => 'SESSION_ID']) }}";
-                window.location.href = url.replace('SESSION_ID', sessionId);
-            }
 
             function mulaiMendengar() {
                 if (!rec || isRedirecting || isRecActive) return;
@@ -317,16 +335,17 @@
                     const utter = new SpeechSynthesisUtterance(teks);
                     utter.lang = "id-ID";
                     const savedRate = localStorage.getItem("speechRate");
-                    utter.rate = savedRate ? parseFloat(savedRate) : 1.0;
+                    utter.rate = savedRate ? parseFloat(savedRate) : 1.1;
 
                     utter.onstart = () => {
                         isSpeaking = true;
                         if (statusDesc) {
-                            statusDesc.innerText = "BERBICARA...";
+                            statusDesc.innerText = "SISTEM BERBICARA";
                             statusDesc.classList.replace("text-slate-400", "text-blue-600");
+                            statusDesc.classList.replace("text-green-600", "text-blue-600");
                         }
                         setWave(true);
-                        mulaiMendengar(); // Microphone nyala berbarengan (Barge-in)
+                        mulaiMendengar();
                     };
 
                     utter.onend = () => {
@@ -334,6 +353,7 @@
                         setWave(false);
                         if (!isRedirecting && statusDesc) {
                             statusDesc.innerText = "MENDENGARKAN";
+                            statusDesc.classList.replace("text-slate-400", "text-green-600");
                             statusDesc.classList.replace("text-blue-600", "text-green-600");
                         }
                         if (callback) callback();
@@ -342,6 +362,11 @@
                     utter.onerror = () => {
                         isSpeaking = false;
                         setWave(false);
+                        if (!isRedirecting && statusDesc) {
+                            statusDesc.innerText = "MENDENGARKAN";
+                            statusDesc.classList.replace("text-slate-400", "text-green-600");
+                            statusDesc.classList.replace("text-blue-600", "text-green-600");
+                        }
                         mulaiMendengar();
                     };
 
@@ -367,15 +392,17 @@
                     teks += "Belum ada materi pertemuan. ";
                 }
 
-                teks += "Menu lainnya: Dua untuk Presensi, tiga untuk Penugasan, empat untuk Anggota kelas, atau nol untuk kembali. Katakan Ulang, jika butuh panduan.";
+                // Panduan suara dikembalikan 0 untuk kembali
+                teks += "Menu navigasi: Satu untuk Pembelajaran, Dua untuk Presensi, Tiga untuk Penugasan, Empat untuk Anggota, atau Nol untuk kembali. Katakan Ulang, jika butuh panduan.";
                 return teks;
             }
 
-            function navigasiKe(nomor) {
+            window.navigasiKe = function(nomor) {
                 if (isRedirecting) return;
 
                 let tujuan = ""; let teks = "";
 
+                // Navigasi dengan 0 sebagai kembali
                 if (nomor === 0) {
                     tujuan = "{{ route('courses.index') }}";
                     teks = "Nol. Kembali ke Daftar Mata Kuliah.";
@@ -390,7 +417,9 @@
                 } else if (nomor === 4) {
                     tujuan = urlAnggota;
                     teks = "Empat. Membuka daftar Anggota kelas.";
-                } else if (nomor >= 5) {
+                } 
+                // Navigasi ke Materi Pertemuan (Mulai dari 5)
+                else if (nomor >= 5) {
                     let sesiTujuan = sesiList.find(s => s.voiceId === nomor);
                     if(sesiTujuan) {
                         teks = `Membuka materi ${sesiTujuan.judul.replace(/[^A-Za-z0-9 \.,\?]/g, '')}.`;
@@ -410,19 +439,15 @@
                         if(statusDesc) {
                             statusDesc.innerText = "MENGALIHKAN...";
                             statusDesc.classList.replace("text-green-600", "text-slate-800");
+                            statusDesc.classList.replace("text-blue-600", "text-slate-800");
                         }
-                    }
 
-                    bicara(teks, () => {
-                        if (tujuan !== "" && tujuan !== "#") {
-                            window.location.href = tujuan;
-                        } else {
+                        bicara(teks);
+                        setTimeout(() => { window.location.href = tujuan; }, 400); 
+                    } else {
+                        bicara(teks, () => {
                             try { rec.start(); } catch(e){}
-                        }
-                    });
-
-                    if (tujuan !== "" && tujuan !== "#") {
-                        setTimeout(() => { window.location.href = tujuan; }, 4000);
+                        });
                     }
                 }
             }
@@ -437,18 +462,16 @@
                     }
                     hasil = hasil.toLowerCase().trim();
 
-                    // ANTI ECHO PINTAR
                     const omonganBot = [
                         "anda berada di kelas", "deskripsi:", "daftar alur belajar",
                         "pertemuan", "sebutkan angka", "belum ada materi",
-                        "menu lainnya", "dua untuk presensi", "tiga untuk penugasan",
+                        "menu navigasi", "dua untuk presensi", "tiga untuk penugasan",
                         "empat untuk anggota", "nol untuk kembali", "katakan ulang",
-                        "membuka materi", "sudah berada"
+                        "membuka materi", "sudah berada", "halaman presensi belum"
                     ];
 
-                    if (omonganBot.some(kalimat => hasil.includes(kalimat))) {
-                        return;
-                    }
+                    if (omonganBot.some(kalimat => hasil.includes(kalimat))) return;
+                    if (isSpeaking) return;
 
                     prosesJawaban(hasil);
                 };
@@ -460,7 +483,7 @@
             }
 
             function prosesJawaban(hasil) {
-                if (hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan")) {
+                if (hasil.includes("ulang") || hasil.includes("panduan")) {
                     synth.cancel(); if(rec) rec.abort();
                     bicara(getPanduanSuara(), () => { mulaiMendengar(); });
                     return;
@@ -468,35 +491,28 @@
 
                 const angka = hasil.match(/\d+/);
                 if (angka) {
-                    synth.cancel(); if(rec) rec.abort();
-                    navigasiKe(parseInt(angka[0]));
+                    window.navigasiKe(parseInt(angka[0]));
                     return;
                 }
 
+                // Pengenalan "nol" dan "kosong" dikembalikan
                 const mapKata = {
-                    "nol": 0, "kosong": 0, 
-                    "satu": 1, "sato": 1, 
+                    "nol": 0, "kosong": 0,
+                    "satu": 1, "sato": 1, "sate": 1,
                     "dua": 2, "tua": 2, "jua": 2, 
                     "tiga": 3, "empat": 4, "lima": 5, 
                     "enam": 6, "tujuh": 7, "tuju": 7, 
                     "delapan": 8, "sembilan": 9, "sepuluh": 10,
-                    "sebelas": 11, "dua belas": 12, "tiga belas": 13, "empat belas": 14, "lima belas": 15
+                    "sebelas": 11, "dua belas": 12, "tiga belas": 13, "empat belas": 14, "lima belas": 15,
+                    "enam belas": 16, "tujuh belas": 17, "delapan belas": 18, "sembilan belas": 19, "dua puluh": 20
                 };
 
                 for (let kata in mapKata) {
                     if (hasil.includes(kata)) {
-                        synth.cancel(); if(rec) rec.abort();
-                        navigasiKe(mapKata[kata]);
+                        window.navigasiKe(mapKata[kata]);
                         return;
                     }
                 }
-
-                // Cek Alias
-                if (hasil.includes("kembali") || hasil.includes("daftar")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(0); }
-                else if (hasil.includes("pembelajaran")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(1); }
-                else if (hasil.includes("presensi")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(2); }
-                else if (hasil.includes("penugasan")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(3); }
-                else if (hasil.includes("anggota")) { synth.cancel(); if(rec) rec.abort(); navigasiKe(4); }
             }
 
             window.addEventListener("load", () => {

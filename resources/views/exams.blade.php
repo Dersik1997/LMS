@@ -29,20 +29,20 @@
     </div>
 
     {{-- NAVBAR & VOICE STATUS --}}
-    <header class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-2 sm:py-4 shadow-sm w-full shrink-0 cursor-pointer" id="voice-header" title="Ketuk untuk memotong suara sistem">
+    <header class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-2 sm:py-4 shadow-sm w-full shrink-0 cursor-pointer" id="voice-header" title="Ketuk layar 2x untuk memotong suara sistem">
         <div class="max-w-7xl mx-auto grid grid-cols-3 items-center relative h-10 sm:h-12 md:h-14">
             
             {{-- Kiri: Tombol 0 (Kembali ke Dashboard) --}}
-            <div class="flex items-center gap-2 sm:gap-4 justify-start shrink-0">
-                <button onclick="navigasiKe(0)" class="flex w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white items-center justify-center transition-all duration-300 shadow-sm group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95">
+            <div class="flex items-center gap-2 sm:gap-4 justify-start shrink-0 pointer-events-auto">
+                <button data-menu="0" class="flex w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white items-center justify-center transition-all duration-300 shadow-sm group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95">
                     <svg class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
                     </svg>
                     <span class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[8px] md:text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white">0</span>
                 </button>
-                <div class="hidden sm:block text-left cursor-pointer group" onclick="navigasiKe(0)">
-                    <span class="block text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest">Navigasi Suara</span>
-                    <span class="block text-[10px] md:text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors">0 - Kembali</span>
+                <div class="hidden sm:block text-left cursor-pointer group" data-menu="0">
+                    <span class="block text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest pointer-events-none">Navigasi Suara</span>
+                    <span class="block text-[10px] md:text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors pointer-events-none">0 - Kembali</span>
                 </div>
             </div>
 
@@ -57,18 +57,19 @@
             </div>
 
             {{-- Kanan: Indikator Voice --}}
-            <div class="flex items-center justify-end gap-1.5 sm:gap-3 justify-self-end shrink-0">
+            <div class="flex items-center justify-end gap-1.5 sm:gap-3 justify-self-end shrink-0 pointer-events-auto">
                 <div class="flex items-center gap-[2px] h-4 w-6 sm:w-10 justify-center" id="wave-container">
                     <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
                     <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
                     <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
                 </div>
-                <span id="status-desc" class="hidden sm:block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest w-12 sm:w-20 text-left">MENYIAPKAN</span>
+                <span id="status-desc" class="hidden sm:block text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest w-12 sm:w-20 text-left pointer-events-none">MENYIAPKAN</span>
             </div>
         </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto custom-scrollbar relative">
+    {{-- PAKAI overflow-y-scroll BIAR GAK GESER --}}
+    <main class="flex-1 overflow-y-scroll custom-scrollbar relative">
         <div class="p-3 sm:p-6 lg:p-10 max-w-5xl mx-auto w-full space-y-6 sm:space-y-8 pb-32">
             
             {{-- Pesan Sukses Ujian Selesai --}}
@@ -82,8 +83,8 @@
             @endif
 
             {{-- TOMBOL 1: MASUKKAN TOKEN --}}
-            <div onclick="navigasiKe(1)" class="group bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[1.5rem] sm:rounded-[2.5rem] p-5 md:p-8 text-white shadow-xl shadow-blue-200/50 cursor-pointer relative overflow-hidden transform hover:-translate-y-1 active:scale-95 transition-all safe-fade-in" style="animation-delay: 0.1s">
-                <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-5 md:gap-6 text-center md:text-left">
+            <div data-menu="1" class="group bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[1.5rem] sm:rounded-[2.5rem] p-5 md:p-8 text-white shadow-xl shadow-blue-200/50 cursor-pointer relative overflow-hidden transform hover:-translate-y-1 active:scale-95 transition-all safe-fade-in" style="animation-delay: 0.1s">
+                <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-5 md:gap-6 text-center md:text-left pointer-events-none">
                     <div class="flex flex-col md:flex-row items-center gap-4 md:gap-6 w-full md:w-auto">
                         <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/20 border border-white/10 flex items-center justify-center backdrop-blur-md shrink-0">
                             <span class="text-2xl sm:text-3xl font-black tracking-tighter">1</span>
@@ -158,21 +159,21 @@
                             $badgeBg = $isAktif ? 'bg-slate-800 text-white' : ($sudahSelesai ? 'bg-emerald-600 text-white' : 'bg-slate-300 text-slate-500');
                         @endphp
 
-                        <div onclick="navigasiKe({{ $voiceId }})" class="exam-card group p-4 sm:p-5 rounded-[1.5rem] sm:rounded-[2rem] border-2 transition-all relative overflow-hidden flex flex-col sm:flex-row items-center sm:items-stretch gap-4 sm:gap-6 safe-fade-in {{ $cardClass }}" data-kategori="{{ $exam->kategori }}" style="animation-delay: 0.3s">
+                        <div data-menu="{{ $voiceId }}" class="exam-card group p-4 sm:p-5 rounded-[1.5rem] sm:rounded-[2rem] border-2 transition-all relative overflow-hidden flex flex-col sm:flex-row items-center sm:items-stretch gap-4 sm:gap-6 safe-fade-in {{ $cardClass }}" data-kategori="{{ $exam->kategori }}" style="animation-delay: 0.3s">
                             
                             @if($isAktif)
-                                <div class="absolute top-0 right-0 bg-blue-500 text-white text-[8px] sm:text-[9px] font-black px-3 sm:px-4 py-1 rounded-bl-xl uppercase tracking-widest animate-pulse shadow-sm">
+                                <div class="absolute top-0 right-0 bg-blue-500 text-white text-[8px] sm:text-[9px] font-black px-3 sm:px-4 py-1 rounded-bl-xl uppercase tracking-widest animate-pulse shadow-sm pointer-events-none">
                                     Sedang Berlangsung
                                 </div>
                             @elseif($sudahSelesai)
-                                <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[8px] sm:text-[9px] font-black px-3 sm:px-4 py-1 rounded-bl-xl uppercase tracking-widest shadow-sm flex items-center gap-1">
+                                <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[8px] sm:text-[9px] font-black px-3 sm:px-4 py-1 rounded-bl-xl uppercase tracking-widest shadow-sm flex items-center gap-1 pointer-events-none">
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                     Selesai
                                 </div>
                             @endif
 
                             {{-- Tanggal Box --}}
-                            <div class="w-full sm:w-24 py-3 sm:py-0 h-auto sm:h-24 {{ $bgClass }} {{ $dateTextClass }} rounded-[1rem] sm:rounded-[1.5rem] flex flex-row sm:flex-col items-center justify-center gap-2 sm:gap-0 shrink-0 border {{ $borderClass }} relative mt-4 sm:mt-0">
+                            <div class="w-full sm:w-24 py-3 sm:py-0 h-auto sm:h-24 {{ $bgClass }} {{ $dateTextClass }} rounded-[1rem] sm:rounded-[1.5rem] flex flex-row sm:flex-col items-center justify-center gap-2 sm:gap-0 shrink-0 border {{ $borderClass }} relative mt-4 sm:mt-0 pointer-events-none">
                                 <div class="absolute -top-3 -left-3 w-7 h-7 sm:w-8 sm:h-8 rounded-full {{ $badgeBg }} flex items-center justify-center font-black text-[10px] sm:text-xs border-[3px] border-white shadow-sm z-10 transition-colors">
                                     {{ $voiceId }}
                                 </div>
@@ -182,7 +183,7 @@
                             </div>
                             
                             {{-- Info Box --}}
-                            <div class="flex-1 w-full text-center sm:text-left pr-0">
+                            <div class="flex-1 w-full text-center sm:text-left pr-0 pointer-events-none">
                                 <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 mb-2">
                                     <h4 class="text-base sm:text-xl font-black {{ $isAktif ? 'text-slate-900 group-hover:text-blue-600' : 'text-slate-600' }} transition-colors">
                                         {{ $exam->judul }}
@@ -205,7 +206,7 @@
                             </div>
                             
                             {{-- Tombol Aksi Utama --}}
-                            <div class="flex flex-wrap items-center justify-center sm:justify-end w-full sm:w-auto mt-2 sm:mt-0">
+                            <div class="flex flex-wrap items-center justify-center sm:justify-end w-full sm:w-auto mt-2 sm:mt-0 pointer-events-none">
                                 @if($sudahSelesai)
                                     <div class="flex flex-row sm:flex-col items-center justify-center gap-3 sm:gap-0 sm:items-end w-full sm:w-auto p-3 sm:p-0 bg-emerald-50 sm:bg-transparent rounded-xl sm:rounded-none">
                                         <span class="text-[9px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-widest sm:mb-1">Nilai Anda:</span>
@@ -285,10 +286,9 @@
         }
 
         // ==================================================
-        // LOGIKA VOICE ASSISTANT (BARGE-IN & ANTI-HANG)
+        // LOGIKA VOICE ASSISTANT & SECURE DOUBLE CLICK
         // ==================================================
         
-        // Buat Array Daftar Ujian secara dinamis dari PHP
         const examList = [
             @foreach($exams as $index => $ex)
                 @php 
@@ -329,7 +329,7 @@
             rec = new SpeechRec(); 
             rec.lang = "id-ID"; 
             rec.continuous = true; 
-            rec.interimResults = true; // Kunci Voice Barge-in
+            rec.interimResults = true; 
         }
 
         function setWave(active) {
@@ -350,12 +350,43 @@
             }
         }
 
-        // Fitur Cut-Off Manual klik layar
+        // ==========================================
+        // LOGIKA SECURE DOUBLE CLICK 
+        // ==========================================
+        let clickTimer = null;
+        const clickDelay = 300; 
+
         document.body.addEventListener('click', (e) => {
-            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
-            if (isSpeaking && !isRedirecting) {
-                synth.cancel();
-                setWave(false);
+            const navElement = e.target.closest('[data-menu]');
+
+            if (navElement) {
+                e.preventDefault(); 
+            }
+
+            if (clickTimer !== null) {
+                clearTimeout(clickTimer);
+                clickTimer = null;
+
+                if (!isRedirecting) {
+                    synth.cancel(); 
+                    isSpeaking = false;
+                    setWave(false);
+                    if (statusDesc) {
+                        statusDesc.innerText = "MENDENGARKAN";
+                        statusDesc.classList.replace("text-blue-600", "text-green-600");
+                        statusDesc.classList.replace("text-slate-400", "text-green-600");
+                    }
+                    if (rec) { try { rec.abort(); } catch(err){} isRecActive = false; }
+                    setTimeout(() => { mulaiMendengar(); }, 50);
+                }
+            } else {
+                clickTimer = setTimeout(() => {
+                    clickTimer = null;
+                    if (navElement && !isRedirecting) {
+                        const menuId = parseInt(navElement.getAttribute('data-menu'));
+                        window.navigasiKe(menuId);
+                    }
+                }, clickDelay);
             }
         });
 
@@ -372,21 +403,24 @@
         function bicara(teks, callback = null) {
             if (isRedirecting) return;
             synth.cancel();
+            
+            window.currentBotText = teks;
 
             setTimeout(() => {
                 const utter = new SpeechSynthesisUtterance(teks);
                 utter.lang = "id-ID";
                 const savedRate = localStorage.getItem("speechRate");
-                utter.rate = savedRate ? parseFloat(savedRate) : 1.0;
+                utter.rate = savedRate ? parseFloat(savedRate) : 1.1;
 
                 utter.onstart = () => { 
                     isSpeaking = true;
                     if (statusDesc) {
-                        statusDesc.innerText = "BERBICARA...";
+                        statusDesc.innerText = "SISTEM BERBICARA";
                         statusDesc.classList.replace("text-slate-400", "text-blue-600");
+                        statusDesc.classList.replace("text-green-600", "text-blue-600");
                     }
                     setWave(true); 
-                    mulaiMendengar(); // Mic nyala bersamaan (Barge-in)
+                    mulaiMendengar(); 
                 };
                 
                 utter.onend = () => { 
@@ -394,6 +428,7 @@
                     setWave(false);
                     if (!isRedirecting && statusDesc) {
                         statusDesc.innerText = "MENDENGARKAN";
+                        statusDesc.classList.replace("text-slate-400", "text-green-600");
                         statusDesc.classList.replace("text-blue-600", "text-green-600");
                     }
                     if (callback) callback(); 
@@ -409,7 +444,6 @@
             }, 50);
         }
 
-        // FUNGSI PANDUAN UTAMA
         function getPanduanUtama(isInitial = false) {
             let teks = "";
             
@@ -449,7 +483,7 @@
             return teks;
         }
 
-        function navigasiKe(nomor) {
+        window.navigasiKe = function(nomor) {
             if (isRedirecting) return;
 
             let tujuan = "";
@@ -466,15 +500,15 @@
                 
                 if (examTujuan) {
                     if (examTujuan.isAktif) {
-                        teks = `Membuka persiapan untuk ujian ${examTujuan.judul}.`;
+                        teks = `Membuka persiapan untuk ujian ${examTujuan.judul.replace(/[^A-Za-z0-9 \.,\?]/g, '')}.`;
                         const baseUrl = "{{ route('exam.preparation', 'EXAM_ID') }}";
                         tujuan = baseUrl.replace('EXAM_ID', examTujuan.id);
                     } else if (examTujuan.isSelesai) {
                         tujuan = "#";
-                        teks = `Ujian ${examTujuan.judul} sudah Anda kerjakan dengan nilai ${examTujuan.nilai}.`;
+                        teks = `Ujian ${examTujuan.judul.replace(/[^A-Za-z0-9 \.,\?]/g, '')} sudah Anda kerjakan dengan nilai ${examTujuan.nilai}.`;
                     } else {
                         tujuan = "#";
-                        teks = `Maaf, ujian ${examTujuan.judul} ${examTujuan.alasan}.`;
+                        teks = `Maaf, ujian ${examTujuan.judul.replace(/[^A-Za-z0-9 \.,\?]/g, '')} ${examTujuan.alasan}.`;
                     }
                 } else {
                     tujuan = "#";
@@ -491,18 +525,15 @@
                     if(statusDesc) {
                         statusDesc.innerText = "MENGALIHKAN...";
                         statusDesc.classList.replace("text-green-600", "text-slate-800");
+                        statusDesc.classList.replace("text-blue-600", "text-slate-800");
                     }
-                }
-
-                bicara(teks, () => {
-                    if (tujuan !== "" && tujuan !== "#") {
-                        window.location.href = tujuan;
-                    }
-                });
-
-                // Fallback Anti-Hang
-                if (tujuan !== "" && tujuan !== "#") {
-                    setTimeout(() => { window.location.href = tujuan; }, 4000);
+                    
+                    bicara(teks);
+                    setTimeout(() => { window.location.href = tujuan; }, 500); // REDIRECT SATSET
+                } else {
+                    bicara(teks, () => {
+                        try { rec.start(); } catch(e){}
+                    });
                 }
             }
         }
@@ -515,9 +546,15 @@
                 for (let i = event.resultIndex; i < event.results.length; ++i) {
                     hasil += event.results[i][0].transcript;
                 }
-                hasil = hasil.toLowerCase().trim();
+                hasil = hasil.replace(/[.,!?]/g, '').toLowerCase().trim();
                 
-                // ANTI ECHO: Cegah mik menangkap suara bot sendiri
+                if (isSpeaking) {
+                    let botText = (window.currentBotText || "").replace(/[.,!?]/g, '').toLowerCase().trim();
+                    if (botText.includes(hasil)) {
+                        return; 
+                    }
+                }
+
                 const omonganBot = [
                     "terima kasih telah mengikuti", "halaman daftar ujian", 
                     "sebutkan angka satu", "token ujian", "ujian yang bisa anda ikuti", 
@@ -546,46 +583,45 @@
                 return;
             }
 
-            // Deteksi Angka Langsung
             const angka = hasil.match(/\d+/);
             if (angka) {
-                navigasiKe(parseInt(angka[0]));
+                synth.cancel(); if(rec) rec.abort();
+                window.navigasiKe(parseInt(angka[0]));
                 return;
             }
 
-            // Deteksi Pengejaan
             const kataAngka = {
-                "nol": 0, "kosong": 0,
-                "satu": 1, "sato": 1, "sate": 1,
-                "dua": 2, "tua": 2, "jua": 2,
-                "tiga": 3,
-                "empat": 4,
-                "lima": 5,
-                "enam": 6,
-                "tujuh": 7, "tuju": 7,
-                "delapan": 8,
-                "sembilan": 9,
-                "sepuluh": 10
+                "nol": 0, "kosong": 0, "0": 0,
+                "satu": 1, "sato": 1, "sate": 1, "1": 1,
+                "dua": 2, "tua": 2, "jua": 2, "2": 2,
+                "tiga": 3, "3": 3,
+                "empat": 4, "4": 4,
+                "lima": 5, "5": 5,
+                "enam": 6, "6": 6,
+                "tujuh": 7, "tuju": 7, "7": 7,
+                "delapan": 8, "8": 8,
+                "sembilan": 9, "9": 9,
+                "sepuluh": 10, "10": 10
             };
 
             for (let kata in kataAngka) {
                 if (hasil.includes(kata)) { 
-                    navigasiKe(kataAngka[kata]); 
+                    synth.cancel(); if(rec) rec.abort();
+                    window.navigasiKe(kataAngka[kata]); 
                     return;
                 }
             }
 
             if (hasil.includes("kembali") || hasil.includes("dashboard")) { 
-                navigasiKe(0); 
+                synth.cancel(); if(rec) rec.abort(); window.navigasiKe(0); 
             } else if (hasil.includes("token")) { 
-                navigasiKe(1); 
+                synth.cancel(); if(rec) rec.abort(); window.navigasiKe(1); 
             }
         }
 
         window.addEventListener("load", () => {
             document.body.addEventListener("click", () => {}, { once: true });
             setTimeout(() => { 
-                mulaiMendengar();
                 bicara(getPanduanUtama(true)); 
             }, 800);
         });

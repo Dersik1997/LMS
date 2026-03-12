@@ -209,6 +209,26 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                         @if(isset($kelas) && count($kelas) > 0)
                             @foreach ($kelas as $k)
+                                @php
+                                    // LOGIKA PROGRESS SAMA SEPERTI DI COURSE DETAIL
+                                    $totalSesi = $k->courseSessions->count();
+                                    $sesiSelesai = 0;
+                                    
+                                    if($totalSesi > 0) {
+                                        foreach($k->courseSessions as $ss) {
+                                            $adaMateri = $ss->materis && $ss->materis->count() > 0;
+                                            $adaDiskusi = $ss->discussions && $ss->discussions->count() > 0;
+                                            
+                                            if($adaMateri && $adaDiskusi) {
+                                                $sesiSelesai += 1;
+                                            } else {
+                                                $sesiSelesai += 0.5;
+                                            }
+                                        }
+                                    }
+                                    $persenProgres = $totalSesi > 0 ? min(100, round(($sesiSelesai / $totalSesi) * 100)) : 0;
+                                @endphp
+
                                 <a href="{{ route('course.detail', ['kelas' => $k->id]) }}" class="group bg-white p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-lg transition-all flex items-center gap-4 sm:gap-6 cursor-pointer link-navigasi">
                                     <div class="w-14 h-14 sm:w-16 sm:h-16 bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 transition-colors">
                                         <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,10 +236,13 @@
                                         </svg>
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <h4 class="text-sm sm:text-base font-black text-slate-900 truncate">{{ $k->mataKuliah->nama }}</h4>
-                                        <p class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase truncate mt-0.5">{{ $k->dosen->nama }}</p>
+                                        <div class="flex justify-between items-center mb-0.5">
+                                            <h4 class="text-sm sm:text-base font-black text-slate-900 truncate pr-2">{{ $k->mataKuliah->nama }}</h4>
+                                            <span class="text-[9px] sm:text-[10px] font-black text-blue-600">{{ $persenProgres }}%</span>
+                                        </div>
+                                        <p class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase truncate">{{ $k->dosen->nama }}</p>
                                         <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mt-2">
-                                            <div class="h-full bg-blue-500 rounded-full transition-all" style="width: {{ $k->progress ?? 0 }}%"></div>
+                                            <div class="h-full bg-blue-500 rounded-full transition-all" style="width: {{ $persenProgres }}%"></div>
                                         </div>
                                     </div>
                                 </a>
@@ -269,7 +292,6 @@
             if (SpeechRec) {
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
-                // DIKEMBALIKAN KE FALSE AGAR TANGKAPAN "SATU" MURNI DAN TIDAK TERPOTONG
                 rec.continuous = false;
                 rec.interimResults = false; 
             }
@@ -314,7 +336,6 @@
                 }
             }
 
-            // KLIK GANDA (CUT-OFF INSTAN) DAN KLIK TUNGGAL (LINK NAVIGASI)
             let clickTimer = null;
             const clickDelay = 300; 
 
@@ -404,7 +425,6 @@
                 }, 50);
             }
 
-            // FUNGSI INI AKAN DIPANGGIL SAAT PENGGUNA BILANG "ULANG"
             function getPanduanUtama() {
                 let nama = "{{ $namaPanggilan }}";
                 let panduan = `Halo ${nama}. Sebutkan angka berikut: `;
@@ -433,7 +453,6 @@
                 const menu = dataMenu[nomor];
                 if (!menu) return;
 
-                // PROTEKSI AGAR TIDAK SALAH REDIRECT KE BERANDA
                 if (!menu.rute || menu.rute === '#' || menu.rute.includes('undefined')) {
                     bicara("Mohon maaf, halaman belum tersedia.");
                     return;
@@ -468,7 +487,6 @@
 
                     let hasil = event.results[0][0].transcript.toLowerCase().replace(/[.,?!]/g, '').trim();
 
-                    // PENDETEKSI KATA "ULANG" - AKAN MEMBACA PANDUAN DARI AWAL (NOL)
                     if (/\b(ulang|ulangi|panduan|baca ulang)\b/.test(hasil)) { 
                         bicara(getPanduanUtama()); 
                     }
@@ -480,7 +498,6 @@
                     else if (/\b(enam|6|nam|keenam)\b/.test(hasil)) { eksekusiNavigasi(6); }
                     else if (/\b(nol|0|kosong|keluar)\b/.test(hasil)) { eksekusiNavigasi(0); }
                     else {
-                        // DIKEMBALIKAN: Jika pengguna salah bicara, sistem akan menegur agar pengguna tahu
                         bicara("Perintah tidak dikenali. Silakan sebut ulang angkanya.");
                     }
                 };

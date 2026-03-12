@@ -6,7 +6,7 @@
             name="viewport"
             content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
-        <title>Mengerjakan Ujian | LMS Inklusi UMMI</title>
+        <title>Mengerjakan Ujian - {{ $exam->judul }} | LMS Inklusi UMMI</title>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <link
@@ -70,7 +70,7 @@
                 box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
             }
             .nav-btn.answered:not(.active) {
-                background-color: #eff6ff; /* Biru sangat muda */
+                background-color: #eff6ff;
                 color: #2563eb;
                 border-color: #93c5fd;
             }
@@ -106,21 +106,23 @@
 
         {{-- NAVBAR BARU (MOBILE GRID SYSTEM) --}}
         <header
-            class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-2 sm:py-4 shadow-sm w-full shrink-0"
+            class="bg-white/90 backdrop-blur-2xl border-b border-slate-200/60 sticky top-0 z-40 px-3 sm:px-4 md:px-8 py-2 sm:py-4 shadow-sm w-full shrink-0 cursor-pointer"
+            id="voice-header"
+            title="Ketuk layar 2x untuk memotong suara sistem"
         >
             <div
-                class="w-full mx-auto grid grid-cols-3 items-center relative h-10 sm:h-12"
+                class="w-full mx-auto grid grid-cols-3 items-center relative h-10 sm:h-12 pointer-events-none"
             >
                 {{-- Kiri: Tombol Back + Angka 0 --}}
                 <div
-                    class="flex items-center gap-2 sm:gap-4 justify-start shrink-0"
+                    class="flex items-center gap-2 sm:gap-4 justify-start shrink-0 pointer-events-auto"
                 >
                     <button
-                        onclick="navigasiKe(0)"
+                        data-menu="0"
                         class="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-slate-100 hover:bg-blue-600 text-slate-500 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm group border border-slate-200 hover:border-blue-600 relative cursor-pointer active:scale-95"
                     >
                         <svg
-                            class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform"
+                            class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 transform group-hover:-translate-x-1 transition-transform pointer-events-none"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -133,20 +135,20 @@
                             ></path>
                         </svg>
                         <span
-                            class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[8px] md:text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white"
+                            class="absolute -bottom-1 -right-1 bg-slate-800 text-white text-[8px] md:text-[9px] font-black px-1.5 py-0.5 rounded-md border border-white pointer-events-none"
                             >0</span
                         >
                     </button>
                     <div
                         class="hidden md:block text-left cursor-pointer group shrink-0"
-                        onclick="navigasiKe(0)"
+                        data-menu="0"
                     >
                         <span
-                            class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest"
+                            class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest pointer-events-none"
                             >Navigasi Suara</span
                         >
                         <span
-                            class="block text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors"
+                            class="block text-xs font-black text-slate-700 group-hover:text-blue-600 transition-colors pointer-events-none"
                             >0 - Keluar Ujian</span
                         >
                     </div>
@@ -157,12 +159,12 @@
                     class="flex flex-col items-center justify-center justify-self-center w-full max-w-[170px] sm:max-w-none pointer-events-none"
                 >
                     <h1
-                        class="text-sm sm:text-lg md:text-xl font-extrabold text-slate-900 tracking-tight leading-none truncate pointer-events-auto w-full text-center"
+                        class="text-sm sm:text-lg md:text-xl font-extrabold text-slate-900 tracking-tight leading-none truncate w-full text-center"
                     >
                         {{ $exam->judul }}
                     </h1>
                     <div
-                        class="mt-1 sm:mt-1.5 pointer-events-auto flex items-center justify-center gap-1.5 sm:gap-2"
+                        class="mt-1 sm:mt-1.5 flex items-center justify-center gap-1.5 sm:gap-2"
                     >
                         <div
                             class="flex items-center gap-1 sm:gap-1.5 bg-red-50 px-1.5 sm:px-2 py-0.5 rounded-md border border-red-100 shadow-sm"
@@ -196,7 +198,7 @@
 
                 {{-- Kanan: Indikator Voice --}}
                 <div
-                    class="flex items-center justify-end gap-1.5 sm:gap-3 justify-self-end shrink-0"
+                    class="flex items-center justify-end gap-1.5 sm:gap-3 justify-self-end shrink-0 pointer-events-auto"
                 >
                     <div
                         class="flex items-center gap-[2px] h-4 w-6 sm:w-10 justify-center"
@@ -214,8 +216,8 @@
                     </div>
                     <span
                         id="status-desc"
-                        class="hidden md:block text-[9px] font-black text-slate-400 uppercase tracking-widest w-20 text-left"
-                        >MEMUAT...</span
+                        class="hidden md:block text-[9px] font-black text-slate-400 uppercase tracking-widest w-20 text-left pointer-events-none"
+                        >MENYIAPKAN</span
                     >
                 </div>
             </div>
@@ -225,8 +227,9 @@
         <main class="flex-1 flex overflow-hidden w-full relative">
             {{-- AREA KIRI: Konten Soal + Footer Navigasi --}}
             <div class="flex-1 flex flex-col h-full bg-slate-50/50 relative">
+                {{-- PAKAI overflow-y-scroll DISINI BIAR GAK GESER SAAT MATI NYALA SCROLLBAR --}}
                 <div
-                    class="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-4 md:p-8 lg:p-12"
+                    class="flex-1 overflow-y-scroll custom-scrollbar p-3 sm:p-4 md:p-8 lg:p-12"
                 >
                     <div
                         class="w-full max-w-5xl mx-auto space-y-4 sm:space-y-8"
@@ -386,7 +389,7 @@
                     class="p-8 border-t border-slate-100 bg-slate-50/30 shrink-0"
                 >
                     <button
-                        onclick="konfirmasiSelesai()"
+                        onclick="konfirmasiSelesaiBtn()"
                         class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] shadow-lg shadow-slate-900/20 hover:bg-blue-600 hover:shadow-blue-600/30 transition-all transform hover:-translate-y-1 active:scale-95"
                     >
                         Kumpulkan Ujian
@@ -454,7 +457,7 @@
 
                 <div class="p-6 bg-white border-t border-slate-100 shrink-0">
                     <button
-                        onclick="konfirmasiSelesai()"
+                        onclick="konfirmasiSelesaiBtn()"
                         class="w-full py-4 bg-slate-900 text-white rounded-xl sm:rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] shadow-lg hover:bg-blue-600 transition-colors active:scale-95"
                     >
                         Kumpulkan Ujian
@@ -485,9 +488,18 @@
             const waveBars = document.querySelectorAll(".wave-bar");
             const synth = window.speechSynthesis;
             const SpeechRec = window.webkitSpeechRecognition || window.SpeechRecognition;
+
             let rec = null;
             let isVoiceActive = true;
             let waveInterval;
+
+            let isRecActive = false;
+            let isRedirecting = false;
+            let isSpeaking = false;
+
+            // Konfirmasi via Voice States
+            let isConfirmingExit = false;
+            let isConfirmingSubmit = false;
 
             window.onload = () => {
                 document.getElementById('lblTerjawab').innerText = "0";
@@ -509,6 +521,134 @@
                 }, 800);
             };
 
+            if (SpeechRec) {
+                rec = new SpeechRec();
+                rec.lang = "id-ID";
+                rec.continuous = true;
+                rec.interimResults = true;
+            }
+
+            function setWave(active) {
+                if (active) {
+                    if (waveInterval) clearInterval(waveInterval);
+                    waveInterval = setInterval(() => {
+                        if (waveBars.length > 0) {
+                            waveBars.forEach((bar) => {
+                                bar.style.height = `${Math.floor(Math.random() * 12) + 4}px`;
+                            });
+                        }
+                    }, 100);
+                } else {
+                    clearInterval(waveInterval);
+                    if (waveBars.length > 0) {
+                        waveBars.forEach((bar) => (bar.style.height = "4px"));
+                    }
+                }
+            }
+
+            // ==========================================
+            // LOGIKA SECURE DOUBLE CLICK & DATA-MENU
+            // ==========================================
+            let clickTimer = null;
+            const clickDelay = 300;
+
+            document.body.addEventListener('click', (e) => {
+                // Abaikan klik input text/textarea agar pengguna bisa ngetik esai normal
+                if ((e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') && !e.target.closest('[data-menu]')) {
+                    return;
+                }
+
+                const navElement = e.target.closest('[data-menu]');
+
+                if (navElement) {
+                    e.preventDefault();
+                }
+
+                if (clickTimer !== null) {
+                    // DOUBLE CLICK DETECTED: Murni matikan suara sistem
+                    clearTimeout(clickTimer);
+                    clickTimer = null;
+
+                    if (!isRedirecting) {
+                        synth.cancel();
+                        isSpeaking = false;
+                        setWave(false);
+                        if (statusDesc) {
+                            statusDesc.innerText = "MENDENGARKAN";
+                            statusDesc.classList.replace("text-blue-600", "text-green-600");
+                            statusDesc.classList.replace("text-slate-400", "text-green-600");
+                        }
+                        if (rec) { try { rec.abort(); } catch(err){} isRecActive = false; }
+
+                        // Restart STT agar mau mendengar lagi
+                        setTimeout(() => { mulaiMendengar(); }, 50);
+                    }
+                } else {
+                    // SINGLE CLICK DETECTED
+                    clickTimer = setTimeout(() => {
+                        clickTimer = null;
+                        if (navElement && !isRedirecting) {
+                            const menuId = parseInt(navElement.getAttribute('data-menu'));
+                            window.navigasiKe(menuId);
+                        }
+                    }, clickDelay);
+                }
+            });
+
+            function mulaiMendengar() {
+                if (!rec || isRedirecting || isRecActive) return;
+                try {
+                    rec.start();
+                    isRecActive = true;
+                } catch (e) {
+                    console.error("Mic error:", e);
+                }
+            }
+
+            function bicara(teks, callback = null) {
+                if (!isVoiceActive || isRedirecting) return;
+                synth.cancel();
+
+                window.currentBotText = teks;
+
+                setTimeout(() => {
+                    const utter = new SpeechSynthesisUtterance(teks);
+                    utter.lang = "id-ID";
+                    const savedRate = localStorage.getItem("speechRate");
+                    utter.rate = savedRate ? parseFloat(savedRate) : 1.1;
+
+                    utter.onstart = () => {
+                        isSpeaking = true;
+                        if (statusDesc) {
+                            statusDesc.innerText = "SISTEM BERBICARA";
+                            statusDesc.classList.replace("text-slate-400", "text-blue-600");
+                            statusDesc.classList.replace("text-green-600", "text-blue-600");
+                        }
+                        setWave(true);
+                        mulaiMendengar();
+                    };
+
+                    utter.onend = () => {
+                        isSpeaking = false;
+                        setWave(false);
+                        if (!isRedirecting && statusDesc) {
+                            statusDesc.innerText = "MENDENGARKAN";
+                            statusDesc.classList.replace("text-slate-400", "text-green-600");
+                            statusDesc.classList.replace("text-blue-600", "text-green-600");
+                        }
+                        if (callback) callback();
+                    };
+
+                    utter.onerror = () => {
+                        isSpeaking = false;
+                        setWave(false);
+                        mulaiMendengar();
+                    };
+
+                    synth.speak(utter);
+                }, 50);
+            }
+
             /* --- FUNGSI MODAL BOTTOM SHEET MOBILE --- */
             function openMobileNav() {
                 const overlay = document.getElementById('mobileNavOverlay');
@@ -516,7 +656,6 @@
                 const content = document.getElementById('mobileNavContent');
 
                 overlay.classList.remove('hidden');
-                // Sedikit delay agar class transisi membaca display block
                 setTimeout(() => {
                     backdrop.classList.remove('opacity-0');
                     content.classList.remove('translate-y-full');
@@ -532,7 +671,7 @@
 
                 setTimeout(() => {
                     document.getElementById('mobileNavOverlay').classList.add('hidden');
-                }, 300); // durasi sama dengan CSS transition duration
+                }, 300);
             }
 
             function renderNavigasi() {
@@ -607,7 +746,7 @@
                 if (currentIndex === questions.length - 1) {
                     btnNext.className = "flex-1 md:flex-none px-0 sm:px-8 py-3.5 sm:py-4 bg-emerald-600 text-white rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-600/30 hover:bg-emerald-700 transition-all active:scale-95 text-center";
                     txtBtnNext.innerText = "Kumpulkan";
-                    btnNext.onclick = konfirmasiSelesai;
+                    btnNext.onclick = konfirmasiSelesaiBtn;
                 } else {
                     btnNext.className = "flex-1 md:flex-none px-0 sm:px-8 py-3.5 sm:py-4 bg-blue-600 text-white rounded-xl sm:rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest shadow-lg shadow-blue-600/30 hover:bg-blue-700 transition-all active:scale-95 text-center";
                     txtBtnNext.innerText = "Selanjutnya";
@@ -617,50 +756,12 @@
                 renderNavigasi();
             }
 
-            // --- Logika Suara ---
-            function setWave(active) {
-                if (waveBars.length > 0) {
-                    waveBars.forEach((bar) => {
-                        bar.style.height = active ? `${Math.floor(Math.random() * 12) + 4}px` : "4px";
-                    });
-                }
-            }
-
-            function bicara(teks, cb) {
-                if(!isVoiceActive) return;
-                synth.cancel();
-
-                const utter = new SpeechSynthesisUtterance(teks);
-                utter.lang = "id-ID";
-                const savedRate = localStorage.getItem("speechRate");
-                utter.rate = savedRate ? parseFloat(savedRate) : 1.0;
-
-                utter.onstart = () => {
-                    if (statusDesc) {
-                        statusDesc.innerText = "BERBICARA...";
-                        statusDesc.className = "hidden md:block text-[9px] font-black text-blue-600 uppercase tracking-widest w-20 text-left";
-                    }
-                    waveInterval = setInterval(() => setWave(true), 150);
-                };
-
-                utter.onend = () => {
-                    if (statusDesc) {
-                        statusDesc.innerText = "MENDENGARKAN...";
-                        statusDesc.className = "hidden md:block text-[9px] font-black text-blue-600 uppercase tracking-widest w-20 text-left animate-pulse";
-                    }
-                    clearInterval(waveInterval);
-                    setWave(false);
-                    if (cb) cb();
-                };
-                synth.speak(utter);
-            }
-
             function bacaSoalAktif(isUlang = false) {
                 const q = questions[currentIndex];
-                let t = `Soal nomor ${currentIndex+1}. ${q.teks_soal}. `;
+                let t = `Soal nomor ${currentIndex+1}. ${q.teks_soal.replace(/[^A-Za-z0-9 \.,\?]/g, '')}. `;
 
                 if(q.tipe === 'PG') {
-                    q.options.forEach((o, i) => t += `Pilihan ${['A','B','C','D','E'][i]}, ${o.teks_opsi}. `);
+                    q.options.forEach((o, i) => t += `Pilihan ${['A','B','C','D','E'][i]}, ${o.teks_opsi.replace(/[^A-Za-z0-9 \.,\?]/g, '')}. `);
                     t += "Sebutkan huruf pilihan jawaban Anda.";
                 } else {
                     t += "Ini adalah soal esai. Silakan ketik jawaban Anda di kolom yang tersedia, lalu bilang lanjut.";
@@ -675,49 +776,9 @@
                 bicara(t, mulaiMendengar);
             }
 
-            function mulaiMendengar() {
-                if(!SpeechRec) return;
-                if(rec) rec.stop();
-
-                rec = new SpeechRec();
-                rec.lang = 'id-ID';
-
-                rec.onresult = (e) => {
-                    const msg = e.results[0][0].transcript.toLowerCase().trim();
-
-                    if(msg.includes("ulang") || msg.includes("panduan") || msg.includes("bantuan")) {
-                        rec.stop();
-                        bacaSoalAktif(true);
-                        return;
-                    }
-
-                    if(msg.includes("lanjut") || msg.includes("selanjutnya")) { rec.stop(); navNext(); }
-                    else if(msg.includes("kembali") && !msg.includes("nol")) { rec.stop(); navPrev(); }
-                    else if(msg.includes("kumpulkan") || msg.includes("selesai")) { rec.stop(); konfirmasiSelesai(); }
-                    else if(msg.includes("nol") || msg.includes("batal")) { rec.stop(); navigasiKe(0); }
-                    else if(questions[currentIndex].tipe === 'PG') {
-                        // Deteksi spesifik untuk pilihan A B C D E
-                        const isA = msg === 'a' || msg.endsWith(' a') || msg.includes('pilih a') || msg.includes('jawaban a') || msg === 'ah';
-                        const isB = msg === 'b' || msg === 'be' || msg.endsWith(' b') || msg.includes('pilih b') || msg.includes('jawaban b');
-                        const isC = msg === 'c' || msg === 'ce' || msg.endsWith(' c') || msg.includes('pilih c') || msg.includes('jawaban c');
-                        const isD = msg === 'd' || msg === 'de' || msg.endsWith(' d') || msg.includes('pilih d') || msg.includes('jawaban d');
-                        const isE = msg === 'e' || msg === 'eh' || msg.endsWith(' e') || msg.includes('pilih e') || msg.includes('jawaban e');
-
-                        if (isA && questions[currentIndex].options[0]) { rec.stop(); pilihJawaban(questions[currentIndex].options[0].id, 0); }
-                        else if (isB && questions[currentIndex].options[1]) { rec.stop(); pilihJawaban(questions[currentIndex].options[1].id, 1); }
-                        else if (isC && questions[currentIndex].options[2]) { rec.stop(); pilihJawaban(questions[currentIndex].options[2].id, 2); }
-                        else if (isD && questions[currentIndex].options[3]) { rec.stop(); pilihJawaban(questions[currentIndex].options[3].id, 3); }
-                        else if (isE && questions[currentIndex].options[4]) { rec.stop(); pilihJawaban(questions[currentIndex].options[4].id, 4); }
-                    }
-                };
-
-                rec.onend = () => { rec.start(); };
-                rec.start();
-            }
-
             function pilihJawaban(optId, idx) {
                 answers[questions[currentIndex].id] = optId;
-                muatSoal(currentIndex); // Update UI
+                muatSoal(currentIndex);
 
                 const feedback = "Anda memilih jawaban " + ['A', 'B', 'C', 'D', 'E'][idx];
 
@@ -733,7 +794,7 @@
             function navNext() {
                 if(currentIndex < questions.length - 1) {
                     synth.cancel();
-                    closeMobileNav(); // Tutup modal nav mobile jika terbuka
+                    closeMobileNav();
                     muatSoal(currentIndex + 1);
                     if(isVoiceActive) setTimeout(() => bacaSoalAktif(), 300);
                 } else {
@@ -744,7 +805,7 @@
             function navPrev() {
                 if(currentIndex > 0) {
                     synth.cancel();
-                    closeMobileNav(); // Tutup modal nav mobile jika terbuka
+                    closeMobileNav();
                     muatSoal(currentIndex - 1);
                     if(isVoiceActive) setTimeout(() => bacaSoalAktif(), 300);
                 } else {
@@ -776,15 +837,20 @@
                 }, 1000);
             }
 
-            function konfirmasiSelesai() {
+            function konfirmasiSelesaiVoice() {
                 synth.cancel();
-                if(confirm("Apakah Anda yakin ingin mengumpulkan ujian? Pastikan semua soal telah terjawab.")) submitUjian();
-                else bicara("Pengumpulan dibatalkan. Silakan lanjutkan.", mulaiMendengar);
+                isConfirmingSubmit = true;
+                bicara("Apakah Anda yakin ingin mengumpulkan ujian? Pastikan semua soal telah terjawab. Sebut Ya untuk mengumpulkan, atau Tidak untuk membatalkan.", mulaiMendengar);
+            }
+
+            // Fungsi klik button Kumpulkan (sama dengan voice logic)
+            window.konfirmasiSelesaiBtn = function() {
+                konfirmasiSelesaiVoice();
             }
 
             function submitUjian() {
-                isVoiceActive = false; // matikan suara
-                if(rec) rec.stop();
+                isVoiceActive = false;
+                if(rec) { try{ rec.abort(); } catch(e){} }
                 document.getElementById('loader').classList.remove('hidden');
                 setTimeout(() => { document.getElementById('loader').classList.remove('opacity-0'); }, 10);
                 document.querySelector('#loader span').innerText = "Mengirim Jawaban...";
@@ -793,15 +859,94 @@
                 document.getElementById('submitUjianForm').submit();
             }
 
-            function navigasiKe(v) {
-                if(v === 0) {
+            window.navigasiKe = function(nomor) {
+                if (nomor === 0) {
                     synth.cancel();
-                    if(confirm("Yakin ingin keluar ujian? Jawaban Anda mungkin tidak tersimpan jika belum di kumpulkan.")){
-                        bicara("Membatalkan ujian. Kembali ke halaman sebelumnya.", () => {
-                            setTimeout(() => { window.location.href="/exams"; }, 500);
-                        });
-                    }
+                    isConfirmingExit = true;
+                    bicara("Yakin ingin keluar dari ujian ini? Jawaban Anda mungkin tidak tersimpan. Sebut Ya untuk keluar, atau Tidak untuk kembali ke soal.", mulaiMendengar);
                 }
+            }
+
+            if (rec) {
+                rec.onresult = (e) => {
+                    if (isRedirecting) return;
+
+                    const msg = e.results[e.results.length - 1][0].transcript.toLowerCase().trim();
+
+                    // Anti-Echo
+                    if (isSpeaking) {
+                        let botText = (window.currentBotText || "").replace(/[.,!?]/g, '').toLowerCase().trim();
+                        if (botText.includes(msg)) {
+                            let perintahPenting = ["ya", "iya", "tidak", "batal", "lanjut", "kembali", "kumpulkan"];
+                            let isPerintah = perintahPenting.some(cmd => msg === cmd || msg.includes(cmd));
+                            if (!isPerintah) return;
+                            else { synth.cancel(); isSpeaking = false; }
+                        }
+                    }
+
+                    // --- State Konfirmasi Keluar Ujian (Tombol 0) ---
+                    if (isConfirmingExit) {
+                        if (msg.includes("ya") || msg.includes("iya") || msg.includes("keluar") || msg.includes("yakin")) {
+                            isConfirmingExit = false;
+                            isRedirecting = true;
+                            if(statusDesc) {
+                                statusDesc.innerText = "MENGALIHKAN...";
+                                statusDesc.classList.replace("text-green-600", "text-slate-800");
+                                statusDesc.classList.replace("text-blue-600", "text-slate-800");
+                            }
+                            bicara("Membatalkan ujian. Kembali ke daftar ujian.", () => {
+                                setTimeout(() => { window.location.href = "/exams"; }, 500); // REDIRECT SATSET
+                            });
+                        } else if (msg.includes("tidak") || msg.includes("batal") || msg.includes("lanjut")) {
+                            isConfirmingExit = false;
+                            bicara("Dibatalkan. Kembali ke lembar ujian.", mulaiMendengar);
+                        }
+                        return;
+                    }
+
+                    // --- State Konfirmasi Submit Ujian ---
+                    if (isConfirmingSubmit) {
+                        if (msg.includes("ya") || msg.includes("iya") || msg.includes("kumpul")) {
+                            isConfirmingSubmit = false;
+                            submitUjian();
+                        } else if (msg.includes("tidak") || msg.includes("batal") || msg.includes("kembali")) {
+                            isConfirmingSubmit = false;
+                            bicara("Pengumpulan dibatalkan. Silakan lanjutkan ujian.", mulaiMendengar);
+                        }
+                        return;
+                    }
+
+                    // --- Normal Command ---
+                    if(msg.includes("ulang") || msg.includes("panduan") || msg.includes("bantuan")) {
+                        try{ rec.abort(); } catch(e){}
+                        bacaSoalAktif(true);
+                        return;
+                    }
+
+                    if(msg.includes("lanjut") || msg.includes("selanjutnya")) { try{ rec.abort(); } catch(e){} navNext(); }
+                    else if(msg.includes("kembali") && !msg.includes("nol")) { try{ rec.abort(); } catch(e){} navPrev(); }
+                    else if(msg.includes("kumpulkan") || msg.includes("selesai")) { try{ rec.abort(); } catch(e){} konfirmasiSelesaiVoice(); }
+                    else if(msg.includes("nol") || msg.includes("batal") || msg.includes("keluar")) { try{ rec.abort(); } catch(e){} navigasiKe(0); }
+                    else if(questions[currentIndex] && questions[currentIndex].tipe === 'PG') {
+                        // Deteksi spesifik untuk pilihan A B C D E
+                        const isA = msg === 'a' || msg.endsWith(' a') || msg.includes('pilih a') || msg.includes('jawaban a') || msg === 'ah';
+                        const isB = msg === 'b' || msg === 'be' || msg.endsWith(' b') || msg.includes('pilih b') || msg.includes('jawaban b');
+                        const isC = msg === 'c' || msg === 'ce' || msg.endsWith(' c') || msg.includes('pilih c') || msg.includes('jawaban c');
+                        const isD = msg === 'd' || msg === 'de' || msg.endsWith(' d') || msg.includes('pilih d') || msg.includes('jawaban d');
+                        const isE = msg === 'e' || msg === 'eh' || msg.endsWith(' e') || msg.includes('pilih e') || msg.includes('jawaban e');
+
+                        if (isA && questions[currentIndex].options[0]) { try{ rec.abort(); } catch(e){} pilihJawaban(questions[currentIndex].options[0].id, 0); }
+                        else if (isB && questions[currentIndex].options[1]) { try{ rec.abort(); } catch(e){} pilihJawaban(questions[currentIndex].options[1].id, 1); }
+                        else if (isC && questions[currentIndex].options[2]) { try{ rec.abort(); } catch(e){} pilihJawaban(questions[currentIndex].options[2].id, 2); }
+                        else if (isD && questions[currentIndex].options[3]) { try{ rec.abort(); } catch(e){} pilihJawaban(questions[currentIndex].options[3].id, 3); }
+                        else if (isE && questions[currentIndex].options[4]) { try{ rec.abort(); } catch(e){} pilihJawaban(questions[currentIndex].options[4].id, 4); }
+                    }
+                };
+
+                rec.onend = () => {
+                    isRecActive = false;
+                    if (!isRedirecting) mulaiMendengar();
+                };
             }
         </script>
     </body>
