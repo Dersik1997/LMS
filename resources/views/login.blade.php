@@ -25,7 +25,7 @@
         </style>
     </head>
     <body
-        class="m-0 p-4 font-['Plus_Jakarta_Sans'] bg-slate-50 min-h-full flex items-center justify-center overflow-x-hidden"
+        class="m-0 p-4 font-['Plus_Jakarta_Sans'] bg-slate-50 min-h-full flex items-center justify-center overflow-x-hidden relative"
     >
         <div
             class="w-full max-w-6xl bg-white rounded-[2rem] md:rounded-[3.5rem] shadow-2xl overflow-hidden border border-slate-100 grid grid-cols-1 lg:grid-cols-2 h-auto lg:h-[85vh] lg:max-h-[700px]"
@@ -41,13 +41,13 @@
 
             <div
                 class="p-6 md:p-10 lg:p-6 flex flex-col justify-center bg-white items-center relative"
-                onclick="hentikanSuaraBicara()"
             >
                 <div class="w-full max-w-md lg:max-w-[400px] mx-auto">
                     <div
                         id="voice-header"
                         class="mb-10 opacity-0 transition-opacity duration-500 cursor-pointer"
                         title="Ketuk untuk skip suara"
+                        onclick="hentikanSuaraBicara()"
                     >
                         <div class="flex items-center gap-6 mb-4">
                             <div
@@ -93,7 +93,7 @@
                                 <span
                                     id="status-desc"
                                     class="text-base font-bold text-slate-800 leading-none mt-1 uppercase"
-                                    >SIAP</span
+                                    >MEMULAI...</span
                                 >
                             </div>
                         </div>
@@ -214,17 +214,15 @@
             let isProcessing = false;
             let currentStep = 1;
 
-            // Variabel Penampung & Jeda (Debounce)
-            let timerSelesaiBicara;
-
             const savedRate =
                 parseFloat(localStorage.getItem("speechRate")) || 1.1;
 
             if (SpeechRec) {
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
-                rec.continuous = true;
-                rec.interimResults = true;
+                // Tunggu jeda diam baru di proses
+                rec.continuous = false;
+                rec.interimResults = false;
             }
 
             let waveInterval;
@@ -257,7 +255,10 @@
                 try {
                     rec.start();
                     isRecActive = true;
-                } catch (e) {}
+                    statusDesc.innerText = "MENDENGARKAN";
+                } catch (e) {
+                    console.log("Mic diblokir:", e);
+                }
             }
 
             function hentikanSuaraBicara() {
@@ -296,7 +297,7 @@
                             statusDesc.innerText = "MENDENGARKAN";
                             setTimeout(() => {
                                 mulaiMendengar();
-                            }, 50);
+                            }, 100);
                         }
                         if (callback) callback();
                     };
@@ -309,7 +310,7 @@
                     };
 
                     synth.speak(utter);
-                }, 10);
+                }, 50);
             }
 
             function ekstraksiAngka(teks) {
@@ -373,79 +374,65 @@
                 rec.onresult = (event) => {
                     if (isProcessing || isSpeaking) return;
 
-                    // Menggabungkan seluruh teks yang terekam dalam satu sesi nafas/bicara
-                    let teksUtuh = "";
-                    for (let i = 0; i < event.results.length; i++) {
-                        teksUtuh += event.results[i][0].transcript + " ";
-                    }
-                    teksUtuh = teksUtuh.toLowerCase().trim();
-
-                    // Khusus untuk perintah singkat (Benar/Salah) ambil suku kata paling terakhir
-                    let kataTerakhir = event.results[
-                        event.results.length - 1
-                    ][0].transcript
+                    let teksUtuh = event.results[0][0].transcript
                         .toLowerCase()
                         .trim();
 
                     const polaBenar = /\b(benar|ya|iya|lanjut|oke|betul)\b/;
-                    const polaSalah = /\b(salah|ulang|ulangi|ganti|bukan)\b/; // Diubah ke Salah
+                    const polaSalah = /\b(salah|ulang|ulangi|ganti|bukan)\b/;
 
-                    // === FASE 1 & 3: ISI DATA (MENGGUNAKAN JEDA 1.5 DETIK) ===
-                    if (currentStep === 1 || currentStep === 3) {
-                        // Bersihkan timer setiap kali pengguna menambahkan kata baru (masih bicara)
-                        clearTimeout(timerSelesaiBicara);
-
+                    if (currentStep === 1) {
                         let angkaDeteksi = ekstraksiAngka(teksUtuh);
 
-                        // Menampilkan angka di layar secara real-time
-                        if (currentStep === 1) {
+                        if (angkaDeteksi.length > 0) {
                             inputNim.value = angkaDeteksi;
-                        } else if (currentStep === 3) {
-                            inputPass.value =
-                                angkaDeteksi || teksUtuh.replace(/\s+/g, "");
+                            currentStep = 2;
+                            resetMicSession();
+
+                            const ejaanNIM = inputNim.value.split("").join(" ");
+                            bicara(ejaanNIM + ". Benar, atau salah?");
+                        } else {
+                            resetMicSession();
+                            bicara("Angka tidak terdengar. Ulangi sebut NIM.");
                         }
-
-                        // JEDA CERDAS: Jika diam 1.5 detik, barulah sistem merespons "Benar, atau Salah?"
-                        timerSelesaiBicara = setTimeout(() => {
-                            if (
-                                currentStep === 1 &&
-                                inputNim.value.length > 0
-                            ) {
-                                currentStep = 2;
-                                resetMicSession();
-                                const ejaanNIM = inputNim.value
-                                    .split("")
-                                    .join(" ");
-                                bicara(ejaanNIM + ". Benar, atau salah?");
-                            } else if (
-                                currentStep === 3 &&
-                                inputPass.value.length > 0
-                            ) {
-                                currentStep = 4;
-                                resetMicSession();
-                                const ejaanSandi = inputPass.value
-                                    .split("")
-                                    .join(" ");
-                                bicara(ejaanSandi + ". Benar, atau salah?");
-                            }
-                        }, 1500);
-
-                        // === FASE 2 & 4: KONFIRMASI (EKSEKUSI INSTAN/KILAT) ===
                     } else if (currentStep === 2) {
-                        if (kataTerakhir.match(polaBenar)) {
+                        if (teksUtuh.match(polaBenar)) {
                             currentStep = 3;
                             resetMicSession();
                             fokusUI(3);
                             bicara("Kata sandi?");
-                        } else if (kataTerakhir.match(polaSalah)) {
+                        } else if (teksUtuh.match(polaSalah)) {
                             currentStep = 1;
                             inputNim.value = "";
                             resetMicSession();
                             fokusUI(1);
                             bicara("Sebut ulang NIM.");
+                        } else {
+                            resetMicSession();
+                            bicara("Mohon sebut benar, atau salah.");
+                        }
+                    } else if (currentStep === 3) {
+                        let rawPass = teksUtuh.replace(/\s+/g, "");
+                        let numPass = ekstraksiAngka(teksUtuh);
+                        let finalPass = numPass.length > 0 ? numPass : rawPass;
+
+                        if (finalPass.length > 0) {
+                            inputPass.value = finalPass;
+                            currentStep = 4;
+                            resetMicSession();
+
+                            const ejaanSandi = inputPass.value
+                                .split("")
+                                .join(" ");
+                            bicara(ejaanSandi + ". Benar, atau salah?");
+                        } else {
+                            resetMicSession();
+                            bicara(
+                                "Sandi tidak terdengar. Ulangi sebut sandi.",
+                            );
                         }
                     } else if (currentStep === 4) {
-                        if (kataTerakhir.match(polaBenar)) {
+                        if (teksUtuh.match(polaBenar)) {
                             resetMicSession();
                             statusDesc.innerText = "MEMPROSES...";
                             fokusUI(5);
@@ -455,11 +442,14 @@
                                     validasiAkhir();
                                 },
                             );
-                        } else if (kataTerakhir.match(polaSalah)) {
+                        } else if (teksUtuh.match(polaSalah)) {
                             currentStep = 3;
                             inputPass.value = "";
                             resetMicSession();
                             bicara("Sebut ulang sandi.");
+                        } else {
+                            resetMicSession();
+                            bicara("Mohon sebut benar, atau salah.");
                         }
                     }
                 };
@@ -467,7 +457,7 @@
                 rec.onend = () => {
                     isRecActive = false;
                     if (!isProcessing && !isSpeaking) {
-                        mulaiMendengar();
+                        setTimeout(mulaiMendengar, 150);
                     }
                 };
             }
@@ -510,7 +500,6 @@
                         } catch (e) {}
 
                         if (res.ok && data.success) {
-                            // Feedback Suara Berhasil
                             bicara(
                                 "Kata sandi benar. Login berhasil. Mengalihkan ke dasbor.",
                                 () => {
@@ -522,10 +511,9 @@
                             currentStep = 3;
                             inputPass.value = "";
 
-                            // Feedback Suara Gagal
                             bicara(
                                 data.message ||
-                                    "Sandi salah. Silakan sebut ulang sandi anda.",
+                                    "Sandi salah. Silakan sebut ulang sandi.",
                                 () => {
                                     fokusUI(3);
                                     btnLogin.classList.remove(
@@ -559,6 +547,7 @@
                 }
             }, 1000);
 
+            // LANGSUNG JALAN SAAT HALAMAN SELESAI DIMUAT (TANPA KETUK)
             window.onload = () => {
                 setTimeout(() => {
                     fokusUI(1);
