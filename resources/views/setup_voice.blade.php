@@ -242,7 +242,7 @@
                         bicara(
                             "Atur kecepatan. Sebut angka satu sampai seratus.",
                         );
-                    else if (currentStep === 2) bicara("Benar, atau salah?");
+                    else if (currentStep === 2) bicara("Benar, atau ulangi?");
                 }, 180000); // 3 Menit
             }
 
@@ -275,10 +275,11 @@
                 const newRate = hitungRate(parseInt(this.value));
                 currentStep = 2;
                 instructionText.innerHTML =
-                    "Sebutkan <strong class='text-blue-600'>Benar</strong> atau <strong class='text-red-600'>Salah</strong>.";
-                // Konfirmasi Baku saat disentuh manual
+                    "Sebutkan <strong class='text-blue-600'>Benar</strong> atau <strong class='text-red-600'>Ulangi</strong>.";
+
+                // DEMO SUARA SAAT DIGESER MANUAL
                 bicara(
-                    "Kecepatan " + this.value + ". Benar, atau salah?",
+                    "Ini adalah contoh kecepatan suara asisten. Benar, atau ulangi?",
                     newRate,
                 );
             });
@@ -292,7 +293,6 @@
                 setTimeout(() => {
                     const utter = new SpeechSynthesisUtterance(teks);
                     utter.lang = "id-ID";
-                    // Gunakan rate kustom untuk demonstrasi, jika tidak ada gunakan default 1.1
                     utter.rate =
                         rateValue !== null
                             ? rateValue
@@ -340,9 +340,8 @@
                 }, 10);
             }
 
-            // Validasi Angka Super Ketat (Tidak menerima kata sisipan/sampah)
+            // Validasi Angka Super Kuat
             function ubahTeksKeAngka(teks) {
-                // Regex Eksak murni untuk angka digit
                 let matchMurni = teks.match(/^([1-9][0-9]?|100)$/);
                 if (matchMurni) return parseInt(matchMurni[0]);
 
@@ -359,26 +358,59 @@
                     sepuluh: 10,
                     sebelas: 11,
                     seratus: 100,
+                    1: 1,
+                    2: 2,
+                    3: 3,
+                    4: 4,
+                    5: 5,
+                    6: 6,
+                    7: 7,
+                    8: 8,
+                    9: 9,
                 };
 
-                let kataKata = teks.split(/\s+/);
-                let angkaKetemu = 0;
-                let lagiNgitung = false;
+                let teksNormal = teks
+                    .replace(/limapuluh/g, "lima puluh")
+                    .replace(/tujuhpuluh/g, "tujuh puluh")
+                    .replace(/duapuluh/g, "dua puluh")
+                    .replace(/tigapuluh/g, "tiga puluh")
+                    .replace(/empatpuluh/g, "empat puluh")
+                    .replace(/enampuluh/g, "enam puluh")
+                    .replace(/delapanpuluh/g, "delapan puluh")
+                    .replace(/sembilanpuluh/g, "sembilan puluh");
+
+                let kataKata = teksNormal.split(/\s+/);
+                let totalAngka = 0;
+                let angkaSementara = 0;
+                let valid = false;
 
                 for (let kata of kataKata) {
                     if (kamusAngka[kata] !== undefined) {
-                        lagiNgitung = true;
-                        angkaKetemu += kamusAngka[kata];
-                    } else if (kata === "belas" && lagiNgitung) {
-                        angkaKetemu += 10;
-                    } else if (kata === "puluh" && lagiNgitung) {
-                        angkaKetemu *= 10;
+                        valid = true;
+                        angkaSementara = kamusAngka[kata];
+                        if (
+                            kata === "sepuluh" ||
+                            kata === "sebelas" ||
+                            kata === "seratus"
+                        ) {
+                            totalAngka += angkaSementara;
+                            angkaSementara = 0;
+                        }
+                    } else if (kata === "belas" && valid) {
+                        totalAngka += angkaSementara + 10;
+                        angkaSementara = 0;
+                    } else if (kata === "puluh" && valid) {
+                        totalAngka += angkaSementara * 10;
+                        angkaSementara = 0;
                     } else {
-                        // Tolak mutlak jika ada kata lain
                         return null;
                     }
                 }
-                return lagiNgitung ? angkaKetemu : null;
+
+                totalAngka += angkaSementara;
+                return valid && totalAngka >= 1 && totalAngka <= 100
+                    ? totalAngka
+                    : null;
             }
 
             if (rec) {
@@ -386,7 +418,6 @@
                     if (isRedirecting || isSpeaking) return;
                     resetIdleTimer();
 
-                    // Pembersihan tanda baca otomatis
                     let hasilTerakhir = event.results[0][0].transcript
                         .toLowerCase()
                         .replace(/[.,?!]/g, "")
@@ -395,11 +426,7 @@
                     if (currentStep === 1) {
                         let nilaiAngka = ubahTeksKeAngka(hasilTerakhir);
 
-                        if (
-                            nilaiAngka !== null &&
-                            nilaiAngka >= 1 &&
-                            nilaiAngka <= 100
-                        ) {
+                        if (nilaiAngka !== null) {
                             slider.value = nilaiAngka;
                             display.innerText = nilaiAngka;
                             currentStep = 2;
@@ -407,13 +434,11 @@
 
                             const newRate = hitungRate(nilaiAngka);
                             instructionText.innerHTML =
-                                "Sebutkan <strong class='text-blue-600'>Benar</strong> atau <strong class='text-red-600'>Salah</strong>.";
+                                "Sebutkan <strong class='text-blue-600'>Benar</strong> atau <strong class='text-red-600'>Ulangi</strong>.";
 
-                            // KONFIRMASI BAKU MUTLAK & TO THE POINT
+                            // DEMO SUARA BAKU
                             bicara(
-                                "Kecepatan " +
-                                    nilaiAngka +
-                                    ". Benar, atau salah?",
+                                "Ini adalah contoh kecepatan suara asisten. Benar, atau ulangi?",
                                 newRate,
                             );
                         } else {
@@ -422,9 +447,9 @@
                             bicara("Sebut ulang angka.");
                         }
                     } else if (currentStep === 2) {
-                        // STRICT MATCHING REGEX (Tanpa Sinonim)
+                        // STRICT MATCHING REGEX SESUAI PERMINTAAN BARU
                         const polaBenar = /^(benar)$/;
-                        const polaSalah = /^(salah|ulang)$/; // Mendukung aturan ulang
+                        const polaUlangi = /^(ulangi|ulang)$/;
 
                         if (hasilTerakhir.match(polaBenar)) {
                             isRedirecting = true;
@@ -439,7 +464,7 @@
                             synth.speak(utter);
 
                             simpanDanLanjut();
-                        } else if (hasilTerakhir.match(polaSalah)) {
+                        } else if (hasilTerakhir.match(polaUlangi)) {
                             currentStep = 1;
                             slider.value = 50;
                             display.innerText = "50";
@@ -447,8 +472,8 @@
                                 "Sebutkan atau geser angka <strong class='text-blue-600'>1 sampai 100</strong>.";
 
                             resetMicSession();
-                            // KEMBALI KE PENOLAKAN AWAL (KARENA SALAH)
-                            bicara("Sebut ulang angka.");
+                            // KEMBALI KE PENOLAKAN AWAL (KARENA ULANGI)
+                            bicara("Sebut ulang angka.", 1.1); // Kembali ke kecepatan default untuk instruksi
                         } else {
                             // PENOLAKAN BAKU STEP 2
                             resetMicSession();
@@ -485,7 +510,7 @@
                     // INSTRUKSI AWAL TO THE POINT
                     bicara(
                         "Atur kecepatan. Sebut angka satu sampai seratus.",
-                        1.0,
+                        1.1,
                     );
                 }, 1000);
             });

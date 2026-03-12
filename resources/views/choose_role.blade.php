@@ -1,199 +1,233 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="id">
     <head>
         <meta charset="UTF-8" />
         <meta
             name="viewport"
             content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
-        <title>Pengaturan Aksesibilitas | LMS Inklusi UMMI</title>
-
-        <link
-            href="https://unpkg.com/aos@2.3.1/dist/aos.css"
-            rel="stylesheet"
-        />
+        <title>Portal LMS Inklusi UMMI</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <link
-            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
             rel="stylesheet"
         />
 
-        <link rel="prefetch" href="{{ route('login') }}" />
+        <link rel="prefetch" href="{{ route('login.dosen') }}" />
+        <link rel="prefetch" href="{{ route('setup.voice') }}" />
 
         <style>
-            input[type="range"]::-webkit-slider-thumb {
-                -webkit-appearance: none;
-                appearance: none;
-                width: 24px;
-                height: 24px;
-                border-radius: 50%;
-                background: #2563eb;
-                cursor: pointer;
-                box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
-                transition: transform 0.2s;
-            }
-            @media (min-width: 640px) {
-                input[type="range"]::-webkit-slider-thumb {
-                    width: 28px;
-                    height: 28px;
-                }
-            }
-            input[type="range"]::-webkit-slider-thumb:hover {
-                transform: scale(1.15);
-            }
             .wave-bar {
                 transition: height 0.1s ease;
             }
         </style>
     </head>
     <body
-        class="font-['Plus_Jakarta_Sans'] bg-[#f8fafc] min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 text-slate-800 relative overflow-hidden"
+        class="bg-slate-50 font-['Plus_Jakarta_Sans'] min-h-[100dvh] flex flex-col relative overflow-x-hidden text-slate-800 m-0 p-0"
     >
-        <div
-            class="absolute top-[-10%] left-[-10%] w-64 sm:w-96 h-64 sm:h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob z-0"
-        ></div>
-        <div
-            class="absolute bottom-[-10%] right-[-10%] w-64 sm:w-96 h-64 sm:h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000 z-0"
-        ></div>
-
-        <div
-            id="main-card"
-            class="flex w-full max-w-lg bg-white/90 backdrop-blur-2xl rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl border border-white/50 p-6 sm:p-10 md:p-12 relative z-10 flex-col items-center text-center mx-auto"
-        >
+        <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
             <div
-                data-aos="fade-down"
-                data-aos-duration="800"
-                id="voice-header"
-                class="w-full mb-6 sm:mb-8 cursor-pointer"
-                title="Ketuk 2x di mana saja untuk memotong suara sistem"
-            >
-                <div
-                    class="flex flex-row items-center justify-center gap-4 sm:gap-6 mb-4"
-                >
-                    <div
-                        id="wave-container"
-                        class="flex items-center gap-[2px] h-10 sm:h-12"
-                    >
-                        <div
-                            class="wave-bar w-[2px] sm:w-[3px] bg-blue-500 rounded-full h-1"
-                        ></div>
-                        <div
-                            class="wave-bar w-[2px] sm:w-[3px] bg-blue-400 rounded-full h-1"
-                        ></div>
-                        <div
-                            class="wave-bar w-[2px] sm:w-[3px] bg-blue-600 rounded-full h-1"
-                        ></div>
-                        <div
-                            class="wave-bar w-[2px] sm:w-[3px] bg-blue-400 rounded-full h-1"
-                        ></div>
-                        <div
-                            class="wave-bar w-[2px] sm:w-[3px] bg-blue-500 rounded-full h-1"
-                        ></div>
-                        <div
-                            class="wave-bar w-[2px] sm:w-[3px] bg-blue-600 rounded-full h-1"
-                        ></div>
-                        <div
-                            class="wave-bar w-[2px] sm:w-[3px] bg-blue-400 rounded-full h-1"
-                        ></div>
-                        <div
-                            class="wave-bar w-[2px] sm:w-[3px] bg-blue-500 rounded-full h-1"
-                        ></div>
-                        <div
-                            class="wave-bar w-[2px] sm:w-[3px] bg-blue-600 rounded-full h-1"
-                        ></div>
-                        <div
-                            class="wave-bar w-[2px] sm:w-[3px] bg-blue-400 rounded-full h-1"
-                        ></div>
-                    </div>
-                    <div class="flex flex-col text-left">
-                        <span
-                            class="text-[8px] sm:text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] sm:tracking-[0.3em]"
-                        >
-                            Status Sistem
-                        </span>
-                        <span
-                            id="status-desc"
-                            class="text-sm sm:text-base font-bold text-slate-800 leading-none mt-1 uppercase"
-                        >
-                            MENYIAPKAN...
-                        </span>
-                    </div>
-                </div>
-                <hr class="border-slate-100 w-full" />
-            </div>
-
-            <h1
-                data-aos="fade-up"
-                data-aos-delay="300"
-                class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-2"
-            >
-                Atur Suara
-            </h1>
-            <p
-                data-aos="fade-up"
-                data-aos-delay="400"
-                id="instruction-text"
-                class="text-slate-500 font-medium mb-6 sm:mb-8 text-xs sm:text-sm leading-relaxed px-2"
-            >
-                Sebutkan atau geser angka
-                <strong class="text-blue-600">1 sampai 100</strong>.
-            </p>
-
+                class="absolute top-[-10%] left-[-10%] w-64 md:w-96 h-64 md:h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob"
+            ></div>
             <div
-                data-aos="fade-up"
-                data-aos-delay="500"
-                class="bg-slate-50 p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 mb-6 sm:mb-8 w-full text-left"
-            >
-                <div class="flex justify-between items-end mb-4">
-                    <label
-                        class="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-widest"
-                    >
-                        Tingkat Kecepatan
-                    </label>
-                    <span
-                        id="speedValue"
-                        class="text-2xl sm:text-3xl font-black text-blue-600"
-                        >50</span
-                    >
-                </div>
-
-                <div class="relative w-full py-2">
-                    <input
-                        type="range"
-                        id="speedSlider"
-                        min="1"
-                        max="100"
-                        value="50"
-                        class="w-full h-2 sm:h-3 bg-slate-200 rounded-lg appearance-none outline-none cursor-pointer focus:ring-2 focus:ring-blue-200 relative z-20"
-                    />
-                </div>
-
-                <div
-                    class="flex justify-between mt-2 sm:mt-3 text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest"
-                >
-                    <span>1 (Lambat)</span>
-                    <span>100 (Cepat)</span>
-                </div>
-            </div>
-
-            <button
-                data-aos="zoom-in"
-                data-aos-delay="600"
-                id="btn-lanjut-manual"
-                onclick="simpanDanLanjut()"
-                class="w-full py-3 sm:py-4 bg-blue-600 text-white rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm uppercase tracking-widest shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer relative z-20"
-            >
-                Lanjut Manual
-            </button>
+                class="absolute bottom-[-10%] right-[-10%] w-64 md:w-96 h-64 md:h-96 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-2000"
+            ></div>
         </div>
 
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <div
+            id="permission-overlay"
+            class="fixed inset-0 z-[100] bg-blue-950/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-opacity duration-700"
+        >
+            <div
+                class="w-20 h-20 sm:w-24 sm:h-24 bg-white/10 rounded-full sm:rounded-[2.5rem] flex items-center justify-center mb-6 sm:mb-8 animate-pulse border border-white/20 text-white"
+            >
+                <svg
+                    class="w-10 h-10 sm:w-12 sm:h-12"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                    ></path>
+                </svg>
+            </div>
+            <h2
+                class="text-2xl sm:text-3xl font-black mb-3 sm:mb-4 uppercase tracking-tighter text-white animate-bounce"
+            >
+                Aktivasi Suara
+            </h2>
+            <p class="text-blue-200 text-sm sm:text-lg max-w-xs sm:max-w-none">
+                Ketuk layar untuk memulai
+            </p>
+        </div>
+
+        <div
+            id="voice-status-bar"
+            class="fixed bottom-8 lg:bottom-auto lg:top-8 left-1/2 transform -translate-x-1/2 w-max max-w-[85%] bg-white/95 backdrop-blur-xl px-4 py-2.5 sm:px-6 sm:py-3 rounded-2xl shadow-xl border border-slate-200 z-50 flex items-center justify-center gap-3 hidden transition-all duration-500 opacity-0 translate-y-10 lg:-translate-y-10"
+        >
+            <div
+                id="wave-container"
+                class="flex items-center gap-[2px] h-4 sm:h-5"
+            >
+                <div
+                    class="wave-bar w-[2px] sm:w-[3px] bg-blue-500 rounded-full h-1"
+                ></div>
+                <div
+                    class="wave-bar w-[2px] sm:w-[3px] bg-blue-400 rounded-full h-1"
+                ></div>
+                <div
+                    class="wave-bar w-[2px] sm:w-[3px] bg-blue-600 rounded-full h-1"
+                ></div>
+                <div
+                    class="wave-bar w-[2px] sm:w-[3px] bg-blue-400 rounded-full h-1"
+                ></div>
+                <div
+                    class="wave-bar w-[2px] sm:w-[3px] bg-blue-500 rounded-full h-1"
+                ></div>
+            </div>
+            <span
+                id="status-text"
+                class="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-widest"
+            >
+                MENDENGARKAN
+            </span>
+        </div>
+
+        <div
+            id="main-content"
+            class="w-full flex-grow flex flex-col opacity-0 transition-opacity duration-1000 hidden relative z-10 min-h-[100dvh]"
+        >
+            <div
+                class="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 w-full max-w-5xl mx-auto pt-12 pb-12 lg:pt-28 lg:pb-16"
+            >
+                <div class="text-center mb-8 sm:mb-12">
+                    <h1
+                        class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-3 sm:mb-4 tracking-tight"
+                    >
+                        LMS Inklusi UMMI
+                    </h1>
+                    <p
+                        class="text-slate-500 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed"
+                    >
+                        Selamat datang di Platform Pembelajaran Inklusif.
+                        <br class="hidden sm:block" />
+                        Sebutkan
+                        <strong class="text-blue-600">Satu</strong> untuk Dosen,
+                        atau <strong class="text-indigo-600">Dua</strong> untuk
+                        Mahasiswa.
+                    </p>
+                </div>
+
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 w-full max-w-4xl"
+                >
+                    <a
+                        href="{{ route('login.dosen') }}"
+                        id="btn-dosen"
+                        class="group relative bg-white/80 backdrop-blur-xl p-6 sm:p-8 rounded-3xl shadow-lg shadow-slate-200/50 border border-white hover:shadow-2xl hover:border-blue-300 transition-all duration-300 transform hover:-translate-y-2 text-center flex flex-col items-center justify-between h-full"
+                    >
+                        <div
+                            class="absolute top-4 left-4 sm:top-5 sm:left-5 w-8 h-8 sm:w-10 sm:h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center font-black text-sm sm:text-lg border border-blue-100"
+                        >
+                            1
+                        </div>
+                        <div
+                            class="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-blue-100 to-blue-50 rounded-[1.5rem] flex items-center justify-center mb-5 sm:mb-6 group-hover:from-blue-600 group-hover:to-blue-500 transition-all duration-300 shadow-inner"
+                        >
+                            <svg
+                                class="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-blue-600 group-hover:text-white transition-colors"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 14l9-5-9-5-9 5 9 5z"
+                                ></path>
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <div class="flex-grow flex flex-col justify-center">
+                            <h2
+                                class="text-xl sm:text-2xl font-bold text-slate-800 mb-2 sm:mb-3"
+                            >
+                                Dosen
+                            </h2>
+                            <p
+                                class="text-sm sm:text-base text-slate-500 leading-relaxed px-2"
+                            >
+                                Kelola perkuliahan, materi, dan berikan
+                                bimbingan kepada mahasiswa.
+                            </p>
+                        </div>
+                    </a>
+
+                    <a
+                        href="{{ route('setup.voice') }}"
+                        id="btn-mahasiswa"
+                        class="group relative bg-white/80 backdrop-blur-xl p-6 sm:p-8 rounded-3xl shadow-lg shadow-slate-200/50 border border-white hover:shadow-2xl hover:border-indigo-300 transition-all duration-300 transform hover:-translate-y-2 text-center flex flex-col items-center justify-between h-full"
+                    >
+                        <div
+                            class="absolute top-4 left-4 sm:top-5 sm:left-5 w-8 h-8 sm:w-10 sm:h-10 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center font-black text-sm sm:text-lg border border-indigo-100"
+                        >
+                            2
+                        </div>
+                        <div
+                            class="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-indigo-100 to-indigo-50 rounded-[1.5rem] flex items-center justify-center mb-5 sm:mb-6 group-hover:from-indigo-600 group-hover:to-indigo-500 transition-all duration-300 shadow-inner"
+                        >
+                            <svg
+                                class="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-indigo-600 group-hover:text-white transition-colors"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <div class="flex-grow flex flex-col justify-center">
+                            <h2
+                                class="text-xl sm:text-2xl font-bold text-slate-800 mb-2 sm:mb-3"
+                            >
+                                Mahasiswa
+                            </h2>
+                            <p
+                                class="text-sm sm:text-base text-slate-500 leading-relaxed px-2"
+                            >
+                                Akses materi kuliah, kumpulkan tugas, dan pantau
+                                perkembangan belajar Anda.
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <footer
+                class="w-full text-center py-4 text-slate-400 text-xs sm:text-sm italic mt-auto relative z-10 bg-white/50 backdrop-blur-md border-t border-slate-200/50"
+            >
+                &copy; 2026 Universitas Muhammadiyah Sukabumi - Kampus Inklusi
+            </footer>
+        </div>
 
         <script>
-            const slider = document.getElementById("speedSlider");
-            const display = document.getElementById("speedValue");
-            const instructionText = document.getElementById("instruction-text");
-            const statusDesc = document.getElementById("status-desc");
+            const overlay = document.getElementById("permission-overlay");
+            const mainContent = document.getElementById("main-content");
+            const statusBar = document.getElementById("voice-status-bar");
+            const statusText = document.getElementById("status-text");
             const waveBars = document.querySelectorAll(".wave-bar");
 
             const synth = window.speechSynthesis;
@@ -201,25 +235,26 @@
                 window.webkitSpeechRecognition || window.SpeechRecognition;
             let rec = null;
             let isRecActive = false;
-            let currentStep = 1;
             let isRedirecting = false;
             let isSpeaking = false;
-            let idleTimer;
+            let idleTimer; // Timer untuk reminder 3 menit
 
-            // MODE SABAR: Harus false
+            const savedRate =
+                parseFloat(localStorage.getItem("speechRate")) || 1.1;
+
             if (SpeechRec) {
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
+                // MODE SABAR MUTLAK
                 rec.continuous = false;
                 rec.interimResults = false;
             }
 
-            let waveInterval;
             function setWave(active) {
                 if (active) {
                     waveInterval = setInterval(() => {
                         waveBars.forEach((bar) => {
-                            const h = Math.floor(Math.random() * 30) + 4;
+                            const h = Math.floor(Math.random() * 16) + 4;
                             bar.style.height = `${h}px`;
                         });
                     }, 100);
@@ -230,20 +265,12 @@
                 }
             }
 
-            function hitungRate(val) {
-                return 0.5 + (val - 1) * (1.5 / 99);
-            }
-
             function resetIdleTimer() {
                 clearTimeout(idleTimer);
                 if (isRedirecting) return;
                 idleTimer = setTimeout(() => {
-                    if (currentStep === 1)
-                        bicara(
-                            "Atur kecepatan. Sebut angka satu sampai seratus.",
-                        );
-                    else if (currentStep === 2) bicara("Benar, atau salah?");
-                }, 180000); // 3 Menit
+                    bicara("Pilih. Satu Dosen. Dua Mahasiswa.");
+                }, 180000); // 3 menit
             }
 
             function resetMicSession() {
@@ -255,35 +282,18 @@
                 }
             }
 
-            // CUT-OFF DOUBLE TAP PADA BODY
+            // CUT-OFF DOUBLE TAP MUTLAK PADA BODY
             document.body.addEventListener("dblclick", () => {
                 if (isSpeaking && !isRedirecting) {
                     synth.cancel();
                     isSpeaking = false;
                     setWave(false);
-                    bicara(""); // Trigger rec.start() dari dalam onend
+                    // Panggil suara kosong untuk mentrigger rec.start() dari onend
+                    bicara("");
                 }
             });
 
-            // Sinkronisasi Interaksi Manual Slider
-            slider.addEventListener("input", function () {
-                display.innerText = this.value;
-            });
-
-            slider.addEventListener("change", function () {
-                if (isRedirecting) return;
-                const newRate = hitungRate(parseInt(this.value));
-                currentStep = 2;
-                instructionText.innerHTML =
-                    "Sebutkan <strong class='text-blue-600'>Benar</strong> atau <strong class='text-red-600'>Salah</strong>.";
-                // Konfirmasi Baku saat disentuh manual
-                bicara(
-                    "Kecepatan " + this.value + ". Benar, atau salah?",
-                    newRate,
-                );
-            });
-
-            function bicara(teks, rateValue = null) {
+            function bicara(teks) {
                 if (isRedirecting) return;
                 isSpeaking = true;
                 resetMicSession();
@@ -292,16 +302,12 @@
                 setTimeout(() => {
                     const utter = new SpeechSynthesisUtterance(teks);
                     utter.lang = "id-ID";
-                    utter.rate =
-                        rateValue !== null
-                            ? rateValue
-                            : parseFloat(localStorage.getItem("speechRate")) ||
-                              1.1;
+                    utter.rate = savedRate;
 
                     utter.onstart = () => {
-                        if (statusDesc && teks !== "") {
-                            statusDesc.innerText = "SISTEM BERBICARA";
-                            statusDesc.classList.replace(
+                        if (statusText && teks !== "") {
+                            statusText.innerText = "SISTEM BERBICARA";
+                            statusText.classList.replace(
                                 "text-green-600",
                                 "text-blue-600",
                             );
@@ -313,11 +319,11 @@
                         isSpeaking = false;
                         setWave(false);
 
-                        // ARSITEKTUR BERANTAI: Mic start HANYA di dalam sini
+                        // ARSITEKTUR BERANTAI: Mic HANYA dipanggil dari sini
                         if (!isRedirecting) {
-                            if (statusDesc) {
-                                statusDesc.innerText = "MENDENGARKAN";
-                                statusDesc.classList.replace(
+                            if (statusText) {
+                                statusText.innerText = "MENDENGARKAN";
+                                statusText.classList.replace(
                                     "text-blue-600",
                                     "text-green-600",
                                 );
@@ -339,189 +345,104 @@
                 }, 10);
             }
 
-            // PERBAIKAN: Validasi Angka Super Kuat (Menangani Ejaan Gabung & Angka Campur)
-            function ubahTeksKeAngka(teks) {
-                // Tangkap angka murni jika terbaca langsung oleh sistem (misal: "50", "70")
-                let matchMurni = teks.match(/^([1-9][0-9]?|100)$/);
-                if (matchMurni) return parseInt(matchMurni[0]);
-
-                // Kamus Komprehensif: Mendukung ejaan teks maupun karakter angka
-                const kamusAngka = {
-                    satu: 1,
-                    dua: 2,
-                    tiga: 3,
-                    empat: 4,
-                    lima: 5,
-                    enam: 6,
-                    tujuh: 7,
-                    delapan: 8,
-                    sembilan: 9,
-                    sepuluh: 10,
-                    sebelas: 11,
-                    seratus: 100,
-                    1: 1,
-                    2: 2,
-                    3: 3,
-                    4: 4,
-                    5: 5,
-                    6: 6,
-                    7: 7,
-                    8: 8,
-                    9: 9,
-                };
-
-                // Normalisasi anomali Web Speech API yang sering menghilangkan spasi
-                let teksNormal = teks
-                    .replace(/limapuluh/g, "lima puluh")
-                    .replace(/tujuhpuluh/g, "tujuh puluh")
-                    .replace(/duapuluh/g, "dua puluh")
-                    .replace(/tigapuluh/g, "tiga puluh")
-                    .replace(/empatpuluh/g, "empat puluh")
-                    .replace(/enampuluh/g, "enam puluh")
-                    .replace(/delapanpuluh/g, "delapan puluh")
-                    .replace(/sembilanpuluh/g, "sembilan puluh");
-
-                let kataKata = teksNormal.split(/\s+/);
-                let totalAngka = 0;
-                let angkaSementara = 0;
-                let valid = false;
-
-                for (let kata of kataKata) {
-                    if (kamusAngka[kata] !== undefined) {
-                        valid = true;
-                        angkaSementara = kamusAngka[kata];
-                        // Jika ada kata tunggal "sepuluh", "sebelas", atau "seratus", langsung masukkan ke total
-                        if (
-                            kata === "sepuluh" ||
-                            kata === "sebelas" ||
-                            kata === "seratus"
-                        ) {
-                            totalAngka += angkaSementara;
-                            angkaSementara = 0;
-                        }
-                    } else if (kata === "belas" && valid) {
-                        totalAngka += angkaSementara + 10;
-                        angkaSementara = 0;
-                    } else if (kata === "puluh" && valid) {
-                        totalAngka += angkaSementara * 10;
-                        angkaSementara = 0;
-                    } else {
-                        // Tolak mutlak jika ada kata aneh / sampah di luar konteks angka
-                        return null;
-                    }
-                }
-
-                totalAngka += angkaSementara;
-
-                // Final Check: Harus di antara 1 - 100
-                return valid && totalAngka >= 1 && totalAngka <= 100
-                    ? totalAngka
-                    : null;
-            }
-
             if (rec) {
                 rec.onresult = (event) => {
                     if (isRedirecting || isSpeaking) return;
                     resetIdleTimer();
 
-                    // Pembersihan tanda baca otomatis
+                    // FIX DITERAPKAN DI SINI: Menghapus tanda baca otomatis
                     let hasilTerakhir = event.results[0][0].transcript
                         .toLowerCase()
                         .replace(/[.,?!]/g, "")
                         .trim();
 
-                    if (currentStep === 1) {
-                        let nilaiAngka = ubahTeksKeAngka(hasilTerakhir);
+                    // STRICT MATCHING MUTLAK (Tanpa Sinonim)
+                    const polaSatu = /^(satu|1)$/;
+                    const polaDua = /^(dua|2)$/;
+                    const polaUlang = /^(ulang)$/;
 
-                        if (nilaiAngka !== null) {
-                            slider.value = nilaiAngka;
-                            display.innerText = nilaiAngka;
-                            currentStep = 2;
-                            resetMicSession();
-
-                            const newRate = hitungRate(nilaiAngka);
-                            instructionText.innerHTML =
-                                "Sebutkan <strong class='text-blue-600'>Benar</strong> atau <strong class='text-red-600'>Salah</strong>.";
-
-                            // KONFIRMASI BAKU MUTLAK & TO THE POINT
-                            bicara(
-                                "Kecepatan " +
-                                    nilaiAngka +
-                                    ". Benar, atau salah?",
-                                newRate,
+                    if (hasilTerakhir.match(polaSatu)) {
+                        isRedirecting = true;
+                        resetMicSession();
+                        setWave(false);
+                        document
+                            .getElementById("btn-dosen")
+                            .classList.add(
+                                "ring-4",
+                                "ring-blue-400",
+                                "scale-105",
                             );
-                        } else {
-                            // PENOLAKAN BAKU STEP 1
-                            resetMicSession();
-                            bicara("Sebut ulang angka.");
-                        }
-                    } else if (currentStep === 2) {
-                        // STRICT MATCHING REGEX (Tanpa Sinonim)
-                        const polaBenar = /^(benar)$/;
-                        const polaSalah = /^(salah|ulang)$/; // Mendukung aturan ulang
+                        if (statusText) statusText.innerText = "MENGALIHKAN...";
 
-                        if (hasilTerakhir.match(polaBenar)) {
-                            isRedirecting = true;
-                            resetMicSession();
-                            setWave(false);
-
-                            // NAVIGASI TO THE POINT
-                            const utter = new SpeechSynthesisUtterance(
-                                "Disimpan.",
+                        // TRANSISI CEPAT & TO THE POINT
+                        const utter = new SpeechSynthesisUtterance("Dosen");
+                        synth.speak(utter);
+                        window.location.href = "{{ route('login.dosen') }}"; // Eksekusi instan
+                    } else if (hasilTerakhir.match(polaDua)) {
+                        isRedirecting = true;
+                        resetMicSession();
+                        setWave(false);
+                        document
+                            .getElementById("btn-mahasiswa")
+                            .classList.add(
+                                "ring-4",
+                                "ring-indigo-400",
+                                "scale-105",
                             );
-                            utter.rate = hitungRate(parseInt(slider.value));
-                            synth.speak(utter);
+                        if (statusText) statusText.innerText = "MENGALIHKAN...";
 
-                            simpanDanLanjut();
-                        } else if (hasilTerakhir.match(polaSalah)) {
-                            currentStep = 1;
-                            slider.value = 50;
-                            display.innerText = "50";
-                            instructionText.innerHTML =
-                                "Sebutkan atau geser angka <strong class='text-blue-600'>1 sampai 100</strong>.";
-
-                            resetMicSession();
-                            // KEMBALI KE PENOLAKAN AWAL (KARENA SALAH)
-                            bicara("Sebut ulang angka.");
-                        } else {
-                            // PENOLAKAN BAKU STEP 2
-                            resetMicSession();
-                            bicara("Sebut ulang perintah.");
-                        }
+                        // TRANSISI CEPAT & TO THE POINT
+                        const utter = new SpeechSynthesisUtterance("Mahasiswa");
+                        synth.speak(utter);
+                        window.location.href = "{{ route('setup.voice') }}"; // Eksekusi instan
+                    } else if (hasilTerakhir.match(polaUlang)) {
+                        resetMicSession();
+                        bicara("Pilih. Satu Dosen. Dua Mahasiswa.");
+                    } else {
+                        // PENOLAKAN BAKU
+                        resetMicSession();
+                        bicara("Sebut ulang angka.");
                     }
                 };
 
                 rec.onend = () => {
                     isRecActive = false;
-                    // Mode Sabar Berantai: Umpan silent utterance untuk menyalakan mic kembali
+                    // Arsitektur Berantai: Jika mic mati sendiri, gunakan utter kosong untuk menyalakan ulang
                     if (!isRedirecting && !isSpeaking) {
                         bicara("");
                     }
                 };
             }
 
-            function simpanDanLanjut() {
-                if (isRedirecting && currentStep !== 2) return;
-                isRedirecting = true;
-                synth.cancel();
+            overlay.addEventListener("click", () => {
+                overlay.classList.add("opacity-0", "pointer-events-none");
 
-                const finalRate = hitungRate(parseInt(slider.value));
-                localStorage.setItem("speechRate", finalRate);
-
-                // TRANSISI CEPAT TANPA DELAY
-                window.location.href = "{{ route('login') }}";
-            }
-
-            window.addEventListener("load", () => {
-                AOS.init({ once: true, easing: "ease-out-cubic" });
+                // Trik pancingan audio mobile
+                synth.speak(new SpeechSynthesisUtterance(""));
 
                 setTimeout(() => {
-                    // INSTRUKSI AWAL TO THE POINT
-                    bicara(
-                        "Atur kecepatan. Sebut angka satu sampai seratus.",
-                        1.0,
+                    overlay.classList.add("hidden");
+                    mainContent.classList.remove("hidden");
+                    setTimeout(
+                        () => mainContent.classList.remove("opacity-0"),
+                        50,
                     );
-                }, 1000);
+
+                    statusBar.classList.remove("hidden");
+                    setTimeout(() => {
+                        statusBar.classList.remove(
+                            "opacity-0",
+                            "translate-y-10",
+                            "lg:-translate-y-10",
+                        );
+                    }, 50);
+
+                    setTimeout(() => {
+                        // NAVIGASI TO THE POINT
+                        bicara("Pilih. Satu Dosen. Dua Mahasiswa.");
+                        resetIdleTimer();
+                    }, 300);
+                }, 700);
             });
         </script>
     </body>
