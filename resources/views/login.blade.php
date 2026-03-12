@@ -18,6 +18,11 @@
             href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"
             rel="stylesheet"
         />
+        <style>
+            .wave-bar {
+                transition: height 0.1s ease;
+            }
+        </style>
     </head>
     <body
         class="m-0 p-4 font-['Plus_Jakarta_Sans'] bg-slate-50 min-h-full flex items-center justify-center overflow-x-hidden"
@@ -48,34 +53,34 @@
                                 class="flex items-center gap-[2px] h-12"
                             >
                                 <div
-                                    class="wave-bar w-[3px] bg-blue-500 rounded-full transition-all duration-150 h-1"
+                                    class="wave-bar w-[3px] bg-blue-500 rounded-full h-1"
                                 ></div>
                                 <div
-                                    class="wave-bar w-[3px] bg-blue-400 rounded-full transition-all duration-150 h-1"
+                                    class="wave-bar w-[3px] bg-blue-400 rounded-full h-1"
                                 ></div>
                                 <div
-                                    class="wave-bar w-[3px] bg-blue-600 rounded-full transition-all duration-150 h-1"
+                                    class="wave-bar w-[3px] bg-blue-600 rounded-full h-1"
                                 ></div>
                                 <div
-                                    class="wave-bar w-[3px] bg-blue-400 rounded-full transition-all duration-150 h-1"
+                                    class="wave-bar w-[3px] bg-blue-400 rounded-full h-1"
                                 ></div>
                                 <div
-                                    class="wave-bar w-[3px] bg-blue-500 rounded-full transition-all duration-150 h-1"
+                                    class="wave-bar w-[3px] bg-blue-500 rounded-full h-1"
                                 ></div>
                                 <div
-                                    class="wave-bar w-[3px] bg-blue-600 rounded-full transition-all duration-150 h-1"
+                                    class="wave-bar w-[3px] bg-blue-600 rounded-full h-1"
                                 ></div>
                                 <div
-                                    class="wave-bar w-[3px] bg-blue-400 rounded-full transition-all duration-150 h-1"
+                                    class="wave-bar w-[3px] bg-blue-400 rounded-full h-1"
                                 ></div>
                                 <div
-                                    class="wave-bar w-[3px] bg-blue-500 rounded-full transition-all duration-150 h-1"
+                                    class="wave-bar w-[3px] bg-blue-500 rounded-full h-1"
                                 ></div>
                                 <div
-                                    class="wave-bar w-[3px] bg-blue-600 rounded-full transition-all duration-150 h-1"
+                                    class="wave-bar w-[3px] bg-blue-600 rounded-full h-1"
                                 ></div>
                                 <div
-                                    class="wave-bar w-[3px] bg-blue-400 rounded-full transition-all duration-150 h-1"
+                                    class="wave-bar w-[3px] bg-blue-400 rounded-full h-1"
                                 ></div>
                             </div>
                             <div class="flex flex-col">
@@ -183,7 +188,6 @@
 
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
-            // Mengaktifkan efek animasi saat halaman dimuat
             AOS.init({ once: true, easing: "ease-out-cubic" });
         </script>
 
@@ -199,6 +203,9 @@
                 window.webkitSpeechRecognition || window.SpeechRecognition;
             const rec = new SpeechRec();
             rec.lang = "id-ID";
+            // Kunci agar mic sabar menunggu sampai pengguna hening
+            rec.continuous = false;
+            rec.interimResults = false;
 
             let waveInterval;
             function setWave(active) {
@@ -216,12 +223,11 @@
             }
 
             function bicara(teks, callback) {
-                synth.cancel(); // Menghentikan suara sebelumnya
+                synth.cancel();
 
                 const utter = new SpeechSynthesisUtterance(teks);
                 utter.lang = "id-ID";
 
-                // AMBIL KECEPATAN DARI LOCAL STORAGE YANG DIATUR DI SETUP
                 const savedRate = localStorage.getItem("speechRate");
                 if (savedRate) {
                     utter.rate = parseFloat(savedRate);
@@ -254,6 +260,7 @@
                 rec.onresult = (e) => {
                     setWave(false);
                     rec.stop();
+                    // Karena interimResults false, ini akan me-return kalimat final setelah diam
                     onResult(e.results[0][0].transcript);
                 };
 
@@ -275,20 +282,29 @@
                         if (nimFix.length > 0) {
                             inputNim.value = nimFix;
                             bicara(
-                                `NIM anda adalah ${nimFix.split("").join(" ")}. Apakah sudah benar? Sebutkan Benar atau Ulangi.`,
+                                `NIM anda adalah ${nimFix.split("").join(" ")}. Benar, atau salah?`,
                                 () => {
                                     dengar((konf) => {
+                                        const jawab = konf.toLowerCase();
                                         if (
-                                            konf
-                                                .toLowerCase()
-                                                .includes("benar") ||
-                                            konf.toLowerCase().includes("ya")
+                                            jawab.includes("benar") ||
+                                            jawab.includes("ya")
                                         ) {
                                             flowPassword();
+                                        } else if (
+                                            jawab.includes("salah") ||
+                                            jawab.includes("ulang") ||
+                                            jawab.includes("bukan")
+                                        ) {
+                                            inputNim.value = "";
+                                            bicara(
+                                                "Sebut ulang NIM anda.",
+                                                startFlow,
+                                            );
                                         } else {
                                             inputNim.value = "";
                                             bicara(
-                                                "Mari ulangi pengisian NIM.",
+                                                "Jawaban tidak dikenali. Mari ulangi dari awal. Sebutkan NIM anda.",
                                                 startFlow,
                                             );
                                         }
@@ -365,7 +381,7 @@
                         const passSpoken = passFix.split("").join(" ");
 
                         bicara(
-                            `Kata sandi anda adalah ${passSpoken}. Apakah sudah benar?`,
+                            `Kata sandi anda adalah ${passSpoken}. Benar, atau salah?`,
                             () => {
                                 dengar((konf) => {
                                     const jawab = konf.toLowerCase();
@@ -374,10 +390,20 @@
                                         jawab.includes("ya")
                                     ) {
                                         validasiAkhir();
+                                    } else if (
+                                        jawab.includes("salah") ||
+                                        jawab.includes("ulang") ||
+                                        jawab.includes("bukan")
+                                    ) {
+                                        inputPass.value = "";
+                                        bicara(
+                                            "Sebut ulang kata sandi anda.",
+                                            flowPassword,
+                                        );
                                     } else {
                                         inputPass.value = "";
                                         bicara(
-                                            "Mari ulangi pengisian kata sandi.",
+                                            "Jawaban tidak dikenali. Sebutkan kata sandi anda.",
                                             flowPassword,
                                         );
                                     }
@@ -391,6 +417,8 @@
             function validasiAkhir() {
                 const nim = inputNim.value;
                 const pass = inputPass.value;
+
+                statusDesc.innerText = "MEMPROSES...";
 
                 bicara("Sedang memeriksa data anda.", () => {
                     fetch("{{ route('login.mahasiswa.post') }}", {
@@ -411,18 +439,20 @@
                             } catch (e) {}
 
                             if (res.ok && data.success) {
+                                // FEEDBACK SUARA BERHASIL
                                 bicara(
-                                    "Akses diterima. Membuka dashboard mahasiswa.",
+                                    "Kata sandi benar. Akses diterima. Mengalihkan ke dasbor mahasiswa.",
                                     () => {
                                         window.location.href = data.redirect;
                                     },
                                 );
                             } else {
+                                // FEEDBACK SUARA GAGAL
+                                inputPass.value = "";
                                 bicara(
                                     data.message ||
-                                        "Login gagal. Silakan ulangi kata sandi.",
+                                        "Kata sandi salah. Silakan sebut ulang kata sandi anda.",
                                     () => {
-                                        inputPass.value = "";
                                         flowPassword();
                                     },
                                 );
@@ -431,6 +461,10 @@
                         .catch(() => {
                             bicara(
                                 "Terjadi kesalahan sistem. Silakan coba kembali.",
+                                () => {
+                                    inputPass.value = "";
+                                    flowPassword();
+                                },
                             );
                         });
                 });
@@ -440,7 +474,7 @@
             window.onload = () => {
                 setTimeout(() => {
                     startFlow();
-                }, 800); // Delay sedikit (0.8 detik) agar animasi transisi halaman selesai dulu
+                }, 800);
             };
         </script>
     </body>
