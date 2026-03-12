@@ -67,8 +67,7 @@
 
         <div
             id="voice-status-bar"
-            class="fixed bottom-8 lg:bottom-auto lg:top-8 left-1/2 transform -translate-x-1/2 w-max max-w-[85%] bg-white/95 backdrop-blur-xl px-4 py-2.5 sm:px-6 sm:py-3 rounded-2xl shadow-xl border border-slate-200 z-50 flex items-center justify-center gap-3 hidden transition-all duration-500 opacity-0 translate-y-10 lg:-translate-y-10 cursor-pointer"
-            onclick="hentikanSuaraBicara()"
+            class="fixed bottom-8 lg:bottom-auto lg:top-8 left-1/2 transform -translate-x-1/2 w-max max-w-[85%] bg-white/95 backdrop-blur-xl px-4 py-2.5 sm:px-6 sm:py-3 rounded-2xl shadow-xl border border-slate-200 z-50 flex items-center justify-center gap-3 hidden transition-all duration-500 opacity-0 translate-y-10 lg:-translate-y-10"
         >
             <div
                 id="wave-container"
@@ -101,7 +100,6 @@
         <div
             id="main-content"
             class="w-full flex-grow flex flex-col opacity-0 transition-opacity duration-1000 hidden relative z-10 min-h-[100dvh]"
-            onclick="hentikanSuaraBicara()"
         >
             <div
                 class="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 w-full max-w-5xl mx-auto pt-12 pb-12 lg:pt-28 lg:pb-16"
@@ -239,7 +237,7 @@
             let isRecActive = false;
             let isRedirecting = false;
             let isSpeaking = false;
-            let timerSalahKata;
+            let idleTimer; // Timer untuk reminder 3 menit
 
             const savedRate =
                 parseFloat(localStorage.getItem("speechRate")) || 1.1;
@@ -247,14 +245,13 @@
             if (SpeechRec) {
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
-                rec.continuous = true;
-                rec.interimResults = true;
+                // MODE SABAR MUTLAK
+                rec.continuous = false;
+                rec.interimResults = false;
             }
 
-            let waveInterval;
             function setWave(active) {
                 if (active) {
-                    if (waveInterval) clearInterval(waveInterval);
                     waveInterval = setInterval(() => {
                         waveBars.forEach((bar) => {
                             const h = Math.floor(Math.random() * 16) + 4;
@@ -262,9 +259,18 @@
                         });
                     }, 100);
                 } else {
-                    clearInterval(waveInterval);
+                    if (typeof waveInterval !== "undefined")
+                        clearInterval(waveInterval);
                     waveBars.forEach((bar) => (bar.style.height = "4px"));
                 }
+            }
+
+            function resetIdleTimer() {
+                clearTimeout(idleTimer);
+                if (isRedirecting) return;
+                idleTimer = setTimeout(() => {
+                    bicara("Pilih. Satu Dosen. Dua Mahasiswa.");
+                }, 180000); // 3 menit
             }
 
             function resetMicSession() {
@@ -276,30 +282,21 @@
                 }
             }
 
-            function mulaiMendengar() {
-                if (!rec || isRedirecting || isSpeaking || isRecActive) return;
-                try {
-                    rec.start();
-                    isRecActive = true;
-                } catch (e) {}
-            }
-
-            // Fitur Interupsi Manual
-            function hentikanSuaraBicara() {
+            // CUT-OFF DOUBLE TAP MUTLAK PADA BODY
+            document.body.addEventListener("dblclick", () => {
                 if (isSpeaking && !isRedirecting) {
                     synth.cancel();
                     isSpeaking = false;
-                    statusText.innerText = "MENDENGARKAN";
                     setWave(false);
-                    mulaiMendengar(); // Langsung nyala saat di-skip
+                    // Panggil suara kosong untuk mentrigger rec.start() dari onend
+                    bicara("");
                 }
-            }
+            });
 
-            function bicara(teks, callback = null) {
+            function bicara(teks) {
                 if (isRedirecting) return;
-
                 isSpeaking = true;
-                resetMicSession(); // Matikan mic saat bot ngomong
+                resetMicSession();
                 synth.cancel();
 
                 setTimeout(() => {
@@ -308,7 +305,7 @@
                     utter.rate = savedRate;
 
                     utter.onstart = () => {
-                        if (statusText) {
+                        if (statusText && teks !== "") {
                             statusText.innerText = "SISTEM BERBICARA";
                             statusText.classList.replace(
                                 "text-green-600",
@@ -318,32 +315,30 @@
                         setWave(true);
                     };
 
-                    // KUNCI PERBAIKAN: Langsung menyalakan mic saat suara bot habis
                     utter.onend = () => {
-                        isSpeaking = false; // Set flag false INSTAN
+                        isSpeaking = false;
                         setWave(false);
 
-                        if (!isRedirecting && statusText) {
-                            statusText.innerText = "MENDENGARKAN";
-                            statusText.classList.replace(
-                                "text-blue-600",
-                                "text-green-600",
-                            );
-
-                            // Jeda 50ms saja untuk mencegah mic menangkap sisa gema (echo) speaker
-                            setTimeout(() => {
-                                mulaiMendengar();
-                            }, 50);
+                        // ARSITEKTUR BERANTAI: Mic HANYA dipanggil dari sini
+                        if (!isRedirecting) {
+                            if (statusText) {
+                                statusText.innerText = "MENDENGARKAN";
+                                statusText.classList.replace(
+                                    "text-blue-600",
+                                    "text-green-600",
+                                );
+                            }
+                            try {
+                                rec.start();
+                                isRecActive = true;
+                                resetIdleTimer();
+                            } catch (e) {}
                         }
-
-                        if (callback) callback();
                     };
 
                     utter.onerror = () => {
                         isSpeaking = false;
                         setWave(false);
-                        if (!isRedirecting) mulaiMendengar();
-                        if (callback) callback();
                     };
 
                     synth.speak(utter);
@@ -353,25 +348,23 @@
             if (rec) {
                 rec.onresult = (event) => {
                     if (isRedirecting || isSpeaking) return;
+                    resetIdleTimer();
 
-                    let hasilTerakhir = event.results[
-                        event.results.length - 1
-                    ][0].transcript
+                    // FIX DITERAPKAN DI SINI: Menghapus tanda baca otomatis
+                    let hasilTerakhir = event.results[0][0].transcript
                         .toLowerCase()
+                        .replace(/[.,?!]/g, "")
                         .trim();
 
-                    const polaSatu = /\b(satu|1|sato|sat)\b/;
-                    const polaDua = /\b(dua|2|duwa|doa|da)\b/;
+                    // STRICT MATCHING MUTLAK (Tanpa Sinonim)
+                    const polaSatu = /^(satu|1)$/;
+                    const polaDua = /^(dua|2)$/;
+                    const polaUlang = /^(ulang)$/;
 
-                    const pilihSatu = hasilTerakhir.match(polaSatu);
-                    const pilihDua = hasilTerakhir.match(polaDua);
-
-                    if (pilihSatu && !pilihDua) {
-                        clearTimeout(timerSalahKata);
+                    if (hasilTerakhir.match(polaSatu)) {
                         isRedirecting = true;
                         resetMicSession();
                         setWave(false);
-
                         document
                             .getElementById("btn-dosen")
                             .classList.add(
@@ -381,23 +374,14 @@
                             );
                         if (statusText) statusText.innerText = "MENGALIHKAN...";
 
-                        // KUNCI PERBAIKAN PENGALIHAN:
-                        // Berbicara singkat ("Oke") dan paksa pindah halaman dalam 400ms.
-                        // Tidak menunggu event onend dari sintesis suara agar terasa super cepat.
-                        const utter = new SpeechSynthesisUtterance("Oke");
-                        utter.lang = "id-ID";
-                        utter.rate = savedRate;
+                        // TRANSISI CEPAT & TO THE POINT
+                        const utter = new SpeechSynthesisUtterance("Dosen");
                         synth.speak(utter);
-
-                        setTimeout(() => {
-                            window.location.href = "{{ route('login.dosen') }}";
-                        }, 400);
-                    } else if (pilihDua && !pilihSatu) {
-                        clearTimeout(timerSalahKata);
+                        window.location.href = "{{ route('login.dosen') }}"; // Eksekusi instan
+                    } else if (hasilTerakhir.match(polaDua)) {
                         isRedirecting = true;
                         resetMicSession();
                         setWave(false);
-
                         document
                             .getElementById("btn-mahasiswa")
                             .classList.add(
@@ -407,42 +391,34 @@
                             );
                         if (statusText) statusText.innerText = "MENGALIHKAN...";
 
-                        const utter = new SpeechSynthesisUtterance("Oke");
-                        utter.lang = "id-ID";
-                        utter.rate = savedRate;
+                        // TRANSISI CEPAT & TO THE POINT
+                        const utter = new SpeechSynthesisUtterance("Mahasiswa");
                         synth.speak(utter);
-
-                        setTimeout(() => {
-                            window.location.href = "{{ route('setup.voice') }}";
-                        }, 400);
-                    } else if (hasilTerakhir.length > 2) {
-                        clearTimeout(timerSalahKata);
-                        timerSalahKata = setTimeout(() => {
-                            if (!isRedirecting && !isSpeaking) {
-                                // Potong kalimat peringatan agar lebih pendek
-                                bicara("Satu, atau dua?");
-                            }
-                        }, 800);
+                        window.location.href = "{{ route('setup.voice') }}"; // Eksekusi instan
+                    } else if (hasilTerakhir.match(polaUlang)) {
+                        resetMicSession();
+                        bicara("Pilih. Satu Dosen. Dua Mahasiswa.");
+                    } else {
+                        // PENOLAKAN BAKU
+                        resetMicSession();
+                        bicara("Sebut ulang angka.");
                     }
                 };
 
                 rec.onend = () => {
                     isRecActive = false;
-                    // Watchdog loop: pastikan mic selalu hidup ulang seketika
+                    // Arsitektur Berantai: Jika mic mati sendiri, gunakan utter kosong untuk menyalakan ulang
                     if (!isRedirecting && !isSpeaking) {
-                        mulaiMendengar();
+                        bicara("");
                     }
                 };
             }
 
-            setInterval(() => {
-                if (!isRecActive && !isRedirecting && !isSpeaking) {
-                    mulaiMendengar();
-                }
-            }, 1000); // Dipercepat pengecekannya tiap 1 detik
-
             overlay.addEventListener("click", () => {
                 overlay.classList.add("opacity-0", "pointer-events-none");
+
+                // Trik pancingan audio mobile
+                synth.speak(new SpeechSynthesisUtterance(""));
 
                 setTimeout(() => {
                     overlay.classList.add("hidden");
@@ -462,8 +438,9 @@
                     }, 50);
 
                     setTimeout(() => {
-                        // Diperpendek agar pengguna tidak bosan
+                        // NAVIGASI TO THE POINT
                         bicara("Pilih. Satu Dosen. Dua Mahasiswa.");
+                        resetIdleTimer();
                     }, 300);
                 }, 700);
             });

@@ -18,6 +18,9 @@
             href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"
             rel="stylesheet"
         />
+
+        <link rel="prefetch" href="{{ route('dashboard') ?? '#' }}" />
+
         <style>
             .wave-bar {
                 transition: height 0.1s ease;
@@ -45,7 +48,8 @@
                 <div class="w-full max-w-md lg:max-w-[400px] mx-auto">
                     <div
                         id="voice-header"
-                        class="mb-10 opacity-0 transition-opacity duration-500"
+                        class="mb-10 opacity-0 transition-opacity duration-500 cursor-pointer"
+                        title="Ketuk 2x untuk memotong suara sistem"
                     >
                         <div class="flex items-center gap-6 mb-4">
                             <div
@@ -197,15 +201,26 @@
             const waveBars = document.querySelectorAll(".wave-bar");
             const inputNim = document.getElementById("input-nim");
             const inputPass = document.getElementById("input-pass");
+            const fieldNim = document.getElementById("field-nim");
+            const fieldPass = document.getElementById("field-pass");
 
             const synth = window.speechSynthesis;
             const SpeechRec =
                 window.webkitSpeechRecognition || window.SpeechRecognition;
-            const rec = new SpeechRec();
-            rec.lang = "id-ID";
-            // Kunci agar mic sabar menunggu sampai pengguna hening
-            rec.continuous = false;
-            rec.interimResults = false;
+            let rec = null;
+
+            // STATE MANAGEMENT
+            let step = "NIM"; // NIM -> CONFIRM_NIM -> PASS -> CONFIRM_PASS -> PROSES
+            let isSpeaking = false;
+            let idleTimer;
+
+            if (SpeechRec) {
+                rec = new SpeechRec();
+                rec.lang = "id-ID";
+                // MODE SABAR MUTLAK
+                rec.continuous = false;
+                rec.interimResults = false;
+            }
 
             let waveInterval;
             function setWave(active) {
@@ -217,113 +232,105 @@
                         });
                     }, 100);
                 } else {
-                    clearInterval(waveInterval);
+                    if (typeof waveInterval !== "undefined")
+                        clearInterval(waveInterval);
                     waveBars.forEach((bar) => (bar.style.height = "4px"));
                 }
             }
 
-            function bicara(teks, callback) {
+            function resetIdleTimer() {
+                clearTimeout(idleTimer);
+                if (step === "PROSES") return;
+                idleTimer = setTimeout(() => {
+                    // Pengingat yang lebih panjang dan jelas
+                    if (step === "NIM")
+                        bicara(
+                            "Waktu tunggu habis. Silakan sebutkan Nomor Induk Mahasiswa Anda untuk melanjutkan.",
+                        );
+                    else if (step === "CONFIRM_NIM" || step === "CONFIRM_PASS")
+                        bicara(
+                            "Sistem menunggu konfirmasi Anda. Jawab dengan kata, Benar, atau salah?",
+                        );
+                    else if (step === "PASS")
+                        bicara(
+                            "Waktu tunggu habis. Silakan sebutkan kata sandi Anda untuk melanjutkan.",
+                        );
+                }, 180000); // 3 Menit
+            }
+
+            function resetMic() {
+                if (rec) {
+                    try {
+                        rec.abort();
+                    } catch (e) {}
+                }
+            }
+
+            // CUT-OFF DOUBLE TAP MUTLAK PADA BODY
+            document.body.addEventListener("dblclick", () => {
+                if (isSpeaking && step !== "PROSES") {
+                    synth.cancel();
+                    isSpeaking = false;
+                    setWave(false);
+                    bicara(""); // Trigger onend untuk menyalakan mic seketika
+                }
+            });
+
+            function bicara(teks, callback = null) {
+                if (step === "PROSES" && teks === "") return;
+                isSpeaking = true;
+                resetMic();
                 synth.cancel();
 
-                const utter = new SpeechSynthesisUtterance(teks);
-                utter.lang = "id-ID";
+                setTimeout(() => {
+                    const utter = new SpeechSynthesisUtterance(teks);
+                    utter.lang = "id-ID";
+                    utter.rate =
+                        parseFloat(localStorage.getItem("speechRate")) || 1.1;
 
-                const savedRate = localStorage.getItem("speechRate");
-                if (savedRate) {
-                    utter.rate = parseFloat(savedRate);
-                } else {
-                    utter.rate = 1.0;
-                }
-
-                utter.onstart = () => {
-                    voiceHeader.classList.remove("opacity-0");
-                    statusDesc.innerText = "SISTEM BERBICARA";
-                    setWave(true);
-                };
-                utter.onend = () => {
-                    setWave(false);
-                    if (callback) callback();
-                };
-                synth.speak(utter);
-            }
-
-            function dengar(onResult) {
-                statusDesc.innerText = "MENDENGARKAN...";
-                setWave(true);
-
-                try {
-                    rec.abort();
-                } catch (e) {}
-
-                rec.start();
-
-                rec.onresult = (e) => {
-                    setWave(false);
-                    rec.stop();
-                    // Karena interimResults false, ini akan me-return kalimat final setelah diam
-                    onResult(e.results[0][0].transcript);
-                };
-
-                rec.onerror = () => {
-                    setWave(false);
-                    rec.stop();
-                    setTimeout(() => dengar(onResult), 500);
-                };
-            }
-
-            function startFlow() {
-                const fNim = document.getElementById("field-nim");
-                fNim.classList.add("border-blue-600", "bg-white", "shadow-md");
-
-                bicara("Halaman Login. Silakan sebutkan NIM anda.", () => {
-                    dengar((hasil) => {
-                        const nimFix = hasil.replace(/[^0-9]/g, "");
-
-                        if (nimFix.length > 0) {
-                            inputNim.value = nimFix;
-                            bicara(
-                                `NIM anda adalah ${nimFix.split("").join(" ")}. Benar, atau salah?`,
-                                () => {
-                                    dengar((konf) => {
-                                        const jawab = konf.toLowerCase();
-                                        if (
-                                            jawab.includes("benar") ||
-                                            jawab.includes("ya")
-                                        ) {
-                                            flowPassword();
-                                        } else if (
-                                            jawab.includes("salah") ||
-                                            jawab.includes("ulang") ||
-                                            jawab.includes("bukan")
-                                        ) {
-                                            inputNim.value = "";
-                                            bicara(
-                                                "Sebut ulang NIM anda.",
-                                                startFlow,
-                                            );
-                                        } else {
-                                            inputNim.value = "";
-                                            bicara(
-                                                "Jawaban tidak dikenali. Mari ulangi dari awal. Sebutkan NIM anda.",
-                                                startFlow,
-                                            );
-                                        }
-                                    });
-                                },
-                            );
-                        } else {
-                            bicara(
-                                "NIM tidak terdengar dengan jelas. Mari ulangi.",
-                                startFlow,
+                    utter.onstart = () => {
+                        voiceHeader.classList.remove("opacity-0");
+                        if (teks !== "") {
+                            statusDesc.innerText = "SISTEM BERBICARA";
+                            statusDesc.classList.replace(
+                                "text-green-600",
+                                "text-blue-600",
                             );
                         }
-                    });
-                });
+                        setWave(true);
+                    };
+
+                    utter.onend = () => {
+                        isSpeaking = false;
+                        setWave(false);
+
+                        if (callback) {
+                            callback();
+                        } else if (step !== "PROSES") {
+                            // ARSITEKTUR BERANTAI: Mic start HANYA di dalam sini
+                            statusDesc.innerText = "MENDENGARKAN";
+                            statusDesc.classList.replace(
+                                "text-blue-600",
+                                "text-green-600",
+                            );
+                            try {
+                                rec.start();
+                                resetIdleTimer();
+                            } catch (e) {}
+                        }
+                    };
+
+                    utter.onerror = () => {
+                        isSpeaking = false;
+                        setWave(false);
+                    };
+
+                    synth.speak(utter);
+                }, 50);
             }
 
             function kataKeAngka(teks) {
                 if (!teks) return "";
-
                 const map = {
                     nol: "0",
                     kosong: "0",
@@ -337,13 +344,9 @@
                     delapan: "8",
                     sembilan: "9",
                 };
-
                 let hasil = teks.toLowerCase();
-
                 const angkaLangsung = hasil.match(/\d+/g);
-                if (angkaLangsung) {
-                    return angkaLangsung.join("");
-                }
+                if (angkaLangsung) return angkaLangsung.join("");
 
                 return hasil
                     .replace(/[^a-z\s]/g, " ")
@@ -352,85 +355,126 @@
                     .join("");
             }
 
-            function flowPassword() {
-                const fNim = document.getElementById("field-nim");
-                const fPass = document.getElementById("field-pass");
+            if (rec) {
+                rec.onresult = (event) => {
+                    if (step === "PROSES" || isSpeaking) return;
+                    resetIdleTimer();
 
-                fNim.classList.remove(
+                    // Pembersihan tanda baca otomatis
+                    let hasilTerakhir = event.results[0][0].transcript
+                        .toLowerCase()
+                        .replace(/[.,?!]/g, "")
+                        .trim();
+
+                    if (step === "NIM") {
+                        let nimFix = hasilTerakhir.replace(/[^0-9]/g, "");
+                        if (nimFix.length > 0) {
+                            inputNim.value = nimFix;
+                            step = "CONFIRM_NIM";
+                            // Konfirmasi Baku Tetap Dijaga
+                            bicara(
+                                `NIM Anda adalah ${nimFix.split("").join(" ")}. Benar, atau salah?`,
+                            );
+                        } else {
+                            // Penolakan Baku Tetap Dijaga
+                            bicara("Sebut ulang Nomor Induk Mahasiswa Anda.");
+                        }
+                    } else if (step === "CONFIRM_NIM") {
+                        if (hasilTerakhir.match(/^(benar)$/)) {
+                            step = "PASS";
+                            fieldNim.classList.remove(
+                                "border-blue-600",
+                                "bg-white",
+                                "shadow-md",
+                            );
+                            fieldPass.classList.remove("opacity-20");
+                            fieldPass.classList.add(
+                                "border-blue-600",
+                                "bg-white",
+                                "shadow-md",
+                            );
+
+                            // Instruksi Jelas
+                            bicara(
+                                "Nomor terkonfirmasi. Sekarang, silakan sebutkan kata sandi Anda.",
+                            );
+                        } else if (hasilTerakhir.match(/^(salah|ulang)$/)) {
+                            step = "NIM";
+                            inputNim.value = "";
+                            bicara("Sebut ulang Nomor Induk Mahasiswa Anda.");
+                        } else {
+                            bicara(
+                                "Jawaban tidak valid. Jawab dengan kata, benar, atau salah.",
+                            );
+                        }
+                    } else if (step === "PASS") {
+                        let passFix = kataKeAngka(hasilTerakhir);
+                        if (passFix.length > 0) {
+                            inputPass.value = passFix;
+                            step = "CONFIRM_PASS";
+                            bicara(
+                                `Kata sandi Anda adalah ${passFix.split("").join(" ")}. Benar, atau salah?`,
+                            );
+                        } else {
+                            bicara("Sebut ulang kata sandi Anda.");
+                        }
+                    } else if (step === "CONFIRM_PASS") {
+                        if (hasilTerakhir.match(/^(benar)$/)) {
+                            validasiAkhir();
+                        } else if (hasilTerakhir.match(/^(salah|ulang)$/)) {
+                            step = "PASS";
+                            inputPass.value = "";
+                            bicara("Sebut ulang kata sandi Anda.");
+                        } else {
+                            bicara(
+                                "Jawaban tidak valid. Jawab dengan kata, benar, atau salah.",
+                            );
+                        }
+                    }
+                };
+
+                rec.onend = () => {
+                    // Berantai: Jika hening dan mati otomatis, umpan suara kosong untuk menyalakan ulang
+                    if (!isSpeaking && step !== "PROSES") {
+                        bicara("");
+                    }
+                };
+            }
+
+            function startFlow() {
+                step = "NIM";
+                fieldNim.classList.add(
                     "border-blue-600",
                     "bg-white",
                     "shadow-md",
                 );
-                fPass.classList.remove("opacity-20");
-                fPass.classList.add("border-blue-600", "bg-white", "shadow-md");
 
-                bicara("Sebutkan kata sandi anda.", () => {
-                    dengar((hasil) => {
-                        const passFix = kataKeAngka(hasil);
-
-                        if (!passFix || passFix.length === 0) {
-                            inputPass.value = "";
-                            bicara(
-                                "Kata sandi tidak terbaca. Silakan sebutkan ulang.",
-                                flowPassword,
-                            );
-                            return;
-                        }
-
-                        inputPass.value = passFix;
-                        const passSpoken = passFix.split("").join(" ");
-
-                        bicara(
-                            `Kata sandi anda adalah ${passSpoken}. Benar, atau salah?`,
-                            () => {
-                                dengar((konf) => {
-                                    const jawab = konf.toLowerCase();
-                                    if (
-                                        jawab.includes("benar") ||
-                                        jawab.includes("ya")
-                                    ) {
-                                        validasiAkhir();
-                                    } else if (
-                                        jawab.includes("salah") ||
-                                        jawab.includes("ulang") ||
-                                        jawab.includes("bukan")
-                                    ) {
-                                        inputPass.value = "";
-                                        bicara(
-                                            "Sebut ulang kata sandi anda.",
-                                            flowPassword,
-                                        );
-                                    } else {
-                                        inputPass.value = "";
-                                        bicara(
-                                            "Jawaban tidak dikenali. Sebutkan kata sandi anda.",
-                                            flowPassword,
-                                        );
-                                    }
-                                });
-                            },
-                        );
-                    });
-                });
+                // Kalimat pembuka yang ramah dan instruktif
+                bicara(
+                    "Halaman login mahasiswa. Silakan sebutkan Nomor Induk Mahasiswa Anda.",
+                );
             }
 
+            // Fungsi ini bisa dipanggil suara ATAU klik tombol manual
             function validasiAkhir() {
+                step = "PROSES";
+                synth.cancel();
+                resetMic();
+
                 const nim = inputNim.value;
                 const pass = inputPass.value;
 
                 statusDesc.innerText = "MEMPROSES...";
+                statusDesc.classList.replace("text-green-600", "text-blue-600");
 
-                bicara("Sedang memeriksa data anda.", () => {
+                bicara("Sedang memverifikasi data Anda. Mohon tunggu.", () => {
                     fetch("{{ route('login.mahasiswa.post') }}", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                             "X-CSRF-TOKEN": "{{ csrf_token() }}",
                         },
-                        body: JSON.stringify({
-                            nim: nim,
-                            password: pass,
-                        }),
+                        body: JSON.stringify({ nim: nim, password: pass }),
                     })
                         .then(async (res) => {
                             let data = {};
@@ -439,38 +483,54 @@
                             } catch (e) {}
 
                             if (res.ok && data.success) {
-                                // FEEDBACK SUARA BERHASIL
+                                // Transisi Cepat dengan Feedback Deskriptif
                                 bicara(
-                                    "Kata sandi benar. Akses diterima. Mengalihkan ke dasbor mahasiswa.",
+                                    "Akses diterima. Mengalihkan ke dasbor mahasiswa.",
                                     () => {
                                         window.location.href = data.redirect;
                                     },
                                 );
                             } else {
-                                // FEEDBACK SUARA GAGAL
+                                // Gagal Login
+                                step = "PASS";
                                 inputPass.value = "";
+                                fieldPass.classList.add("border-red-500");
+                                setTimeout(
+                                    () =>
+                                        fieldPass.classList.remove(
+                                            "border-red-500",
+                                        ),
+                                    2000,
+                                );
+
                                 bicara(
-                                    data.message ||
-                                        "Kata sandi salah. Silakan sebut ulang kata sandi anda.",
-                                    () => {
-                                        flowPassword();
-                                    },
+                                    "Verifikasi gagal. Kata sandi yang Anda masukkan salah. Silakan sebut ulang kata sandi Anda.",
                                 );
                             }
                         })
                         .catch(() => {
+                            step = "NIM";
+                            inputNim.value = "";
+                            inputPass.value = "";
+                            fieldPass.classList.add("opacity-20");
+                            fieldPass.classList.remove(
+                                "border-blue-600",
+                                "bg-white",
+                                "shadow-md",
+                            );
+                            fieldNim.classList.add(
+                                "border-blue-600",
+                                "bg-white",
+                                "shadow-md",
+                            );
+
                             bicara(
-                                "Terjadi kesalahan sistem. Silakan coba kembali.",
-                                () => {
-                                    inputPass.value = "";
-                                    flowPassword();
-                                },
+                                "Terjadi kesalahan pada jaringan. Mari kita mulai lagi. Silakan sebutkan Nomor Induk Mahasiswa Anda.",
                             );
                         });
                 });
             }
 
-            // OTOMATIS JALAN SAAT HALAMAN SELESAI DIMUAT
             window.onload = () => {
                 setTimeout(() => {
                     startFlow();
