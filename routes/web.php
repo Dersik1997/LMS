@@ -143,15 +143,15 @@ Route::middleware('auth:mahasiswa')->group(function () {
         Route::post('/mata-kuliah/{kelas}/penugasan/{assignment}/submit', 'store')->name('mahasiswa.assignment.store');
     });
 
-  // --- Presensi Mahasiswa ---
-Route::controller(MahasiswaAttendanceController::class)->group(function () {
-    Route::get('/presensi/{session}', 'attendance')->name('mahasiswa.presensi');
-    Route::post('/presensi/{id}/{status}', 'store')->name('presensi.store');
-    Route::get('/mata-kuliah/struktur-data/presensi/{session}', 'attendance')->name('course.attendance');
-    
-    // PERBAIKAN: Cukup panggil nama fungsinya saja (misal: 'detail')
-    Route::get('/mahasiswa/attendance/{id}', 'detail')->name('mahasiswa.attendance.detail');
-});
+    // --- Presensi Mahasiswa ---
+    Route::controller(MahasiswaAttendanceController::class)->group(function () {
+        Route::post('/presensi/{id}/{status}', 'store')->name('presensi.store');
+        
+        // KEDUA RUTE INI DIARAHKAN KE FUNGSI 'attendance' YANG SAMA
+        Route::get('/presensi/{session}', 'attendance')->name('mahasiswa.presensi');
+        Route::get('/mahasiswa/attendance/{id}', 'attendance')->name('course.attendance');
+    });
+
     // --- Pesan (Chat) ---
     Route::controller(MahasiswaMessageController::class)->group(function () {
         Route::get('/pesan', 'index')->name('messages');

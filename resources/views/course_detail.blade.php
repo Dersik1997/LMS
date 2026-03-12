@@ -239,7 +239,7 @@
             const urlPembelajaran = "{{ route('course.detail', ['kelas' => $kelas->id]) }}";
             const urlPenugasan = "{{ route('course.assignments', ['kelas' => $kelas->id]) }}";
             const urlAnggota = "{{ route('course.members', ['kelas' => $kelas->id]) }}";
-            const urlPresensi = "{{ $session ? route('course.attendance', ['session' => $session->id]) : '#' }}";
+            const urlPresensi = "{{ $session ? route('course.attendance', ['id' => $session->id]) : '#' }}";
 
             // ==========================================
             // LOGIKA VOICE ASSISTANT (BARGE-IN & ANTI-HANG)

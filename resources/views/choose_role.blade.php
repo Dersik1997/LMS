@@ -237,18 +237,70 @@
             let isRecActive = false;
             let isRedirecting = false;
             let isSpeaking = false;
-            let idleTimer; // Timer untuk reminder 3 menit
+            let idleTimer;
+            let waveInterval;
 
             const savedRate =
                 parseFloat(localStorage.getItem("speechRate")) || 1.1;
 
+            // ---- FITUR KUNCI SUARA PEREMPUAN INDONESIA ----
+            let suaraIndonesia = null;
+            function siapkanSuara() {
+                const voices = synth.getVoices();
+                // Mencari suara Google Bahasa Indonesia atau suara id-ID berkarakter perempuan
+                suaraIndonesia =
+                    voices.find(
+                        (v) =>
+                            v.lang.replace("_", "-") === "id-ID" &&
+                            (v.name.includes("Google") ||
+                                v.name.includes("Gadis") ||
+                                v.name.includes("Female")),
+                    ) ||
+                    voices.find((v) => v.lang.replace("_", "-") === "id-ID"); // fallback
+            }
+            // Panggil saat suara di browser sudah siap
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = siapkanSuara;
+            }
+            siapkanSuara();
+            // -----------------------------------------------
+
             if (SpeechRec) {
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
-                // MODE SABAR MUTLAK
                 rec.continuous = false;
                 rec.interimResults = false;
             }
+
+            overlay.addEventListener("click", () => {
+                overlay.classList.add("opacity-0", "pointer-events-none");
+
+                let pancingan = new SpeechSynthesisUtterance("");
+                synth.speak(pancingan);
+
+                setTimeout(() => {
+                    overlay.classList.add("hidden");
+                    mainContent.classList.remove("hidden");
+                    setTimeout(
+                        () => mainContent.classList.remove("opacity-0"),
+                        50,
+                    );
+
+                    statusBar.classList.remove("hidden");
+                    setTimeout(() => {
+                        statusBar.classList.remove(
+                            "opacity-0",
+                            "translate-y-10",
+                            "lg:-translate-y-10",
+                        );
+                    }, 50);
+
+                    setTimeout(() => {
+                        bicara("Pilih. Satu Dosen. Dua Mahasiswa.");
+                        resetIdleTimer();
+                    }, 300);
+                }, 700);
+            });
 
             function setWave(active) {
                 if (active) {
@@ -270,7 +322,7 @@
                 if (isRedirecting) return;
                 idleTimer = setTimeout(() => {
                     bicara("Pilih. Satu Dosen. Dua Mahasiswa.");
-                }, 180000); // 3 menit
+                }, 180000);
             }
 
             function resetMicSession() {
@@ -282,14 +334,47 @@
                 }
             }
 
-            // CUT-OFF DOUBLE TAP MUTLAK PADA BODY
-            document.body.addEventListener("dblclick", () => {
-                if (isSpeaking && !isRedirecting) {
-                    synth.cancel();
-                    isSpeaking = false;
-                    setWave(false);
-                    // Panggil suara kosong untuk mentrigger rec.start() dari onend
-                    bicara("");
+            let clickTimer = null;
+            const clickDelay = 300;
+
+            mainContent.addEventListener("click", (e) => {
+                e.preventDefault();
+                const targetLink = e.target.closest("a");
+
+                if (clickTimer !== null) {
+                    // KLIK GANDA (Matikan suara, nyalakan mic seketika)
+                    clearTimeout(clickTimer);
+                    clickTimer = null;
+
+                    if (!isRedirecting) {
+                        synth.cancel();
+                        isSpeaking = false;
+                        setWave(false);
+                        resetMicSession();
+
+                        setTimeout(() => {
+                            if (statusText) {
+                                statusText.innerText = "MENDENGARKAN";
+                                statusText.classList.replace(
+                                    "text-blue-600",
+                                    "text-green-600",
+                                );
+                            }
+                            try {
+                                rec.start();
+                                isRecActive = true;
+                                resetIdleTimer();
+                            } catch (error) {}
+                        }, 50);
+                    }
+                } else {
+                    // KLIK TUNGGAL
+                    clickTimer = setTimeout(() => {
+                        clickTimer = null;
+                        if (targetLink && targetLink.href) {
+                            window.location.href = targetLink.href;
+                        }
+                    }, clickDelay);
                 }
             });
 
@@ -303,6 +388,7 @@
                     const utter = new SpeechSynthesisUtterance(teks);
                     utter.lang = "id-ID";
                     utter.rate = savedRate;
+                    if (suaraIndonesia) utter.voice = suaraIndonesia; // Menggunakan suara yang dikunci
 
                     utter.onstart = () => {
                         if (statusText && teks !== "") {
@@ -319,7 +405,6 @@
                         isSpeaking = false;
                         setWave(false);
 
-                        // ARSITEKTUR BERANTAI: Mic HANYA dipanggil dari sini
                         if (!isRedirecting) {
                             if (statusText) {
                                 statusText.innerText = "MENDENGARKAN";
@@ -350,18 +435,14 @@
                     if (isRedirecting || isSpeaking) return;
                     resetIdleTimer();
 
-                    // FIX DITERAPKAN DI SINI: Menghapus tanda baca otomatis
-                    let hasilTerakhir = event.results[0][0].transcript
-                        .toLowerCase()
-                        .replace(/[.,?!]/g, "")
-                        .trim();
+                    let hasilTerakhir =
+                        event.results[0][0].transcript.toLowerCase();
 
-                    // STRICT MATCHING MUTLAK (Tanpa Sinonim)
-                    const polaSatu = /^(satu|1)$/;
-                    const polaDua = /^(dua|2)$/;
-                    const polaUlang = /^(ulang)$/;
-
-                    if (hasilTerakhir.match(polaSatu)) {
+                    // --- LOGIKA LEBIH LONGGAR (INCLUDES) AGAR LEBIH PEKA ---
+                    if (
+                        hasilTerakhir.includes("satu") ||
+                        hasilTerakhir.includes("1")
+                    ) {
                         isRedirecting = true;
                         resetMicSession();
                         setWave(false);
@@ -374,11 +455,21 @@
                             );
                         if (statusText) statusText.innerText = "MENGALIHKAN...";
 
-                        // TRANSISI CEPAT & TO THE POINT
                         const utter = new SpeechSynthesisUtterance("Dosen");
+                        utter.lang = "id-ID";
+                        if (suaraIndonesia) utter.voice = suaraIndonesia; // Pastikan suara sama
+
+                        // Pindah halaman setelah selesai bicara
+                        utter.onend = () => {
+                            window.location.href = "{{ route('login.dosen') }}";
+                        };
                         synth.speak(utter);
-                        window.location.href = "{{ route('login.dosen') }}"; // Eksekusi instan
-                    } else if (hasilTerakhir.match(polaDua)) {
+                    } else if (
+                        hasilTerakhir.includes("dua") ||
+                        hasilTerakhir.includes("2") ||
+                        hasilTerakhir.includes("duwa") ||
+                        hasilTerakhir.includes("doa")
+                    ) {
                         isRedirecting = true;
                         resetMicSession();
                         setWave(false);
@@ -391,15 +482,19 @@
                             );
                         if (statusText) statusText.innerText = "MENGALIHKAN...";
 
-                        // TRANSISI CEPAT & TO THE POINT
                         const utter = new SpeechSynthesisUtterance("Mahasiswa");
+                        utter.lang = "id-ID";
+                        if (suaraIndonesia) utter.voice = suaraIndonesia; // Pastikan suara sama
+
+                        // Pindah halaman setelah selesai bicara
+                        utter.onend = () => {
+                            window.location.href = "{{ route('setup.voice') }}";
+                        };
                         synth.speak(utter);
-                        window.location.href = "{{ route('setup.voice') }}"; // Eksekusi instan
-                    } else if (hasilTerakhir.match(polaUlang)) {
+                    } else if (hasilTerakhir.includes("ulang")) {
                         resetMicSession();
                         bicara("Pilih. Satu Dosen. Dua Mahasiswa.");
                     } else {
-                        // PENOLAKAN BAKU
                         resetMicSession();
                         bicara("Sebut ulang angka.");
                     }
@@ -407,43 +502,13 @@
 
                 rec.onend = () => {
                     isRecActive = false;
-                    // Arsitektur Berantai: Jika mic mati sendiri, gunakan utter kosong untuk menyalakan ulang
                     if (!isRedirecting && !isSpeaking) {
-                        bicara("");
+                        try {
+                            rec.start();
+                        } catch (e) {}
                     }
                 };
             }
-
-            overlay.addEventListener("click", () => {
-                overlay.classList.add("opacity-0", "pointer-events-none");
-
-                // Trik pancingan audio mobile
-                synth.speak(new SpeechSynthesisUtterance(""));
-
-                setTimeout(() => {
-                    overlay.classList.add("hidden");
-                    mainContent.classList.remove("hidden");
-                    setTimeout(
-                        () => mainContent.classList.remove("opacity-0"),
-                        50,
-                    );
-
-                    statusBar.classList.remove("hidden");
-                    setTimeout(() => {
-                        statusBar.classList.remove(
-                            "opacity-0",
-                            "translate-y-10",
-                            "lg:-translate-y-10",
-                        );
-                    }, 50);
-
-                    setTimeout(() => {
-                        // NAVIGASI TO THE POINT
-                        bicara("Pilih. Satu Dosen. Dua Mahasiswa.");
-                        resetIdleTimer();
-                    }, 300);
-                }, 700);
-            });
         </script>
     </body>
 </html>

@@ -180,7 +180,6 @@
                 data-aos="zoom-in"
                 data-aos-delay="600"
                 id="btn-lanjut-manual"
-                onclick="simpanDanLanjut()"
                 class="w-full py-3 sm:py-4 bg-blue-600 text-white rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm uppercase tracking-widest shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer relative z-20"
             >
                 Lanjut Manual
@@ -206,7 +205,24 @@
             let isSpeaking = false;
             let idleTimer;
 
-            // MODE SABAR: Harus false
+            let suaraIndonesia = null;
+            function siapkanSuara() {
+                const voices = synth.getVoices();
+                suaraIndonesia =
+                    voices.find(
+                        (v) =>
+                            v.lang.replace("_", "-") === "id-ID" &&
+                            (v.name.includes("Google") ||
+                                v.name.includes("Gadis") ||
+                                v.name.includes("Female")),
+                    ) ||
+                    voices.find((v) => v.lang.replace("_", "-") === "id-ID");
+            }
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = siapkanSuara;
+            }
+            siapkanSuara();
+
             if (SpeechRec) {
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
@@ -242,8 +258,8 @@
                         bicara(
                             "Atur kecepatan. Sebut angka satu sampai seratus.",
                         );
-                    else if (currentStep === 2) bicara("Benar, atau ulangi?");
-                }, 180000); // 3 Menit
+                    else if (currentStep === 2) bicara("Lanjut, atau ulangi?"); // PERUBAHAN DI SINI
+                }, 180000);
             }
 
             function resetMicSession() {
@@ -255,17 +271,50 @@
                 }
             }
 
-            // CUT-OFF DOUBLE TAP PADA BODY
-            document.body.addEventListener("dblclick", () => {
-                if (isSpeaking && !isRedirecting) {
-                    synth.cancel();
-                    isSpeaking = false;
-                    setWave(false);
-                    bicara(""); // Trigger rec.start() dari dalam onend
+            let clickTimer = null;
+            const clickDelay = 300;
+
+            document.body.addEventListener("click", (e) => {
+                if (e.target.tagName.toLowerCase() === "input") return;
+
+                const targetBtn = e.target.closest("button");
+
+                if (clickTimer !== null) {
+                    clearTimeout(clickTimer);
+                    clickTimer = null;
+
+                    if (!isRedirecting) {
+                        synth.cancel();
+                        isSpeaking = false;
+                        setWave(false);
+                        resetMicSession();
+
+                        setTimeout(() => {
+                            if (statusDesc) {
+                                statusDesc.innerText = "MENDENGARKAN";
+                                statusDesc.classList.replace(
+                                    "text-blue-600",
+                                    "text-green-600",
+                                );
+                            }
+                            try {
+                                rec.start();
+                                isRecActive = true;
+                                resetIdleTimer();
+                            } catch (error) {}
+                        }, 50);
+                    }
+                } else {
+                    clickTimer = setTimeout(() => {
+                        clickTimer = null;
+
+                        if (targetBtn && targetBtn.id === "btn-lanjut-manual") {
+                            simpanDanLanjut();
+                        }
+                    }, clickDelay);
                 }
             });
 
-            // Sinkronisasi Interaksi Manual Slider
             slider.addEventListener("input", function () {
                 display.innerText = this.value;
             });
@@ -274,12 +323,13 @@
                 if (isRedirecting) return;
                 const newRate = hitungRate(parseInt(this.value));
                 currentStep = 2;
+                // PERUBAHAN TEKS DI SINI
                 instructionText.innerHTML =
-                    "Sebutkan <strong class='text-blue-600'>Benar</strong> atau <strong class='text-red-600'>Ulangi</strong>.";
+                    "Sebutkan <strong class='text-blue-600'>Lanjut</strong> atau <strong class='text-red-600'>Ulangi</strong>.";
 
-                // DEMO SUARA SAAT DIGESER MANUAL
+                // PERUBAHAN SUARA DI SINI
                 bicara(
-                    "Ini adalah contoh kecepatan suara asisten. Benar, atau ulangi?",
+                    "Ini adalah contoh kecepatan suara asisten. Lanjut, atau ulangi?",
                     newRate,
                 );
             });
@@ -293,6 +343,8 @@
                 setTimeout(() => {
                     const utter = new SpeechSynthesisUtterance(teks);
                     utter.lang = "id-ID";
+                    if (suaraIndonesia) utter.voice = suaraIndonesia;
+
                     utter.rate =
                         rateValue !== null
                             ? rateValue
@@ -314,7 +366,6 @@
                         isSpeaking = false;
                         setWave(false);
 
-                        // ARSITEKTUR BERANTAI: Mic start HANYA di dalam sini
                         if (!isRedirecting) {
                             if (statusDesc) {
                                 statusDesc.innerText = "MENDENGARKAN";
@@ -340,7 +391,6 @@
                 }, 10);
             }
 
-            // Validasi Angka Super Kuat
             function ubahTeksKeAngka(teks) {
                 let matchMurni = teks.match(/^([1-9][0-9]?|100)$/);
                 if (matchMurni) return parseInt(matchMurni[0]);
@@ -433,49 +483,55 @@
                             resetMicSession();
 
                             const newRate = hitungRate(nilaiAngka);
-                            instructionText.innerHTML =
-                                "Sebutkan <strong class='text-blue-600'>Benar</strong> atau <strong class='text-red-600'>Ulangi</strong>.";
 
-                            // DEMO SUARA BAKU
+                            // PERUBAHAN TEKS DI SINI
+                            instructionText.innerHTML =
+                                "Sebutkan <strong class='text-blue-600'>Lanjut</strong> atau <strong class='text-red-600'>Ulangi</strong>.";
+
+                            // PERUBAHAN SUARA DI SINI
                             bicara(
-                                "Ini adalah contoh kecepatan suara asisten. Benar, atau ulangi?",
+                                "Ini adalah contoh kecepatan suara asisten. Lanjut, atau ulangi?",
                                 newRate,
                             );
                         } else {
-                            // PENOLAKAN BAKU STEP 1
                             resetMicSession();
                             bicara("Sebut ulang angka.");
                         }
                     } else if (currentStep === 2) {
-                        // STRICT MATCHING REGEX SESUAI PERMINTAAN BARU
-                        const polaBenar = /^(benar)$/;
-                        const polaUlangi = /^(ulangi|ulang)$/;
-
-                        if (hasilTerakhir.match(polaBenar)) {
+                        // PERUBAHAN LOGIKA DETEKSI DI SINI ("LANJUT" menggantikan "BENAR")
+                        if (hasilTerakhir.includes("lanjut")) {
                             isRedirecting = true;
                             resetMicSession();
                             setWave(false);
 
-                            // NAVIGASI TO THE POINT
+                            const finalRate = hitungRate(
+                                parseInt(slider.value),
+                            );
+                            localStorage.setItem("speechRate", finalRate);
+
                             const utter = new SpeechSynthesisUtterance(
                                 "Disimpan.",
                             );
-                            utter.rate = hitungRate(parseInt(slider.value));
-                            synth.speak(utter);
+                            utter.lang = "id-ID";
+                            if (suaraIndonesia) utter.voice = suaraIndonesia;
+                            utter.rate = finalRate;
 
-                            simpanDanLanjut();
-                        } else if (hasilTerakhir.match(polaUlangi)) {
+                            utter.onend = () => {
+                                window.location.href = "{{ route('login') }}";
+                            };
+                            synth.speak(utter);
+                        } else if (hasilTerakhir.includes("ulang")) {
                             currentStep = 1;
                             slider.value = 50;
                             display.innerText = "50";
+
+                            // PERUBAHAN TEKS DI SINI
                             instructionText.innerHTML =
                                 "Sebutkan atau geser angka <strong class='text-blue-600'>1 sampai 100</strong>.";
 
                             resetMicSession();
-                            // KEMBALI KE PENOLAKAN AWAL (KARENA ULANGI)
-                            bicara("Sebut ulang angka.", 1.1); // Kembali ke kecepatan default untuk instruksi
+                            bicara("Sebut ulang angka.", 1.1);
                         } else {
-                            // PENOLAKAN BAKU STEP 2
                             resetMicSession();
                             bicara("Sebut ulang perintah.");
                         }
@@ -484,9 +540,10 @@
 
                 rec.onend = () => {
                     isRecActive = false;
-                    // Mode Sabar Berantai: Umpan silent utterance untuk menyalakan mic kembali
                     if (!isRedirecting && !isSpeaking) {
-                        bicara("");
+                        try {
+                            rec.start();
+                        } catch (e) {}
                     }
                 };
             }
@@ -499,7 +556,6 @@
                 const finalRate = hitungRate(parseInt(slider.value));
                 localStorage.setItem("speechRate", finalRate);
 
-                // TRANSISI CEPAT TANPA DELAY
                 window.location.href = "{{ route('login') }}";
             }
 
@@ -507,7 +563,6 @@
                 AOS.init({ once: true, easing: "ease-out-cubic" });
 
                 setTimeout(() => {
-                    // INSTRUKSI AWAL TO THE POINT
                     bicara(
                         "Atur kecepatan. Sebut angka satu sampai seratus.",
                         1.1,
