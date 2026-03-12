@@ -17,6 +17,9 @@
             href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
             rel="stylesheet"
         />
+
+        <link rel="prefetch" href="{{ route('login') }}" />
+
         <style>
             input[type="range"]::-webkit-slider-thumb {
                 -webkit-appearance: none;
@@ -63,6 +66,7 @@
                 id="voice-header"
                 class="w-full mb-6 sm:mb-8 cursor-pointer"
                 title="Ketuk area ini untuk memotong suara sistem"
+                onclick="hentikanSuaraBicara()"
             >
                 <div
                     class="flex flex-row items-center justify-center gap-4 sm:gap-6 mb-4"
@@ -208,7 +212,6 @@
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
                 rec.continuous = true;
-                // Tetap true agar sangat responsif
                 rec.interimResults = true;
             }
 
@@ -228,7 +231,6 @@
                 }
             }
 
-            // Fungsi reset memori mic (Mencegah penumpukan)
             function resetMicSession() {
                 if (rec) {
                     try {
@@ -255,25 +257,29 @@
                 instructionText.innerHTML =
                     "Sebutkan <strong class='text-blue-600'>Lanjut</strong> atau <strong class='text-red-600'>Ulang</strong>.";
 
-                // Micro-Prompt
-                bicara(
-                    "Kecepatan " + this.value + ". Lanjut, atau ulang?",
-                    newRate,
-                );
+                // Bot hanya mengonfirmasi angka, potong kata-kata basi
+                bicara(this.value + ". Lanjut, atau ulang?", newRate);
             });
+
+            // Fitur Interupsi Suara Manual
+            function hentikanSuaraBicara() {
+                if (isSpeaking && !isRedirecting) {
+                    synth.cancel();
+                    isSpeaking = false;
+                    statusDesc.innerText = "MENDENGARKAN";
+                    setWave(false);
+                    mulaiMendengar();
+                }
+            }
 
             document.body.addEventListener("click", (e) => {
                 if (
                     e.target.id === "speedSlider" ||
-                    e.target.id === "btn-lanjut-manual"
+                    e.target.id === "btn-lanjut-manual" ||
+                    e.target.closest("#voice-header")
                 )
                     return;
-                if (isSpeaking && !isRedirecting) {
-                    synth.cancel();
-                    setWave(false);
-                    isSpeaking = false;
-                }
-                if (!isRecActive && !isRedirecting) mulaiMendengar();
+                hentikanSuaraBicara(); // Jika klik area kosong, skip suara bot
             });
 
             function mulaiMendengar() {
@@ -287,10 +293,8 @@
             function bicara(teks, rateValue = null, callback = null) {
                 if (isRedirecting) return;
 
-                // MURNI WALKIE-TALKIE: Matikan mic 100% saat bot bicara
                 isSpeaking = true;
                 resetMicSession();
-                synth.resume();
                 synth.cancel();
 
                 setTimeout(() => {
@@ -309,57 +313,57 @@
                         setWave(true);
                     };
 
+                    // MIC LANGSUNG NYALA TANPA JEDA LAMA
                     utter.onend = () => {
+                        isSpeaking = false;
                         setWave(false);
+
                         if (!isRedirecting && statusDesc) {
                             statusDesc.innerText = "MENDENGARKAN";
                             statusDesc.classList.replace(
                                 "text-blue-600",
                                 "text-green-600",
                             );
+
+                            // Jeda super singkat mencegah echo
+                            setTimeout(() => {
+                                mulaiMendengar();
+                            }, 50);
                         }
 
-                        // Jeda agar suara bot tidak memantul ke mic
-                        setTimeout(() => {
-                            isSpeaking = false;
-                            mulaiMendengar();
-                            if (callback) callback();
-                        }, 400);
+                        if (callback) callback();
                     };
 
                     utter.onerror = () => {
                         isSpeaking = false;
                         setWave(false);
-                        mulaiMendengar();
+                        if (!isRedirecting) mulaiMendengar();
                         if (callback) callback();
                     };
 
                     synth.speak(utter);
-                }, 50);
+                }, 10);
             }
 
             if (rec) {
                 rec.onresult = (event) => {
-                    // PENGAMAN MUTLAK: Jika bot bicara, jangan proses suara apapun
                     if (isRedirecting || isSpeaking) return;
 
-                    let hasil = "";
-                    for (
-                        let i = event.resultIndex;
-                        i < event.results.length;
-                        ++i
-                    ) {
-                        hasil += event.results[i][0].transcript + " ";
-                    }
-                    hasil = hasil.toLowerCase().trim();
+                    // Mengambil hanya hasil ucapan terbaru (instan)
+                    let hasilTerakhir = event.results[
+                        event.results.length - 1
+                    ][0].transcript
+                        .toLowerCase()
+                        .trim();
 
-                    prosesJawaban(hasil);
+                    prosesJawaban(hasilTerakhir);
                 };
 
                 rec.onend = () => {
                     isRecActive = false;
+                    // Watchdog kilat
                     if (!isRedirecting && !isSpeaking) {
-                        setTimeout(mulaiMendengar, 300);
+                        mulaiMendengar();
                     }
                 };
             }
@@ -384,25 +388,20 @@
                         instructionText.innerHTML =
                             "Sebutkan <strong class='text-blue-600'>Lanjut</strong> atau <strong class='text-red-600'>Ulang</strong>.";
 
-                        // Micro-Prompt
-                        bicara(
-                            "Kecepatan " + nilaiAngka + ". Lanjut, atau ulang?",
-                            newRate,
-                        );
+                        // Dipotong agar lebih cepat
+                        bicara(nilaiAngka + ". Lanjut, atau ulang?", newRate);
                     } else if (hasil.length > 2) {
-                        // Jika bicara gak jelas, tunggu bentar, baru bot bereaksi
                         clearTimeout(timerSalahKata);
                         timerSalahKata = setTimeout(() => {
                             if (!isRedirecting && !isSpeaking) {
-                                // Micro-Prompt
                                 bicara("Sebut angka satu sampai seratus.", 1.0);
                             }
-                        }, 1200);
+                        }, 1000); // Lebih reaktif
                     }
                 } else if (currentStep === 2) {
-                    // KAMUS PERINTAH MUTLAK
+                    // Regex dioptimalkan untuk mis-pronunciation umum
                     const polaLanjut =
-                        /\b(lanjut|lanju|lanjot|lajut|lanjutkan|maju|terus|oke|ya)\b/;
+                        /\b(lanjut|lanju|lanjot|lajut|lanjutkan|maju|terus|oke|ya|iya)\b/;
                     const polaUlang =
                         /\b(ulang|ulangi|pulang|urang|tulang|kembali|ulank|kurang|ganti|salah)\b/;
 
@@ -411,21 +410,21 @@
 
                     if (pilihLanjut && !pilihUlang) {
                         clearTimeout(timerSalahKata);
+                        isRedirecting = true;
                         resetMicSession();
 
-                        // Micro-Prompt
-                        bicara(
-                            "Disimpan. Mengalihkan.",
-                            hitungRate(parseInt(slider.value)),
-                            () => {
-                                simpanDanLanjut();
-                            },
-                        );
+                        if (statusDesc) statusDesc.innerText = "MENGALIHKAN...";
 
-                        // Fallback
+                        // EKSEKUSI NAVIGASI KILAT
+                        const utter = new SpeechSynthesisUtterance("Oke");
+                        utter.lang = "id-ID";
+                        utter.rate = hitungRate(parseInt(slider.value));
+                        synth.speak(utter);
+
+                        // Pindah dalam hitungan milidetik, tidak nunggu bot selesai ngomong panjang
                         setTimeout(() => {
                             simpanDanLanjut();
-                        }, 3500);
+                        }, 400);
                     } else if (pilihUlang && !pilihLanjut) {
                         clearTimeout(timerSalahKata);
                         resetMicSession();
@@ -433,21 +432,19 @@
                         slider.value = 50;
                         display.innerText = "50";
                         instructionText.innerHTML =
-                            "Sebutkan angka <strong class='text-blue-600'>1 sampai 100</strong> untuk mengatur kecepatan asisten suara.";
+                            "Sebutkan angka <strong class='text-blue-600'>1 sampai 100</strong>.";
 
-                        // Micro-Prompt
                         bicara("Ulangi. Sebut angka.", 1.0);
                     } else if (hasil.length > 2) {
                         clearTimeout(timerSalahKata);
                         timerSalahKata = setTimeout(() => {
                             if (!isRedirecting && !isSpeaking) {
-                                // Micro-Prompt
                                 bicara(
                                     "Lanjut, atau ulang?",
                                     hitungRate(parseInt(slider.value)),
                                 );
                             }
-                        }, 1200);
+                        }, 800);
                     }
                 }
             }
@@ -492,8 +489,8 @@
             }
 
             function simpanDanLanjut() {
-                if (isRedirecting) return;
-                isRedirecting = true;
+                if (!isRedirecting && event && event.type === "click")
+                    isRedirecting = true; // Handle manual click
 
                 synth.cancel();
 
@@ -504,24 +501,23 @@
                 window.location.href = "{{ route('login') }}";
             }
 
-            // PENJAGA MALAM (Watchdog) - Memastikan mic selalu hidup
+            // Loop Watchdog 1 detik
             setInterval(() => {
                 if (!isRecActive && !isRedirecting && !isSpeaking) {
                     mulaiMendengar();
                 }
-            }, 1500);
+            }, 1000);
 
             window.addEventListener("load", () => {
                 AOS.init({ once: true, easing: "ease-out-cubic" });
                 mulaiMendengar();
 
+                if (statusDesc) statusDesc.innerText = "MENDENGARKAN";
+
                 setTimeout(() => {
-                    // Micro-Prompt saat awal buka halaman
-                    bicara(
-                        "Atur kecepatan suara. Sebut satu sampai seratus.",
-                        1.0,
-                    );
-                }, 1000);
+                    // Kalimat awal dipersingkat agar to-the-point
+                    bicara("Atur kecepatan. Sebut satu sampai seratus.", 1.0);
+                }, 800);
             });
         </script>
     </body>

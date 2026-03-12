@@ -12,6 +12,10 @@
             href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
             rel="stylesheet"
         />
+
+        <link rel="prefetch" href="{{ route('login.dosen') }}" />
+        <link rel="prefetch" href="{{ route('setup.voice') }}" />
+
         <style>
             .wave-bar {
                 transition: height 0.1s ease;
@@ -64,6 +68,7 @@
         <div
             id="voice-status-bar"
             class="fixed bottom-8 lg:bottom-auto lg:top-8 left-1/2 transform -translate-x-1/2 w-max max-w-[85%] bg-white/95 backdrop-blur-xl px-4 py-2.5 sm:px-6 sm:py-3 rounded-2xl shadow-xl border border-slate-200 z-50 flex items-center justify-center gap-3 hidden transition-all duration-500 opacity-0 translate-y-10 lg:-translate-y-10 cursor-pointer"
+            onclick="hentikanSuaraBicara()"
         >
             <div
                 id="wave-container"
@@ -96,6 +101,7 @@
         <div
             id="main-content"
             class="w-full flex-grow flex flex-col opacity-0 transition-opacity duration-1000 hidden relative z-10 min-h-[100dvh]"
+            onclick="hentikanSuaraBicara()"
         >
             <div
                 class="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 w-full max-w-5xl mx-auto pt-12 pb-12 lg:pt-28 lg:pb-16"
@@ -236,13 +242,12 @@
             let timerSalahKata;
 
             const savedRate =
-                parseFloat(localStorage.getItem("speechRate")) || 1.0;
+                parseFloat(localStorage.getItem("speechRate")) || 1.1;
 
             if (SpeechRec) {
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
                 rec.continuous = true;
-                // KUNCI RESPONS PINTAR: Tangkap suara sedetik itu juga!
                 rec.interimResults = true;
             }
 
@@ -265,7 +270,7 @@
             function resetMicSession() {
                 if (rec) {
                     try {
-                        rec.abort(); // Matikan paksa
+                        rec.abort();
                     } catch (e) {}
                     isRecActive = false;
                 }
@@ -279,12 +284,22 @@
                 } catch (e) {}
             }
 
+            // Fitur Interupsi Manual
+            function hentikanSuaraBicara() {
+                if (isSpeaking && !isRedirecting) {
+                    synth.cancel();
+                    isSpeaking = false;
+                    statusText.innerText = "MENDENGARKAN";
+                    setWave(false);
+                    mulaiMendengar(); // Langsung nyala saat di-skip
+                }
+            }
+
             function bicara(teks, callback = null) {
                 if (isRedirecting) return;
 
-                // MURNI WALKIE-TALKIE: Matikan mic 100% saat bot bicara
                 isSpeaking = true;
-                resetMicSession();
+                resetMicSession(); // Matikan mic saat bot ngomong
                 synth.cancel();
 
                 setTimeout(() => {
@@ -303,62 +318,54 @@
                         setWave(true);
                     };
 
+                    // KUNCI PERBAIKAN: Langsung menyalakan mic saat suara bot habis
                     utter.onend = () => {
+                        isSpeaking = false; // Set flag false INSTAN
                         setWave(false);
+
                         if (!isRedirecting && statusText) {
                             statusText.innerText = "MENDENGARKAN";
                             statusText.classList.replace(
                                 "text-blue-600",
                                 "text-green-600",
                             );
+
+                            // Jeda 50ms saja untuk mencegah mic menangkap sisa gema (echo) speaker
+                            setTimeout(() => {
+                                mulaiMendengar();
+                            }, 50);
                         }
 
-                        // Beri jeda 400ms setelah bot selesai ngomong, baru hidupkan mic
-                        // Ini memastikan TIDAK ADA sisa gema sama sekali
-                        setTimeout(() => {
-                            isSpeaking = false;
-                            mulaiMendengar();
-                            if (callback) callback();
-                        }, 400);
+                        if (callback) callback();
                     };
 
                     utter.onerror = () => {
                         isSpeaking = false;
                         setWave(false);
-                        mulaiMendengar();
+                        if (!isRedirecting) mulaiMendengar();
                         if (callback) callback();
                     };
 
                     synth.speak(utter);
-                }, 50);
+                }, 10);
             }
 
             if (rec) {
                 rec.onresult = (event) => {
-                    // PENGAMAN: Jika bot sedang bicara, abaikan semua suara
                     if (isRedirecting || isSpeaking) return;
 
-                    let hasil = "";
-                    for (
-                        let i = event.resultIndex;
-                        i < event.results.length;
-                        ++i
-                    ) {
-                        hasil += event.results[i][0].transcript + " ";
-                    }
-                    hasil = hasil.toLowerCase().trim();
+                    let hasilTerakhir = event.results[
+                        event.results.length - 1
+                    ][0].transcript
+                        .toLowerCase()
+                        .trim();
 
-                    // ==========================================
-                    // KAMUS MUTLAK (HANYA ANGKA 1 ATAU 2)
-                    // ==========================================
-                    // Strict matching: Mengabaikan frasa lain, hanya bereaksi pada angka 1/2
-                    const polaSatu = /\b(satu|1|sato)\b/;
-                    const polaDua = /\b(dua|2|duwa)\b/;
+                    const polaSatu = /\b(satu|1|sato|sat)\b/;
+                    const polaDua = /\b(dua|2|duwa|doa|da)\b/;
 
-                    const pilihSatu = hasil.match(polaSatu);
-                    const pilihDua = hasil.match(polaDua);
+                    const pilihSatu = hasilTerakhir.match(polaSatu);
+                    const pilihDua = hasilTerakhir.match(polaDua);
 
-                    // EKSEKUSI KILAT (Langsung tangkap)
                     if (pilihSatu && !pilihDua) {
                         clearTimeout(timerSalahKata);
                         isRedirecting = true;
@@ -374,13 +381,17 @@
                             );
                         if (statusText) statusText.innerText = "MENGALIHKAN...";
 
-                        // Micro-Prompt
-                        bicara("Satu. Masuk Dosen.", () => {
-                            window.location.href = "{{ route('login.dosen') }}";
-                        });
+                        // KUNCI PERBAIKAN PENGALIHAN:
+                        // Berbicara singkat ("Oke") dan paksa pindah halaman dalam 400ms.
+                        // Tidak menunggu event onend dari sintesis suara agar terasa super cepat.
+                        const utter = new SpeechSynthesisUtterance("Oke");
+                        utter.lang = "id-ID";
+                        utter.rate = savedRate;
+                        synth.speak(utter);
+
                         setTimeout(() => {
                             window.location.href = "{{ route('login.dosen') }}";
-                        }, 3500);
+                        }, 400);
                     } else if (pilihDua && !pilihSatu) {
                         clearTimeout(timerSalahKata);
                         isRedirecting = true;
@@ -396,40 +407,39 @@
                             );
                         if (statusText) statusText.innerText = "MENGALIHKAN...";
 
-                        // Micro-Prompt
-                        bicara("Dua. Masuk Mahasiswa.", () => {
-                            window.location.href = "{{ route('setup.voice') }}";
-                        });
+                        const utter = new SpeechSynthesisUtterance("Oke");
+                        utter.lang = "id-ID";
+                        utter.rate = savedRate;
+                        synth.speak(utter);
+
                         setTimeout(() => {
                             window.location.href = "{{ route('setup.voice') }}";
-                        }, 3500);
-                    } else if (hasil.length > 2) {
-                        // Jika bicara kalimat lain selain 1 atau 2, bot akan menuntun kembali
+                        }, 400);
+                    } else if (hasilTerakhir.length > 2) {
                         clearTimeout(timerSalahKata);
                         timerSalahKata = setTimeout(() => {
                             if (!isRedirecting && !isSpeaking) {
-                                // Micro-Prompt
-                                bicara("Sebut satu, atau dua.");
+                                // Potong kalimat peringatan agar lebih pendek
+                                bicara("Satu, atau dua?");
                             }
-                        }, 1200);
+                        }, 800);
                     }
                 };
 
                 rec.onend = () => {
                     isRecActive = false;
-                    // Terus bangunkan mic jika tidak sedang loading atau bicara
+                    // Watchdog loop: pastikan mic selalu hidup ulang seketika
                     if (!isRedirecting && !isSpeaking) {
-                        setTimeout(mulaiMendengar, 300);
+                        mulaiMendengar();
                     }
                 };
             }
 
-            // PENJAGA MALAM (Watchdog) - Memastikan mic selalu hidup
             setInterval(() => {
                 if (!isRecActive && !isRedirecting && !isSpeaking) {
                     mulaiMendengar();
                 }
-            }, 1500);
+            }, 1000); // Dipercepat pengecekannya tiap 1 detik
 
             overlay.addEventListener("click", () => {
                 overlay.classList.add("opacity-0", "pointer-events-none");
@@ -452,9 +462,9 @@
                     }, 50);
 
                     setTimeout(() => {
-                        // MICRO-PROMPT SAAT AWAL MEMBUKA HALAMAN
-                        bicara("Pilih peran. Satu Dosen. Dua Mahasiswa.");
-                    }, 500);
+                        // Diperpendek agar pengguna tidak bosan
+                        bicara("Pilih. Satu Dosen. Dua Mahasiswa.");
+                    }, 300);
                 }, 700);
             });
         </script>
