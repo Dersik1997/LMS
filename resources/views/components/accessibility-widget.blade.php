@@ -1,16 +1,17 @@
 <style>
-    /* Memastikan elemen ikon dan menu dari library ini menembus overlay hitam portal Anda */
     .accessibility-icon, 
     .accessibility-menu, 
     ._accessibility-menu { 
-        z-index: 9999999 !important; 
+        z-index: 2147483647 !important; /* Angka z-index tertinggi di HTML */
         font-family: 'Plus Jakarta Sans', sans-serif !important; 
     }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/accessibility/dist/accessibility.min.js"></script>
+
 <script>
-    function jalankanWidgetInklusi() {
-        // Cek apakah library sudah berhasil ditarik dari server CDN
+    (function jalankanWidget() {
+        // Cek apakah sistem "Accessibility" sudah masuk ke browser
         if (typeof Accessibility !== 'undefined') {
             new Accessibility({
                 icon: {
@@ -19,8 +20,8 @@
                         right: { size: 25, units: 'px' },
                         type: 'fixed'
                     },
-                    zIndex: '9999999',
-                    backgroundColor: '#0056b3', // Biru khas UMMI
+                    zIndex: '2147483647',
+                    backgroundColor: '#0056b3',
                     color: '#ffffff'
                 },
                 labels: {
@@ -39,20 +40,17 @@
                     disableAnimations: 'Hentikan Animasi'
                 },
                 modules: {
-                    // Fitur Pembaca Layar bawaan widget DIMATIKAN agar tidak 
-                    // bertabrakan dengan sistem suara canggih di halaman Anda.
-                    textToSpeech: false,
+                    textToSpeech: false, // Dimatikan agar tidak bentrok
                     speechToText: false
                 },
                 session: {
-                    persistent: true // INI YANG MEMBUATNYA TIDAK RISET SAAT PINDAH HALAMAN
+                    persistent: true // Mencegah riset saat pindah halaman
                 }
             });
-            console.log("Widget Joogps Accessibility Berhasil Dimuat!");
+            console.log("Widget Aksesibilitas Aktif!");
         } else {
-            console.error("Gagal memuat Widget. Cek koneksi internet atau firewall.");
+            // Jika belum siap, tunggu 0.2 detik lalu coba lagi secara otomatis
+            setTimeout(jalankanWidget, 200);
         }
-    }
+    })();
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/accessibility/dist/accessibility.min.js" onload="jalankanWidgetInklusi()"></script>
