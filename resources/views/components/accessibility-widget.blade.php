@@ -1,76 +1,58 @@
 <style>
-    /* Memastikan widget selalu berada di atas layar Aktivasi Suara (z-index: 100) */
-    ._accessibility-menu { z-index: 999999 !important; font-family: 'Plus Jakarta Sans', sans-serif !important; }
-    .accessibility-icon { z-index: 999999 !important; }
+    /* Memastikan elemen ikon dan menu dari library ini menembus overlay hitam portal Anda */
+    .accessibility-icon, 
+    .accessibility-menu, 
+    ._accessibility-menu { 
+        z-index: 9999999 !important; 
+        font-family: 'Plus Jakarta Sans', sans-serif !important; 
+    }
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/accessibility/dist/accessibility.min.js"></script>
-
 <script>
-    window.addEventListener('load', function() {
-        new Accessibility({
-            // Konfigurasi Ikon & Tampilan
-            icon: {
-                position: {
-                    bottom: { size: 25, units: 'px' },
-                    right: { size: 25, units: 'px' },
-                    type: 'fixed'
+    function jalankanWidgetInklusi() {
+        // Cek apakah library sudah berhasil ditarik dari server CDN
+        if (typeof Accessibility !== 'undefined') {
+            new Accessibility({
+                icon: {
+                    position: {
+                        bottom: { size: 25, units: 'px' },
+                        right: { size: 25, units: 'px' },
+                        type: 'fixed'
+                    },
+                    zIndex: '9999999',
+                    backgroundColor: '#0056b3', // Biru khas UMMI
+                    color: '#ffffff'
                 },
-                dimensions: {
-                    width: { size: 60, units: 'px' },
-                    height: { size: 60, units: 'px' }
+                labels: {
+                    resetTitle: 'Kembali ke Awal',
+                    closeTitle: 'Tutup',
+                    menuTitle: 'Aksesibilitas ULD',
+                    increaseText: 'Perbesar Teks',
+                    decreaseText: 'Perkecil Teks',
+                    increaseTextSpacing: 'Perbesar Spasi',
+                    decreaseTextSpacing: 'Perkecil Spasi',
+                    invertColors: 'Kontras Tinggi',
+                    grayHues: 'Mode Monokrom',
+                    underlineLinks: 'Sorot Tautan',
+                    bigCursor: 'Kursor Besar',
+                    readingGuide: 'Panduan Membaca',
+                    disableAnimations: 'Hentikan Animasi'
                 },
-                zIndex: '999999',
-                backgroundColor: '#0056b3', // Warna biru 
-                color: '#ffffff'
-            },
-
-            // Konfigurasi Bahasa (Terjemahan ke Bahasa Indonesia)
-            labels: {
-                resetTitle: 'Reset (Kembali ke Awal)',
-                closeTitle: 'Tutup Menu',
-                menuTitle: 'Aksesibilitas ULD',
-                increaseText: 'Perbesar Teks',
-                decreaseText: 'Perkecil Teks',
-                increaseTextSpacing: 'Perbesar Spasi',
-                decreaseTextSpacing: 'Perkecil Spasi',
-                increaseLineHeight: 'Jarak Baris (+)',
-                decreaseLineHeight: 'Jarak Baris (-)',
-                invertColors: 'Kontras Tinggi',
-                grayHues: 'Mode Monokrom',
-                underlineLinks: 'Sorot Tautan',
-                bigCursor: 'Kursor Besar',
-                readingGuide: 'Panduan Membaca',
-                annotations: 'Anotasi Teks',
-                disableAnimations: 'Hentikan Animasi'
-            },
-
-            // Konfigurasi Fitur yang Diaktifkan
-            modules: {
-                increaseText: true,
-                decreaseText: true,
-                invertColors: true,
-                increaseTextSpacing: true,
-                decreaseTextSpacing: true,
-                increaseLineHeight: true,
-                decreaseLineHeight: true,
-                grayHues: true,
-                underlineLinks: true,
-                bigCursor: true,
-                readingGuide: true,
-                annotations: true,
-                disableAnimations: true,
-
-                // SANGAT PENTING: Matikan fitur suara agar tidak bentrok dengan
-                // script window.speechSynthesis di halaman utama Anda!
-                textToSpeech: false,
-                speechToText: false
-            },
-
-            // Konfigurasi Penyimpanan (Wajib agar tidak riset saat pindah halaman)
-            session: {
-                persistent: true // Menginstruksikan library menggunakan localStorage
-            }
-        });
-    }, false);
+                modules: {
+                    // Fitur Pembaca Layar bawaan widget DIMATIKAN agar tidak 
+                    // bertabrakan dengan sistem suara canggih di halaman Anda.
+                    textToSpeech: false,
+                    speechToText: false
+                },
+                session: {
+                    persistent: true // INI YANG MEMBUATNYA TIDAK RISET SAAT PINDAH HALAMAN
+                }
+            });
+            console.log("Widget Joogps Accessibility Berhasil Dimuat!");
+        } else {
+            console.error("Gagal memuat Widget. Cek koneksi internet atau firewall.");
+        }
+    }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/accessibility/dist/accessibility.min.js" onload="jalankanWidgetInklusi()"></script>
