@@ -8,11 +8,11 @@
     }
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/accessibility/dist/accessibility.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/fathulhudoyo/Fitur_Disabilitas@main/accessibility.min.js"></script>
 
 <script>
     (function jalankanWidget() {
-        // Cek apakah library "Accessibility" sudah selesai didownload oleh browser
+        // Cek apakah library dari GitHub fathulhudoyo sudah selesai didownload
         if (typeof Accessibility !== 'undefined') {
             new Accessibility({
                 icon: {
@@ -49,7 +49,7 @@
                     persistent: true // Otomatis simpan pengaturan agar tidak riset saat pindah halaman
                 }
             });
-            console.log("Widget Aksesibilitas Aktif!");
+            console.log("Widget Aksesibilitas dari GitHub Fathulhudoyo Aktif!");
         } else {
             // Jika CDN lemot, sistem akan menunggu 0.2 detik dan mencoba menyalakan lagi secara otomatis
             setTimeout(jalankanWidget, 200);
