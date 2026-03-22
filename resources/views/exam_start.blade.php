@@ -718,6 +718,6 @@
                 }, 800);
             };
         </script>
-        <script defer src="https://accessibility-widget.pages.dev/js/app.js"></script>
+        <x-accessibility-widget />
     </body>
 </html>

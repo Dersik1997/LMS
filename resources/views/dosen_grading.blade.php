@@ -427,6 +427,6 @@
             elHuruf.className = `px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[9px] sm:text-[10px] font-black uppercase border ${mutu.class}`;
         }
     </script>
-    <script defer src="https://accessibility-widget.pages.dev/js/app.js"></script>
+    <x-accessibility-widget />
 </body>
 </html>
