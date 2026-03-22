@@ -1,8 +1,9 @@
 <style>
+    /* Memaksa Widget Berada Paling Depan */
     .accessibility-icon, 
     .accessibility-menu, 
     ._accessibility-menu { 
-        z-index: 2147483647 !important; /* Angka z-index tertinggi di HTML */
+        z-index: 2147483647 !important; 
         font-family: 'Plus Jakarta Sans', sans-serif !important; 
     }
 </style>
@@ -11,7 +12,7 @@
 
 <script>
     (function jalankanWidget() {
-        // Cek apakah sistem "Accessibility" sudah masuk ke browser
+        // Cek apakah library "Accessibility" sudah selesai didownload oleh browser
         if (typeof Accessibility !== 'undefined') {
             new Accessibility({
                 icon: {
@@ -40,16 +41,17 @@
                     disableAnimations: 'Hentikan Animasi'
                 },
                 modules: {
-                    textToSpeech: false, // Dimatikan agar tidak bentrok
+                    // Dimatikan mutlak agar tidak merusak fitur Suara Dosen/Mahasiswa bawaan Anda
+                    textToSpeech: false, 
                     speechToText: false
                 },
                 session: {
-                    persistent: true // Mencegah riset saat pindah halaman
+                    persistent: true // Otomatis simpan pengaturan agar tidak riset saat pindah halaman
                 }
             });
             console.log("Widget Aksesibilitas Aktif!");
         } else {
-            // Jika belum siap, tunggu 0.2 detik lalu coba lagi secara otomatis
+            // Jika CDN lemot, sistem akan menunggu 0.2 detik dan mencoba menyalakan lagi secara otomatis
             setTimeout(jalankanWidget, 200);
         }
     })();
