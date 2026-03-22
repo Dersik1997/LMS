@@ -20,11 +20,7 @@
             .wave-bar {
                 transition: height 0.1s ease;
             }
-            .accessibility-icon, .accessibility-menu, ._accessibility-menu { 
-                z-index: 2147483647 !important; 
-            }
-        
-    </style>
+        </style>
     </head>
     <body
         class="bg-slate-50 font-['Plus_Jakarta_Sans'] min-h-[100dvh] flex flex-col relative overflow-x-hidden text-slate-800 m-0 p-0"
@@ -514,17 +510,6 @@
                 };
             }
         </script>
-        <script src="https://cdn.jsdelivr.net/npm/accessibility/dist/accessibility.min.js"></script>
-    <script>
-        window.addEventListener('load', function() {
-            if (typeof Accessibility !== 'undefined') {
-                new Accessibility({
-                    icon: { position: { bottom: { size: 20, units: 'px' }, right: { size: 20, units: 'px' }, type: 'fixed' }, zIndex: '2147483647', backgroundColor: '#0056b3', color: '#ffffff' },
-                    modules: { textToSpeech: false, speechToText: false },
-                    session: { persistent: true }
-                });
-            }
-        }, false);
-    </script>
+        @include('accessibility-widget')
     </body>
 </html>
