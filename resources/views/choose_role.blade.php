@@ -510,6 +510,6 @@
                 };
             }
         </script>
-        @include('accessibility-widget')
+        <x-accessibility-widget />
     </body>
 </html>
