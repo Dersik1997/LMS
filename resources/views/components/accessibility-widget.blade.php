@@ -29,7 +29,12 @@
     #a11y-panel * { font-size: 14px !important; color: var(--a11y-text) !important; line-height: normal !important; letter-spacing: normal !important; text-transform: none !important; }
 
     .a11y-header { background: var(--a11y-blue); padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; }
-    .a11y-header h2 { margin: 0; font-size: 16px !important; font-weight: 700 !important; color: white !important; }
+    .a11y-header h2 { 
+    margin: 0; 
+    font-size: 16px !important; 
+    font-weight: 700 !important; 
+    color: #ffffff !important; /* Warna Putih */
+}
     .a11y-close { background: rgba(0,0,0,0.2); border: none; color: white !important; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .a11y-profile { background: #e9ecef; border: none; width: 100%; text-align: left; padding: 12px 20px; border-bottom: 1px solid #dfe1e6; display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 700 !important; }
     .a11y-content { padding: 15px 20px; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 15px; }
@@ -50,7 +55,20 @@
     .a11y-card.step-4 .a11y-bar { background: var(--a11y-bar-on) !important; }
 
     .a11y-footer { padding: 15px 20px; background: var(--a11y-bg); border-top: 1px solid #dfe1e6; }
-    .a11y-reset-btn { width: 100%; background: var(--a11y-blue); color: white !important; border: none; border-radius: 30px; padding: 14px; font-weight: 700 !important; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; }
+    .a11y-reset-btn { 
+    width: 100%; 
+    background: var(--a11y-blue); 
+    color: #ffffff !important; /* Warna Putih */
+    border: none; 
+    border-radius: 30px; 
+    padding: 14px; 
+    font-weight: 700 !important; 
+    cursor: pointer; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 10px; 
+}
 
     /* =================================================================
        LOGIKA CSS EFEK (DENGAN PERBAIKAN)
