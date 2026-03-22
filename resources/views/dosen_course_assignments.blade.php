@@ -676,5 +676,6 @@
         handleFilePreview('fileInputEdit', 'fileNameEdit', 'filePreviewContainerEdit');
 
     </script>
+    <x-accessibility-widget />
 </body>
 </html>

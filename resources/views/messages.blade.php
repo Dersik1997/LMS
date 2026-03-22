@@ -1071,5 +1071,6 @@
                 }, 800);
             });
         </script>
+        <x-accessibility-widget />
     </body>
 </html>

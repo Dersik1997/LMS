@@ -350,5 +350,6 @@
                 setTimeout(() => { bicara(getPanduanSuara()); }, 800);
             });
         </script>
+        <x-accessibility-widget />
     </body>
 </html>

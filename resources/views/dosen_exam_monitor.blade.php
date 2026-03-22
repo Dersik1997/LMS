@@ -169,5 +169,6 @@
 
         </div>
     </main>
+    <x-accessibility-widget />
 </body>
 </html>

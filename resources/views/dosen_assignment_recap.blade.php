@@ -286,5 +286,6 @@
     <script>
         AOS.init({ once: true, easing: 'ease-out-cubic', duration: 800 });
     </script>
+    <x-accessibility-widget />
 </body>
 </html>

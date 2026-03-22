@@ -286,5 +286,6 @@
                 setTimeout(() => closeToast('toast-error'), 4000);
             });
         </script>
+        <x-accessibility-widget />
     </body>
 </html>

@@ -207,5 +207,6 @@
                 backdrop.classList.toggle("hidden");
             }
         </script>
+        <x-accessibility-widget />
     </body>
 </html>
