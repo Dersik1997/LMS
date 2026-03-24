@@ -127,7 +127,7 @@
 
     <button class="a11y-profile">
         <div class="a11y-profile-icon"><svg viewBox="0 0 24 24" width="20"><path d="M12 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4z"/></svg></div>
-        Bebas Pilih Profil ▼
+
     </button>
 
     <div class="a11y-content">
