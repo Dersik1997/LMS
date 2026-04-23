@@ -50,4 +50,20 @@ class MahasiswaAuthController extends Controller
             'redirect' => route('dashboard')
         ]);
     }
+
+    public function register(Request $request) {
+    $request->validate([
+        'nama' => 'required',
+        'nim' => 'required|unique:mahasiswas,nim',
+        'password' => 'required|min:4'
+    ]);
+
+    \App\Models\Mahasiswa::create([
+        'nama' => $request->nama,
+        'nim' => $request->nim,
+        'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+    ]);
+
+    return response()->json(['success' => true]);
+}
 }

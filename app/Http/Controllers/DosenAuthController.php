@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Dosen;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class DosenAuthController extends Controller
 {
@@ -79,5 +81,31 @@ class DosenAuthController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('login.dosen')->with('error', 'Gagal login dengan Google.');
         }
+    }
+
+    public function showLoginForm() {
+        return view('dosen_login');
+    }
+
+    public function register(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'nama' => 'required|string|max:255',
+            'nidn' => 'required|numeric|unique:dosens,nidn',
+            'email' => 'required|email|unique:dosens,email',
+            'password' => 'required|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 422);
+        }
+
+        Dosen::create([
+            'nama' => $request->nama,
+            'nidn' => $request->nidn,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Registrasi Berhasil!']);
     }
 }

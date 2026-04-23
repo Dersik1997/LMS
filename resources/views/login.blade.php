@@ -170,28 +170,58 @@
                             </button>
 
                             <button
-                                data-aos="fade-up"
-                                data-aos-delay="600"
-                                class="w-full py-4 bg-white border border-slate-200 rounded-xl flex items-center justify-center gap-3 transition-all hover:bg-slate-50 hover:border-slate-300 cursor-pointer"
-                            >
-                                <img
-                                    src="{{ asset('images/gogle.svg') }}"
-                                    class="w-4 h-4"
-                                    alt="Google"
-                                />
-                                <span
-                                    class="text-[9px] font-black text-slate-600 tracking-widest uppercase"
-                                    >Login with Google</span
-                                >
-                            </button>
+    type="button"
+    onclick="openRegisterModal()"
+    data-aos="fade-up"
+    data-aos-delay="600"
+    class="w-full py-4 bg-white border border-slate-200 rounded-xl flex items-center justify-center gap-3 transition-all hover:bg-slate-50 cursor-pointer"
+>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-blue-600">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+    </svg>
+    <span class="text-[9px] font-black text-slate-600 tracking-widest uppercase">Daftar Akun Mahasiswa</span>
+</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <div id="registerModal" class="fixed inset-0 z-[999] hidden items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md transition-all duration-500">
+    <div class="w-full max-w-md bg-white rounded-[3rem] shadow-2xl p-10 relative animate-pop overflow-hidden">
+        <button type="button" onclick="closeRegisterModal()" class="absolute top-8 right-8 text-slate-300 hover:text-red-500 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+        </button>
+
+        <div class="mb-10 text-center">
+            <h3 class="text-2xl font-black text-slate-900 uppercase">Daftar Mahasiswa</h3>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">Gunakan Suara atau Ketik Langsung</p>
+        </div>
+
+        <form id="registerForm" class="space-y-4">
+            @csrf
+            <div class="p-4 rounded-2xl bg-slate-50 border-2 border-transparent transition-all">
+                <label class="block text-[8px] font-black text-slate-400 uppercase">Nama Lengkap</label>
+                <input type="text" name="nama" id="reg-input-nama" class="w-full bg-transparent text-sm font-bold outline-none" placeholder="Ketik atau sebutkan nama">
+            </div>
+            <div class="p-4 rounded-2xl bg-slate-50 border-2 border-transparent transition-all">
+                <label class="block text-[8px] font-black text-slate-400 uppercase">NIM</label>
+                <input type="text" name="nim" id="reg-input-nim" class="w-full bg-transparent text-sm font-bold outline-none" placeholder="Sebutkan angka NIM">
+            </div>
+            <div class="p-4 rounded-2xl bg-slate-50 border-2 border-transparent transition-all">
+                <label class="block text-[8px] font-black text-slate-400 uppercase">Kata Sandi</label>
+                <input type="password" name="password" id="reg-input-pass" class="w-full bg-transparent text-sm font-bold outline-none" placeholder="Sebutkan angka sandi">
+            </div>
+            <button type="submit" id="regBtn" class="w-full py-5 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase shadow-xl hover:bg-blue-700 transition-all mt-4">Daftar Akun Sekarang</button>
+        </form>
+    </div>
+</div>
+
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
+
+            // Tambahkan di bagian atas script
+
             AOS.init({ once: true, easing: "ease-out-cubic" });
         </script>
 
@@ -586,7 +616,80 @@
                     startFlow();
                 }, 800);
             };
+
+            
         </script>
+        <script>
+    // 1. Definisikan variabel state di bagian paling atas script utama
+    let isModalOpen = false;
+
+    // 2. Fungsi untuk membuka modal (pastikan ID sesuai dengan HTML)
+    function openRegisterModal() {
+        const modal = document.getElementById('registerModal');
+        if (modal) {
+            isModalOpen = true;
+            modal.classList.remove('hidden'); // Pastikan menghapus 'hidden'
+            modal.classList.add('flex', 'modal-active'); // Tambahkan flex untuk tampil
+            
+            // Logika Suara
+            step = "REG_NAMA";
+            bicara("Menu pendaftaran mahasiswa. Silakan sebutkan nama lengkap Anda.");
+        } else {
+            console.error("Elemen registerModal tidak ditemukan!");
+        }
+    }
+
+    // 3. Fungsi untuk menutup modal
+    function closeRegisterModal() {
+        const modal = document.getElementById('registerModal');
+        if (modal) {
+            isModalOpen = false;
+            modal.classList.add('hidden');
+            modal.classList.remove('flex', 'modal-active');
+            
+            // Kembali ke alur Login Utama
+            step = "NIM";
+            startFlow();
+        }
+    }
+
+    // 4. Update Event Listener Submit (Gunakan event delegation agar lebih aman)
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('regBtn');
+            btn.innerText = "MENDAFTAR...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch("{{ route('register.mahasiswa.post') }}", {
+                    method: "POST",
+                    headers: { 
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}", 
+                        "Accept": "application/json" 
+                    },
+                    body: new FormData(this)
+                });
+                
+                const json = await res.json();
+                if (json.success) {
+                    alert("Berhasil Daftar! Silakan Login.");
+                    closeRegisterModal();
+                    this.reset(); // Kosongkan form setelah sukses
+                } else {
+                    bicara(json.message || "Pendaftaran gagal. NIM mungkin sudah terdaftar.");
+                    btn.innerText = "Daftar Akun Sekarang";
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                console.error(error);
+                btn.innerText = "Daftar Akun Sekarang";
+                btn.disabled = false;
+            }
+        });
+    }
+</script>
         <x-accessibility-widget />
     </body>
 </html>

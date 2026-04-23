@@ -57,6 +57,7 @@ Route::get('/setup-voice', function () { return view('setup_voice'); })->name('s
 Route::get('/login', function () { return view('login'); })->name('login');
 Route::post('/login-process', [AuthController::class, 'loginMahasiswa'])->name('login.post');
 Route::post('/login/mahasiswa', [MahasiswaAuthController::class, 'login'])->name('login.mahasiswa.post');
+Route::post('/register-mahasiswa', [MahasiswaAuthController::class, 'register'])->name('register.mahasiswa.post');
 
 // [PERBAIKAN LOGOUT] Smart Logout -> Kembali ke halaman pertama
 Route::get('/logout', function () {
@@ -80,6 +81,8 @@ Route::get('/logout', function () {
 // --- Auth Dosen ---
 Route::get('/login-dosen', function () { return view('dosen_login'); })->name('login.dosen');
 Route::post('/login/dosen', [DosenAuthController::class, 'login'])->name('login.dosen.post');
+Route::get('/login-dosen', [DosenAuthController::class, 'showLoginForm'])->name('login.dosen');
+Route::post('/register-dosen', [DosenAuthController::class, 'register'])->name('register.dosen.post');
 
 // Auth Dosen via Google
 Route::get('/login/dosen/google', [DosenAuthController::class, 'redirectToGoogle'])->name('login.dosen.google');
