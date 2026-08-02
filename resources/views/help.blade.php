@@ -2,451 +2,707 @@
 <html lang="id">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <title>Pusat Bantuan | LMS Inklusi UMMI</title>
-
-        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>Modul Panduan - LMS Inklusi UMMI</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
 
         <style>
-            html { scrollbar-gutter: stable; }
-            .custom-scrollbar::-webkit-scrollbar { width: 5px; }
-            .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-            .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
-            .wave-bar { transition: height 0.1s ease; }
-        </style>
-    </head>
-    
-    <body class="m-0 font-['Plus_Jakarta_Sans'] bg-[#f8fafc] h-[100dvh] flex flex-col lg:flex-row border-box text-slate-800 overflow-hidden custom-scrollbar">
-        <div id="mobileBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden transition-opacity"></div>
-
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-slate-200 flex flex-col h-[100dvh] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shrink-0">
-            <div class="p-8 border-b border-slate-100 flex items-center gap-4 shrink-0">
-                <img src="{{ asset('images/logo-ummi.png') }}" class="w-10 h-10 object-contain" alt="Logo UMMI" onerror="this.src = 'https://via.placeholder.com/40'" />
-                <div>
-                    <h1 class="text-lg font-black text-slate-900 tracking-tight leading-none">LMS Inklusi</h1>
-                    <p class="text-[9px] font-bold text-blue-600 uppercase tracking-widest mt-1">Portal Mahasiswa</p>
-                </div>
-                <button onclick="toggleSidebar()" class="lg:hidden ml-auto text-slate-400 hover:text-slate-600 cursor-pointer p-2 bg-slate-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-
-            <nav class="flex-1 p-6 space-y-3 overflow-y-auto custom-scrollbar">
-                <a href="{{ route('dashboard') ?? '#' }}" data-menu="5" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
-                    <div class="flex items-center gap-4">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                        <span>Beranda</span>
-                    </div>
-                    <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">5</span>
-                </a>
-
-                <a href="{{ route('profile') ?? '#' }}" data-menu="6" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
-                    <div class="flex items-center gap-4">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                        <span>Profil Saya</span>
-                    </div>
-                    <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">6</span>
-                </a>
-
-                <a href="{{ route('notifications') ?? '#' }}" data-menu="7" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
-                    <div class="flex items-center gap-4">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                        <span>Pemberitahuan</span>
-                    </div>
-                    <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">7</span>
-                </a>
-
-                <a href="{{ route('messages') ?? '#' }}" data-menu="8" class="flex items-center justify-between p-4 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl font-bold transition-all">
-                    <div class="flex items-center gap-4">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                        <span>Pesan</span>
-                    </div>
-                    <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">8</span>
-                </a>
-
-                <a href="{{ route('help') ?? '#' }}" data-menu="9" class="flex items-center justify-between p-4 bg-blue-50 text-blue-700 rounded-2xl font-bold transition-all shadow-sm border border-blue-100">
-                    <div class="flex items-center gap-4">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span>Bantuan</span>
-                    </div>
-                    <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">9</span>
-                </a>
-            </nav>
-
-            <div class="p-6 border-t border-slate-100 shrink-0">
-                <button data-menu="0" class="w-full p-4 flex items-center justify-between text-red-600 font-bold bg-red-50 rounded-2xl hover:bg-red-100 transition-all border border-red-100 cursor-pointer">
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                        <span>Keluar</span>
-                    </div>
-                    <span class="text-[10px] bg-black text-white px-2 py-1 rounded-lg font-black shadow-sm">0</span>
-                </button>
-            </div>
-        </aside>
-
-        <main class="flex-1 flex flex-col h-[100dvh] overflow-y-auto relative lg:ml-80 transition-all duration-300 custom-scrollbar">
-            <div class="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-blue-50 to-transparent -z-10"></div>
-
-            <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 md:px-8 py-3 sm:py-6 sticky top-0 z-30 shrink-0 cursor-pointer" id="voice-header" title="Ketuk 2x untuk memotong suara sistem">
-                <div class="max-w-7xl mx-auto flex items-center justify-between h-10 sm:h-14 pointer-events-none">
-                    <div class="flex items-center gap-2 sm:gap-4 pointer-events-auto">
-                        <button onclick="toggleSidebar()" class="lg:hidden p-1.5 sm:p-2 text-slate-500 hover:bg-slate-100 rounded-lg cursor-pointer">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                        </button>
-                        <div>
-                            <h2 class="text-lg sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-none">Pusat Bantuan</h2>
-                            <p class="text-[9px] sm:text-sm font-medium text-slate-500 mt-1">Panduan Penggunaan</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2 sm:gap-4 pointer-events-auto">
-                        <div class="flex items-center gap-1 sm:gap-3 pr-2 sm:pr-4 border-r border-slate-200">
-                            <button data-menu="7" class="relative p-1.5 sm:p-2 text-slate-400 hover:text-blue-600 transition-all cursor-pointer">
-                                <svg class="w-5 h-5 sm:w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                                @if(isset($unreadCount) && $unreadCount > 0)
-                                <span class="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                                @endif
-                            </button>
-                            <button data-menu="9" class="hidden sm:block p-1.5 sm:p-2 text-blue-600 bg-blue-50 hover:text-blue-700 rounded-xl transition-all cursor-pointer">
-                                <svg class="w-5 h-5 sm:w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </button>
-                        </div>
-
-                        <div class="flex items-center gap-1.5 sm:gap-3 pl-1 sm:pl-2 w-[90px] sm:w-[130px] justify-start shrink-0 cursor-pointer">
-                            <div class="flex items-center gap-[2px] h-4 w-4 sm:w-6 justify-center shrink-0" id="wave-container">
-                                <div class="wave-bar w-[2px] bg-blue-500 rounded-full h-1 transition-all"></div>
-                                <div class="wave-bar w-[2px] bg-blue-400 rounded-full h-1 transition-all"></div>
-                                <div class="wave-bar w-[2px] bg-blue-600 rounded-full h-1 transition-all"></div>
-                            </div>
-                            <span id="status-desc" class="text-[8px] sm:text-[9px] font-black text-slate-400 uppercase tracking-widest text-left w-16 sm:w-24 truncate">MENYIAPKAN</span>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <div class="p-4 sm:p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-6 sm:space-y-8">
-                
-                <div data-aos="fade-up" class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 text-white shadow-xl shadow-blue-200 relative overflow-hidden pointer-events-none">
-                    <div class="relative z-10 flex flex-col lg:flex-row gap-6 sm:gap-8 items-center">
-                        <div class="w-full">
-                            <h3 class="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tighter mb-2 sm:mb-4 text-center lg:text-left">
-                                Navigasi Suara
-                            </h3>
-                            <p class="text-xs sm:text-sm md:text-base text-blue-100 font-medium mb-4 sm:mb-6 leading-relaxed text-center lg:text-left">
-                                Sistem LMS Inklusi dikendalikan menggunakan perintah suara berbasis nomor. Cukup sebutkan angka menu untuk berpindah halaman secara instan.
-                            </p>
-                            
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                                <div class="bg-white/10 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
-                                    <span class="block text-xl sm:text-2xl font-black">5</span>
-                                    <span class="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest opacity-80">Beranda</span>
-                                </div>
-                                <div class="bg-white/10 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
-                                    <span class="block text-xl sm:text-2xl font-black">6</span>
-                                    <span class="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest opacity-80">Profil</span>
-                                </div>
-                                <div class="bg-white/10 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
-                                    <span class="block text-xl sm:text-2xl font-black">7</span>
-                                    <span class="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest opacity-80">Notif</span>
-                                </div>
-                                <div class="bg-white/10 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-white/20 text-center backdrop-blur-md">
-                                    <span class="block text-xl sm:text-2xl font-black">0</span>
-                                    <span class="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest opacity-80">Keluar</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hidden lg:flex justify-center shrink-0">
-                            <div class="w-48 h-48 xl:w-64 xl:h-64 bg-white/10 rounded-full flex items-center justify-center border-4 border-white/20 relative">
-                                <svg class="w-24 h-24 xl:w-32 xl:h-32 text-white opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
-                                </svg>
-                                <div class="absolute inset-0 rounded-full border border-white/30 animate-ping"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 pb-6 sm:pb-10">
-                    <div data-aos="fade-up" data-aos-delay="100" class="bg-white p-5 sm:p-6 md:p-8 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group pointer-events-none">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-orange-50 text-orange-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-1 sm:mb-2">Suara Tidak Terdeteksi?</h4>
-                        <p class="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">Pastikan Anda telah memberikan izin (Allow) pada browser untuk mengakses mikrofon.</p>
-                    </div>
-
-                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-5 sm:p-6 md:p-8 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group pointer-events-none">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 text-blue-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                        </div>
-                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-1 sm:mb-2">Cara Kirim Tugas?</h4>
-                        <p class="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">Masuk ke menu Penugasan, pilih tugas aktif, lalu ikuti instruksi yang diucapkan asisten suara.</p>
-                    </div>
-
-                    <div data-aos="fade-up" data-aos-delay="300" class="bg-white p-5 sm:p-6 md:p-8 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-lg transition-all group pointer-events-none">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 text-slate-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                            </svg>
-                        </div>
-                        <h4 class="text-sm sm:text-base font-black text-slate-900 mb-1 sm:mb-2">Lupa Password?</h4>
-                        <p class="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">Hubungi Admin UPT TIK di Gedung A Lantai 2 untuk mereset password SIAK Anda.</p>
-                    </div>
-                </div>
-
-                <div data-aos="fade-up" data-aos-delay="400" class="bg-white rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] p-5 sm:p-6 md:p-8 border border-slate-100 flex flex-col md:flex-row items-center md:items-center justify-between gap-4 sm:gap-6 shadow-sm mb-10">
-                    <div class="flex flex-col md:flex-row items-center gap-3 sm:gap-4 md:gap-6 text-center md:text-left pointer-events-none">
-                        <div class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-slate-900 text-white rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-slate-200 shrink-0">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h4 class="text-base sm:text-lg md:text-xl font-black text-slate-900 tracking-tight">Butuh Bantuan Lebih?</h4>
-                            <p class="text-[10px] sm:text-xs md:text-sm text-slate-500 font-medium mt-0.5 sm:mt-1">Tim IT Inklusi UMMI siap membantu Anda.</p>
-                        </div>
-                    </div>
-                    <button class="w-full md:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-blue-600 text-white rounded-lg sm:rounded-xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 cursor-pointer">
-                        Hubungi Admin
-                    </button>
-                </div>
-            </div>
-        </main>
-
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-        <script>
-            AOS.init({ once: true, easing: "ease-out-cubic" });
-
-            function toggleSidebar() {
-                const sidebar = document.getElementById("sidebar");
-                const backdrop = document.getElementById("mobileBackdrop");
-                sidebar.classList.toggle("-translate-x-full");
-                backdrop.classList.toggle("hidden");
+            .wave-bar {
+                transition: height 0.1s ease;
             }
 
-            // ==========================================
-            // LOGIKA VOICE ASSISTANT (SATSET & ANTI-LAG)
-            // ==========================================
-            const statusDesc = document.getElementById("status-desc");
+            /* Background diselaraskan 100% dengan choose_role */
+            .bg-animated {
+                background: linear-gradient(
+                    -45deg,
+                    #f8fafc,
+                    #e2e8f0,
+                    #dbeafe,
+                    #e0e7ff
+                );
+                background-size: 400% 400%;
+                animation: gradientBG 15s ease infinite;
+            }
+            @keyframes gradientBG {
+                0% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%;
+                }
+                100% {
+                    background-position: 0% 50%;
+                }
+            }
+
+            /* Efek Kaca diselaraskan */
+            .glass-card {
+                background: rgba(255, 255, 255, 0.75);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Animasi untuk "Audio Player" saat membaca */
+            .audio-pulse {
+                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+                animation: pulse-ring 2s infinite;
+            }
+            @keyframes pulse-ring {
+                0% {
+                    transform: scale(0.95);
+                    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+                }
+                70% {
+                    transform: scale(1);
+                    box-shadow: 0 0 0 20px rgba(79, 70, 229, 0);
+                }
+                100% {
+                    transform: scale(0.95);
+                    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+                }
+            }
+        </style>
+    </head>
+    <body
+        class="bg-animated font-['Plus_Jakarta_Sans'] min-h-[100dvh] flex flex-col relative overflow-x-hidden text-slate-800 m-0 p-0"
+    >
+        <!-- Ornamen Latar Belakang (Sama dengan halaman role) -->
+        <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+            <div
+                class="absolute top-[-10%] left-[-10%] w-72 md:w-[30rem] h-72 md:h-[30rem] bg-blue-300 rounded-full mix-blend-multiply filter blur-[80px] opacity-50 animate-blob"
+            ></div>
+            <div
+                class="absolute bottom-[-10%] right-[-10%] w-72 md:w-[30rem] h-72 md:h-[30rem] bg-indigo-300 rounded-full mix-blend-multiply filter blur-[80px] opacity-50 animate-blob"
+                style="animation-delay: 2s"
+            ></div>
+            <div
+                class="absolute top-[40%] left-[40%] w-72 md:w-[30rem] h-72 md:h-[30rem] bg-teal-200 rounded-full mix-blend-multiply filter blur-[80px] opacity-40 animate-blob"
+                style="animation-delay: 4s"
+            ></div>
+        </div>
+
+        <!-- INDIKATOR SUARA GLOBAL -->
+        <div
+            id="voice-status-bar"
+            class="fixed bottom-8 lg:bottom-auto lg:top-8 left-1/2 transform -translate-x-1/2 w-max bg-white/95 backdrop-blur-xl px-6 py-3.5 rounded-full shadow-2xl border border-slate-200 z-50 flex items-center justify-center gap-4 transition-all duration-500"
+        >
+            <div id="wave-container" class="flex items-center gap-[3px] h-5">
+                <div
+                    class="wave-bar w-[3px] bg-indigo-500 rounded-full h-1"
+                ></div>
+                <div
+                    class="wave-bar w-[3px] bg-indigo-400 rounded-full h-1"
+                ></div>
+                <div
+                    class="wave-bar w-[3px] bg-indigo-600 rounded-full h-1"
+                ></div>
+                <div
+                    class="wave-bar w-[3px] bg-indigo-400 rounded-full h-1"
+                ></div>
+                <div
+                    class="wave-bar w-[3px] bg-indigo-500 rounded-full h-1"
+                ></div>
+            </div>
+            <span
+                id="status-text"
+                class="text-sm font-black text-slate-700 uppercase tracking-widest"
+                >MENDENGARKAN</span
+            >
+        </div>
+
+        <div
+            class="w-full flex-grow flex flex-col relative z-10 min-h-[100dvh]"
+        >
+            <div
+                class="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 w-full max-w-5xl mx-auto pt-16 pb-12 lg:pt-28 lg:pb-16"
+            >
+                <div class="text-center mb-10 sm:mb-16" id="header-text">
+                    <div
+                        class="inline-block px-4 py-1.5 bg-indigo-100 text-indigo-700 font-bold text-xs rounded-full mb-4 tracking-wider uppercase"
+                    >
+                        Pusat Bantuan Suara
+                    </div>
+                    <h1
+                        class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 mb-4 tracking-tight drop-shadow-sm"
+                    >
+                        Modul Panduan
+                    </h1>
+                    <p
+                        class="text-slate-600 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed font-medium"
+                        id="panduan-desc"
+                    >
+                        Sebutkan
+                        <strong class="text-blue-600">Satu</strong> untuk Modul
+                        Dosen,
+                        <strong class="text-indigo-600">Dua</strong> untuk Modul
+                        Mahasiswa, atau
+                        <strong class="text-red-500">Nol</strong> untuk Kembali.
+                    </p>
+                </div>
+
+                <!-- TAMPILAN "AUDIO PLAYER" SAAT MODUL DIBACA -->
+                <div
+                    id="konten-pembacaan"
+                    class="w-full max-w-4xl glass-card p-8 sm:p-12 rounded-[3rem] shadow-2xl border border-white mb-8 hidden flex-col items-center text-center"
+                >
+                    <!-- Ikon Audio Berdetak -->
+                    <div
+                        class="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full flex items-center justify-center mb-8 audio-pulse shadow-[0_10px_30px_rgba(79,70,229,0.5)]"
+                    >
+                        <svg
+                            class="w-12 h-12 sm:w-16 sm:h-16 text-white"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+                            ></path>
+                        </svg>
+                    </div>
+
+                    <div
+                        class="inline-flex items-center gap-2 px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-sm font-bold uppercase tracking-wider mb-4"
+                    >
+                        <span
+                            class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"
+                        ></span>
+                        Audio Berjalan
+                    </div>
+
+                    <h2
+                        id="judul-pembacaan"
+                        class="text-3xl sm:text-4xl font-black text-slate-800 mb-6 tracking-tight"
+                    >
+                        Membaca Modul...
+                    </h2>
+
+                    <div
+                        id="teks-pembacaan"
+                        class="text-lg sm:text-xl leading-loose text-slate-600 font-medium max-w-2xl mx-auto"
+                    >
+                        <!-- Teks Modul Masuk Sini -->
+                    </div>
+
+                    <div class="w-full h-[1px] bg-slate-200 my-8"></div>
+
+                    <p class="text-sm font-bold text-slate-400">
+                        Ucapkan <strong class="text-red-500">"Nol"</strong> atau
+                        <strong class="text-red-500">"Kembali"</strong> untuk
+                        menghentikan audio.
+                    </p>
+                </div>
+
+                <!-- 3 KARTU MENU MODUL -->
+                <div
+                    class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 w-full max-w-5xl relative"
+                    id="menu-cards"
+                >
+                    <!-- KARTU 1: MODUL DOSEN -->
+                    <button
+                        onclick="bacaModul('dosen')"
+                        id="btn-dosen"
+                        class="group glass-card p-8 sm:p-10 rounded-[2.5rem] hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.3)] hover:border-blue-400 transition-all duration-300 transform hover:-translate-y-2 text-center flex flex-col items-center justify-between h-full relative overflow-hidden focus:outline-none"
+                    >
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-blue-500/5 group-hover:to-blue-500/10 transition-colors"
+                        ></div>
+                        <div
+                            class="absolute top-6 left-6 w-10 h-10 bg-white text-blue-600 rounded-full flex items-center justify-center font-black text-lg border-2 border-blue-100 shadow-sm z-10 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                        >
+                            1
+                        </div>
+
+                        <div
+                            class="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-100 to-white rounded-[1.5rem] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm border border-white z-10"
+                        >
+                            <svg
+                                class="w-10 h-10 text-blue-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M12 14l9-5-9-5-9 5 9 5z"
+                                ></path>
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <div
+                            class="flex-grow flex flex-col justify-center z-10"
+                        >
+                            <h2
+                                class="text-xl font-black text-slate-800 mb-2 group-hover:text-blue-700 transition-colors"
+                            >
+                                Modul Dosen
+                            </h2>
+                            <p
+                                class="text-sm text-slate-500 leading-relaxed px-2"
+                            >
+                                Panduan mengelola kelas dan materi secara
+                                efisien.
+                            </p>
+                        </div>
+                    </button>
+
+                    <!-- KARTU 2: MODUL MAHASISWA -->
+                    <button
+                        onclick="bacaModul('mahasiswa')"
+                        id="btn-mahasiswa"
+                        class="group glass-card p-8 sm:p-10 rounded-[2.5rem] hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.3)] hover:border-indigo-400 transition-all duration-300 transform hover:-translate-y-2 text-center flex flex-col items-center justify-between h-full relative overflow-hidden focus:outline-none"
+                    >
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-indigo-500/0 to-indigo-500/5 group-hover:to-indigo-500/10 transition-colors"
+                        ></div>
+                        <div
+                            class="absolute top-6 left-6 w-10 h-10 bg-white text-indigo-600 rounded-full flex items-center justify-center font-black text-lg border-2 border-indigo-100 shadow-sm z-10 group-hover:bg-indigo-600 group-hover:text-white transition-colors"
+                        >
+                            2
+                        </div>
+
+                        <div
+                            class="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-indigo-100 to-white rounded-[1.5rem] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm border border-white z-10"
+                        >
+                            <svg
+                                class="w-10 h-10 text-indigo-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <div
+                            class="flex-grow flex flex-col justify-center z-10"
+                        >
+                            <h2
+                                class="text-xl font-black text-slate-800 mb-2 group-hover:text-indigo-700 transition-colors"
+                            >
+                                Modul Mahasiswa
+                            </h2>
+                            <p
+                                class="text-sm text-slate-500 leading-relaxed px-2"
+                            >
+                                Panduan navigasi audio dan tata cara ujian
+                                online.
+                            </p>
+                        </div>
+                    </button>
+
+                    <!-- KARTU 3: KEMBALI -->
+                    <a
+                        href="{{ route('choose_role') }}"
+                        id="btn-kembali"
+                        class="group glass-card p-8 sm:p-10 rounded-[2.5rem] hover:shadow-[0_20px_40px_-15px_rgba(239,68,68,0.3)] hover:border-red-400 transition-all duration-300 transform hover:-translate-y-2 text-center flex flex-col items-center justify-between h-full relative overflow-hidden"
+                    >
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-red-500/0 to-red-500/5 group-hover:to-red-500/10 transition-colors"
+                        ></div>
+                        <div
+                            class="absolute top-6 left-6 w-10 h-10 bg-white text-red-600 rounded-full flex items-center justify-center font-black text-lg border-2 border-red-100 shadow-sm z-10 group-hover:bg-red-600 group-hover:text-white transition-colors"
+                        >
+                            0
+                        </div>
+
+                        <div
+                            class="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-red-100 to-white rounded-[1.5rem] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm border border-white z-10"
+                        >
+                            <svg
+                                class="w-10 h-10 text-red-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                                ></path>
+                            </svg>
+                        </div>
+                        <div
+                            class="flex-grow flex flex-col justify-center z-10"
+                        >
+                            <h2
+                                class="text-xl font-black text-slate-800 mb-2 group-hover:text-red-700 transition-colors"
+                            >
+                                Kembali
+                            </h2>
+                            <p
+                                class="text-sm text-slate-500 leading-relaxed px-2"
+                            >
+                                Tutup halaman ini dan kembali ke menu utama.
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <footer
+                class="w-full text-center py-6 text-slate-500 text-sm font-medium mt-auto relative z-10 bg-white/40 backdrop-blur-md border-t border-slate-200/50"
+            >
+                &copy; 2026 Universitas Muhammadiyah Sukabumi - Kampus Inklusi
+            </footer>
+        </div>
+
+        <script>
+            const statusBar = document.getElementById("voice-status-bar");
+            const statusText = document.getElementById("status-text");
             const waveBars = document.querySelectorAll(".wave-bar");
+
+            const headerText = document.getElementById("header-text");
+            const menuCards = document.getElementById("menu-cards");
+            const kontenPembacaan = document.getElementById("konten-pembacaan");
+            const judulPembacaan = document.getElementById("judul-pembacaan");
+            const teksPembacaan = document.getElementById("teks-pembacaan");
+
             const synth = window.speechSynthesis;
-            const SpeechRec = window.webkitSpeechRecognition || window.SpeechRecognition;
-            
+            const SpeechRec =
+                window.webkitSpeechRecognition || window.SpeechRecognition;
             let rec = null;
-            let waveInterval;
             let isRecActive = false;
             let isRedirecting = false;
             let isSpeaking = false;
+            let idleTimer;
+            let waveInterval;
+
+            let sedangMembaca = false;
+            const savedRate =
+                parseFloat(localStorage.getItem("speechRate")) || 1.1;
+            const teksAwal =
+                "Anda berada di halaman Modul Panduan. Sebutkan Satu untuk memutar audio modul Dosen. Sebutkan Dua untuk memutar audio modul Mahasiswa. Atau sebutkan Nol untuk kembali ke halaman utama.";
+
+            let suaraIndonesia = null;
+            function siapkanSuara() {
+                const voices = synth.getVoices();
+                suaraIndonesia =
+                    voices.find(
+                        (v) =>
+                            v.lang.replace("_", "-") === "id-ID" &&
+                            (v.name.includes("Google") ||
+                                v.name.includes("Gadis") ||
+                                v.name.includes("Female")),
+                    ) ||
+                    voices.find((v) => v.lang.replace("_", "-") === "id-ID");
+            }
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = siapkanSuara;
+            }
+            siapkanSuara();
 
             if (SpeechRec) {
                 rec = new SpeechRec();
                 rec.lang = "id-ID";
-                rec.continuous = true;
-                rec.interimResults = true; 
+                rec.continuous = false;
+                rec.interimResults = false;
             }
+
+            // AUTO START SAAT HALAMAN DIBUKA
+            window.addEventListener("load", () => {
+                setTimeout(() => {
+                    bicara(teksAwal);
+                    resetIdleTimer();
+                }, 800);
+            });
 
             function setWave(active) {
                 if (active) {
-                    if (waveInterval) clearInterval(waveInterval);
                     waveInterval = setInterval(() => {
-                        if (waveBars.length > 0) {
-                            waveBars.forEach((bar) => {
-                                bar.style.height = `${Math.floor(Math.random() * 12) + 4}px`;
-                            });
-                        }
+                        waveBars.forEach((bar) => {
+                            bar.style.height = `${Math.floor(Math.random() * 20) + 4}px`;
+                        });
                     }, 100);
                 } else {
-                    clearInterval(waveInterval);
-                    if (waveBars.length > 0) {
-                        waveBars.forEach((bar) => (bar.style.height = "4px"));
-                    }
+                    if (typeof waveInterval !== "undefined")
+                        clearInterval(waveInterval);
+                    waveBars.forEach((bar) => (bar.style.height = "4px"));
                 }
             }
 
-            // PENDETEKSI DOUBLE-CLICK SAJA (KLIK BIASA LANGSUNG TEMBUS/SATSET)
-            let lastClickTime = 0;
-            document.body.addEventListener('click', (e) => {
-                const currentTime = new Date().getTime();
-                const tapLength = currentTime - lastClickTime;
-                lastClickTime = currentTime;
-
-                // Jika jarak antar klik kurang dari 400ms (Double Click Detected)
-                if (tapLength > 0 && tapLength < 400) {
-                    if (isSpeaking && !isRedirecting) {
-                        synth.cancel(); 
-                        isSpeaking = false;
-                        setWave(false);
-                        if (statusDesc) {
-                            statusDesc.innerText = "MENDENGARKAN";
-                            statusDesc.classList.replace("text-blue-600", "text-green-600");
-                        }
-                        if (rec) { try { rec.abort(); } catch(err){} isRecActive = false; }
-                        setTimeout(() => { mulaiMendengar(); }, 50);
-                    }
-                }
-            });
-
-            // PENANGANAN KLIK MENU MENGGUNAKAN DELEGASI (Satset tanpa nahan event)
-            document.body.addEventListener('click', (e) => {
-                const menuElement = e.target.closest('[data-menu]');
-                if (menuElement) {
-                    e.preventDefault();
-                    const menuId = parseInt(menuElement.getAttribute('data-menu'));
-                    window.navigasiKe(menuId);
-                }
-            });
-
-            function mulaiMendengar() {
-                if (!rec || isRedirecting || isRecActive) return;
-                try {
-                    rec.start();
-                    isRecActive = true;
-                } catch (e) {
-                    console.error("Mic error:", e);
-                }
-            }
-
-            function bicara(teks, callback = null) {
+            function resetIdleTimer() {
+                clearTimeout(idleTimer);
                 if (isRedirecting) return;
+                idleTimer = setTimeout(() => {
+                    if (!sedangMembaca) bicara(teksAwal);
+                }, 180000); // diam 3 menit diulang
+            }
+
+            function resetMicSession() {
+                if (rec) {
+                    try {
+                        rec.abort();
+                    } catch (e) {}
+                    isRecActive = false;
+                }
+            }
+
+            function bicara(teks) {
+                if (isRedirecting) return;
+                isSpeaking = true;
+                resetMicSession();
                 synth.cancel();
 
                 setTimeout(() => {
                     const utter = new SpeechSynthesisUtterance(teks);
                     utter.lang = "id-ID";
-                    const savedRate = localStorage.getItem("speechRate");
-                    utter.rate = savedRate ? parseFloat(savedRate) : 1.1;
+                    utter.rate = savedRate;
+                    if (suaraIndonesia) utter.voice = suaraIndonesia;
 
                     utter.onstart = () => {
-                        isSpeaking = true;
-                        if (statusDesc) {
-                            statusDesc.innerText = "SISTEM BERBICARA";
-                            statusDesc.classList.replace("text-slate-400", "text-blue-600");
-                            statusDesc.classList.replace("text-green-600", "text-blue-600");
+                        if (statusText && teks !== "") {
+                            statusText.innerText = "SISTEM BERBICARA";
+                            statusText.classList.replace(
+                                "text-slate-700",
+                                "text-indigo-600",
+                            );
+                            statusText.classList.replace(
+                                "text-green-600",
+                                "text-indigo-600",
+                            );
                         }
                         setWave(true);
-                        mulaiMendengar();
                     };
 
                     utter.onend = () => {
                         isSpeaking = false;
                         setWave(false);
-                        if (!isRedirecting && statusDesc) {
-                            statusDesc.innerText = "MENDENGARKAN";
-                            statusDesc.classList.replace("text-slate-400", "text-green-600");
-                            statusDesc.classList.replace("text-blue-600", "text-green-600");
+
+                        if (!isRedirecting) {
+                            if (statusText) {
+                                statusText.innerText = "MENDENGARKAN";
+                                statusText.classList.replace(
+                                    "text-indigo-600",
+                                    "text-green-600",
+                                );
+                            }
+                            try {
+                                rec.start();
+                                isRecActive = true;
+                                resetIdleTimer();
+                            } catch (e) {}
                         }
-                        if (callback) callback();
                     };
 
                     utter.onerror = () => {
                         isSpeaking = false;
                         setWave(false);
-                        if (!isRedirecting && statusDesc) {
-                            statusDesc.innerText = "MENDENGARKAN";
-                            statusDesc.classList.replace("text-slate-400", "text-green-600");
-                            statusDesc.classList.replace("text-blue-600", "text-green-600");
-                        }
-                        mulaiMendengar();
                     };
 
                     synth.speak(utter);
                 }, 50);
             }
 
-            function getPanduanUtama() {
-                let teks = "Halo, ini adalah Pusat Bantuan. Anda dapat membaca panduan atau melihat solusi dari masalah umum. ";
-                teks += "Silakan ucapkan angka lima untuk Beranda, enam untuk Profil, tujuh untuk Pemberitahuan, delapan untuk Pesan, dan nol untuk Keluar. ";
-                teks += "Katakan Ulang, jika butuh panduan ini dibacakan kembali.";
-                return teks;
-            }
+            // MENGHENTIKAN SUARA DENGAN KLIK GANDA
+            let clickTimer = null;
+            document.body.addEventListener("click", (e) => {
+                const targetLink = e.target.closest("a");
+                const targetBtn = e.target.closest("button");
 
-            window.navigasiKe = function(nomor) {
-                if (isRedirecting) return;
+                if (targetBtn) return; // biarkan onClick HTML (bacaModul) berjalan normal
 
-                let tujuan = ""; let teks = "";
-
-                if (nomor === 5) { tujuan = "{{ route('dashboard') ?? '#' }}"; teks = "Membuka Beranda."; }
-                else if (nomor === 6) { tujuan = "{{ route('profile') ?? '#' }}"; teks = "Membuka Profil."; }
-                else if (nomor === 7) { tujuan = "{{ route('notifications') ?? '#' }}"; teks = "Membuka Pemberitahuan."; }
-                else if (nomor === 8) { tujuan = "{{ route('messages') ?? '#' }}"; teks = "Membuka Pesan."; }
-                else if (nomor === 9) { teks = "Anda sudah berada di halaman Bantuan."; }
-                else if (nomor === 0) { tujuan = "{{ route('logout') ?? '#' }}"; teks = "Keluar aplikasi."; }
-
-                if (teks !== "") {
-                    if (tujuan !== "" && tujuan !== "#") {
-                        isRedirecting = true;
+                if (clickTimer !== null) {
+                    clearTimeout(clickTimer);
+                    clickTimer = null;
+                    if (!isRedirecting) {
                         synth.cancel();
-                        if(rec) rec.abort();
-
-                        if(statusDesc) {
-                            statusDesc.innerText = "MENGALIHKAN...";
-                            statusDesc.classList.replace("text-green-600", "text-slate-800");
-                            statusDesc.classList.replace("text-blue-600", "text-slate-800");
-                        }
-                        
-                        bicara(teks); // Bot mulai ngomong
-                        setTimeout(() => { window.location.href = tujuan; }, 400); // 400ms lsg pindah halaman (Satset)
-                    } else {
-                        bicara(teks, () => {
-                            try { rec.start(); } catch (e) {}
-                        });
+                        isSpeaking = false;
+                        setWave(false);
+                        resetMicSession();
+                        setTimeout(() => {
+                            if (statusText) {
+                                statusText.innerText = "MENDENGARKAN";
+                                statusText.classList.replace(
+                                    "text-indigo-600",
+                                    "text-green-600",
+                                );
+                            }
+                            try {
+                                rec.start();
+                                isRecActive = true;
+                                resetIdleTimer();
+                            } catch (error) {}
+                        }, 50);
                     }
+                } else {
+                    clickTimer = setTimeout(() => {
+                        clickTimer = null;
+                        if (
+                            targetLink &&
+                            targetLink.href &&
+                            targetLink.href !== "#"
+                        ) {
+                            window.location.href = targetLink.href;
+                        }
+                    }, 300);
                 }
+            });
+
+            // LOGIKA AUDIO PLAYER MODUL
+            window.bacaModul = function (tipe) {
+                sedangMembaca = true;
+
+                // Ubah Tampilan: Sembunyikan Grid Menu, Munculkan Audio Player
+                headerText.classList.add("hidden");
+                menuCards.classList.add("hidden");
+                kontenPembacaan.classList.remove("hidden");
+                kontenPembacaan.classList.add("flex"); // Pastikan class flex dari Tailwind berjalan
+
+                let isiSuara = "";
+                if (tipe === "dosen") {
+                    judulPembacaan.innerText = "Audio Panduan Dosen";
+                    teksPembacaan.innerHTML = `
+                        <p>Sebagai Dosen, Anda memiliki hak akses penuh untuk mengelola kegiatan akademik. Langkah pertama adalah masuk menggunakan NIDN dan kata sandi.</p>
+                        <p>Pada halaman dasbor, Anda dapat melihat jadwal mengajar, membuat sesi perkuliahan, mengunggah materi, dan memantau absensi.</p>
+                        <p>Untuk mengelola nilai mahasiswa, silakan gunakan menu Penilaian secara berkala.</p>
+                    `;
+                    isiSuara =
+                        "Memutar Audio Panduan Dosen. Sebagai Dosen, Anda memiliki hak akses penuh untuk mengelola kegiatan akademik. Langkah pertama adalah masuk menggunakan N I D N dan kata sandi. Pada halaman dasbor, Anda dapat melihat jadwal mengajar, membuat sesi perkuliahan, mengunggah materi, dan memantau absensi. Untuk mengelola nilai mahasiswa, silakan gunakan menu Penilaian secara berkala. Panduan selesai. Sebutkan Nol, untuk menghentikan audio dan kembali.";
+                } else {
+                    judulPembacaan.innerText = "Audio Panduan Mahasiswa";
+                    teksPembacaan.innerHTML = `
+                        <p>Aplikasi ini terintegrasi penuh dengan asisten suara. Pastikan Anda berada di ruangan yang cukup tenang agar mikrofon dapat menangkap suara dengan baik.</p>
+                        <p>Di setiap halaman, Anda cukup menyebutkan angka yang dibacakan oleh sistem. Misalnya, sebutkan angka 'Satu' untuk melihat daftar mata kuliah.</p>
+                        <p>Saat Anda mengerjakan ujian online, sistem akan membacakan soal, dan Anda cukup membalas dengan menyebutkan opsi jawaban A, B, C, atau D.</p>
+                    `;
+                    isiSuara =
+                        "Memutar Audio Panduan Mahasiswa. Aplikasi ini terintegrasi penuh dengan asisten suara. Pastikan Anda berada di ruangan yang cukup tenang agar mikrofon dapat menangkap suara dengan baik. Di setiap halaman, Anda cukup menyebutkan angka yang dibacakan oleh sistem. Misalnya, sebutkan angka Satu untuk melihat daftar mata kuliah. Saat Anda mengerjakan ujian online, sistem akan membacakan soal secara berurutan, dan Anda cukup membalas dengan menyebutkan opsi jawaban A, B, C, atau D. Panduan selesai. Sebutkan Nol, untuk menghentikan audio dan kembali.";
+                }
+
+                bicara(isiSuara);
+            };
+
+            function tutupBacaModul() {
+                sedangMembaca = false;
+
+                // Kembalikan Tampilan Awal
+                kontenPembacaan.classList.add("hidden");
+                kontenPembacaan.classList.remove("flex");
+                headerText.classList.remove("hidden");
+                menuCards.classList.remove("hidden");
+
+                bicara(teksAwal);
             }
 
+            // PENGENALAN SUARA
             if (rec) {
                 rec.onresult = (event) => {
-                    if (isRedirecting) return;
+                    if (isRedirecting || isSpeaking) return;
+                    resetIdleTimer();
 
-                    let hasil = "";
-                    for (let i = event.resultIndex; i < event.results.length; ++i) {
-                        hasil += event.results[i][0].transcript;
+                    let hasilTerakhir =
+                        event.results[0][0].transcript.toLowerCase();
+
+                    if (!sedangMembaca) {
+                        // Kondisi Milih Modul (Belum diputar)
+                        if (
+                            hasilTerakhir.includes("satu") ||
+                            hasilTerakhir.includes("1")
+                        ) {
+                            document
+                                .getElementById("btn-dosen")
+                                .classList.add("ring-4", "ring-blue-400");
+                            bacaModul("dosen");
+                        } else if (
+                            hasilTerakhir.includes("dua") ||
+                            hasilTerakhir.includes("2") ||
+                            hasilTerakhir.includes("duwa") ||
+                            hasilTerakhir.includes("doa")
+                        ) {
+                            document
+                                .getElementById("btn-mahasiswa")
+                                .classList.add("ring-4", "ring-indigo-400");
+                            bacaModul("mahasiswa");
+                        } else if (
+                            hasilTerakhir.includes("nol") ||
+                            hasilTerakhir.includes("0") ||
+                            hasilTerakhir.includes("kembali")
+                        ) {
+                            isRedirecting = true;
+                            resetMicSession();
+                            setWave(false);
+                            document
+                                .getElementById("btn-kembali")
+                                .classList.add("ring-4", "ring-red-400");
+                            if (statusText)
+                                statusText.innerText = "MENGALIHKAN...";
+
+                            const utter = new SpeechSynthesisUtterance(
+                                "Kembali ke halaman utama.",
+                            );
+                            utter.lang = "id-ID";
+                            if (suaraIndonesia) utter.voice = suaraIndonesia;
+                            utter.onend = () => {
+                                window.location.href =
+                                    "{{ route('choose_role') }}";
+                            };
+                            synth.speak(utter);
+                        } else if (hasilTerakhir.includes("ulang")) {
+                            resetMicSession();
+                            bicara(teksAwal);
+                        } else {
+                            resetMicSession();
+                            bicara("Sebut ulang angka pilihan Anda.");
+                        }
+                    } else {
+                        // Kondisi Audio Sedang/Selesai Diputar
+                        if (
+                            hasilTerakhir.includes("nol") ||
+                            hasilTerakhir.includes("0") ||
+                            hasilTerakhir.includes("kembali") ||
+                            hasilTerakhir.includes("stop") ||
+                            hasilTerakhir.includes("berhenti")
+                        ) {
+                            document
+                                .getElementById("btn-dosen")
+                                .classList.remove("ring-4", "ring-blue-400");
+                            document
+                                .getElementById("btn-mahasiswa")
+                                .classList.remove("ring-4", "ring-indigo-400");
+                            tutupBacaModul();
+                        } else {
+                            resetMicSession();
+                            bicara(
+                                "Ucapkan Nol atau Kembali, untuk menghentikan audio.",
+                            );
+                        }
                     }
-                    hasil = hasil.toLowerCase().replace(/[.,?!]/g, '').trim();
-
-                    if (isSpeaking) return;
-
-                    prosesJawaban(hasil);
                 };
 
-                rec.onend = () => { 
+                rec.onend = () => {
                     isRecActive = false;
-                    if (!isRedirecting) mulaiMendengar(); 
+                    if (!isRedirecting && !isSpeaking) {
+                        try {
+                            rec.start();
+                        } catch (e) {}
+                    }
                 };
             }
-
-            function prosesJawaban(hasil) {
-                if (hasil.includes("ulang") || hasil.includes("panduan") || hasil.includes("bantuan")) {
-                    synth.cancel();
-                    if(rec) rec.abort();
-                    bicara(getPanduanUtama(), () => { mulaiMendengar(); });
-                    return;
-                }
-
-                if (/\b(satu|1|sato|sapu|saku|atu|aku|tu|kesatu)\b/.test(hasil)) { window.navigasiKe(1); }
-                else if (/\b(dua|2|duwa|doa|tua|jua|kedua)\b/.test(hasil)) { window.navigasiKe(2); }
-                else if (/\b(tiga|3|ti ga|ketiga)\b/.test(hasil)) { window.navigasiKe(3); }
-                else if (/\b(empat|4|pat|keempat)\b/.test(hasil)) { window.navigasiKe(4); }
-                else if (/\b(lima|5|kelima)\b/.test(hasil)) { window.navigasiKe(5); }
-                else if (/\b(enam|6|nam|keenam)\b/.test(hasil)) { window.navigasiKe(6); }
-                else if (/\b(tujuh|7|tuju|ketujuh)\b/.test(hasil)) { window.navigasiKe(7); }
-                else if (/\b(delapan|8|kedelapan)\b/.test(hasil)) { window.navigasiKe(8); }
-                else if (/\b(sembilan|9|kesembilan)\b/.test(hasil)) { window.navigasiKe(9); }
-                else if (/\b(nol|0|kosong)\b/.test(hasil)) { window.navigasiKe(0); }
-            }
-
-            window.addEventListener("load", () => {
-                document.body.addEventListener("click", () => {}, { once: true });
-                setTimeout(() => {
-                    bicara(getPanduanUtama());
-                }, 800);
-            });
         </script>
         <x-accessibility-widget />
     </body>

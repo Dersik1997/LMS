@@ -53,6 +53,9 @@ use App\Http\Controllers\Dosen\DosenNotificationController;
 Route::get('/', function () { return view('choose_role'); })->name('choose_role');
 Route::get('/setup-voice', function () { return view('setup_voice'); })->name('setup.voice');
 
+// [BARU] RUTE HALAMAN MODUL PANDUAN
+Route::get('/modul-panduan', function () { return view('modul_panduan'); })->name('modul.panduan');
+
 // --- Auth Mahasiswa ---
 Route::get('/login', function () { return view('login'); })->name('login');
 Route::post('/login-process', [AuthController::class, 'loginMahasiswa'])->name('login.post');
@@ -61,20 +64,16 @@ Route::post('/register-mahasiswa', [MahasiswaAuthController::class, 'register'])
 
 // [PERBAIKAN LOGOUT] Smart Logout -> Kembali ke halaman pertama
 Route::get('/logout', function () {
-    // Cek jika yang logout adalah Dosen
     if (Auth::guard('dosen')->check()) {
         Auth::guard('dosen')->logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
-        // Redirect ke Halaman Pertama (choose_role)
         return redirect()->route('choose_role');
     }
 
-    // Jika yang logout adalah Mahasiswa
     Auth::guard('mahasiswa')->logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
-    // Redirect ke Halaman Pertama (choose_role)
     return redirect()->route('choose_role');
 })->name('logout');
 
@@ -104,21 +103,17 @@ Route::get('/logout-dosen', function () {
 */
 Route::middleware('auth:mahasiswa')->group(function () {
     
-    // --- Dashboard & Profil ---
     Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])->name('dashboard');
     
-    // Rute Profil
     Route::get('/mahasiswa/profile', [MahasiswaProfileController::class, 'index'])->name('profile');
     Route::put('/mahasiswa/profile/update', [MahasiswaProfileController::class, 'update'])->name('profile.update');
     Route::put('/mahasiswa/profile/password', [MahasiswaProfileController::class, 'updatePassword'])->name('profile.password');
     
     Route::get('/bantuan', function () { return view('help'); })->name('help');
     
-    // --- Notifikasi ---
     Route::get('/pemberitahuan', [MahasiswaNotificationController::class, 'index'])->name('notifications');
     Route::post('/pemberitahuan/read-all', [MahasiswaNotificationController::class, 'markAllRead'])->name('notifications.read');
 
-    // --- Mata Kuliah & Kelas ---
     Route::controller(MahasiswaController::class)->group(function () {
         Route::get('/mata-kuliah', 'index')->name('courses.index');
         Route::get('/mata-kuliah/{kelas}', 'show')->name('course.detail');
@@ -126,36 +121,28 @@ Route::middleware('auth:mahasiswa')->group(function () {
         Route::get('/kelas/{kelas}/anggota/search', 'search')->name('course.members.search');
         Route::post('/mata-kuliah/{kelas}/assignment/{assignment}/message', 'sendMessage')->name('mahasiswa.assignment.message.store');
         
-        // Detail spesifik struktur data
         Route::get('mata-kuliah/struktur-data/mata-kuliah/{kelas}/topik/{session}', 'topic')->name('topic.detail');
         Route::post('mata-kuliah/struktur-data/mata-kuliah/{kelas}/assignment/{assignment}/submit', 'submitAssignment')->name('assignment.submit');
         Route::get('mata-kuliah/struktur-data/mata-kuliah/{kelas}/anggota', 'members')->name('course.members');
     });
 
-    // Rute spesifik prototype view
     Route::get('/mata-kuliah/struktur-data', function () { return view('course_detail'); })->name('course.prototype.detail');
 
-    // --- Gabung Kelas ---
     Route::get('/gabung-kelas', function () { return view('join_course'); })->name('courses.join');
     Route::post('/mahasiswa/join-kelas', [MahasiswaJoinKelasController::class, 'join'])->name('mahasiswa.join.kelas');
 
-    // --- Penugasan Mahasiswa ---
     Route::controller(MahasiswaAssignmentController::class)->group(function () {
         Route::get('/mata-kuliah/{kelas}/penugasan', 'index')->name('course.assignments');
         Route::get('/mata-kuliah/{kelas}/penugasan/{assignment}', 'show')->name('mahasiswa.assignment.detail');
         Route::post('/mata-kuliah/{kelas}/penugasan/{assignment}/submit', 'store')->name('mahasiswa.assignment.store');
     });
 
-    // --- Presensi Mahasiswa ---
     Route::controller(MahasiswaAttendanceController::class)->group(function () {
         Route::post('/presensi/{id}/{status}', 'store')->name('presensi.store');
-        
-        // KEDUA RUTE INI DIARAHKAN KE FUNGSI 'attendance' YANG SAMA
         Route::get('/presensi/{session}', 'attendance')->name('mahasiswa.presensi');
         Route::get('/mahasiswa/attendance/{id}', 'attendance')->name('course.attendance');
     });
 
-    // --- Pesan (Chat) ---
     Route::controller(MahasiswaMessageController::class)->group(function () {
         Route::get('/pesan', 'index')->name('messages');
         Route::get('/messages/search', 'search')->name('messages.search');
@@ -163,13 +150,10 @@ Route::middleware('auth:mahasiswa')->group(function () {
         Route::get('/messages/{dosen}', 'show')->name('messages.show');
     });
 
-    // --- Diskusi Sesi (Hanya Mahasiswa) ---
     Route::post('/discussion/{session}', [DiscussionController::class, 'store'])->name('mahasiswa.discussion.store'); 
-    
     Route::get('/student/chat/{conversation}/messages', [DiscussionController::class,'messages']);
     Route::post('/student/chat/{conversation}/send', [DiscussionController::class,'send']);
 
-    // --- Ujian Online ---
     Route::prefix('ujian')->controller(MahasiswaExamController::class)->group(function () {
         Route::get('/', 'index')->name('exams');
         Route::get('/gabung', 'join')->name('join.exam');
@@ -189,21 +173,18 @@ Route::middleware('auth:mahasiswa')->group(function () {
 */
 Route::prefix('dosen')->middleware('auth:dosen')->group(function () {
 
-    // --- Dashboard & Jadwal ---
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/', 'index')->name('dosen.dashboard');
         Route::get('/jadwal', 'schedule')->name('dosen.schedule');
         Route::get('/jadwal/pdf', [DashboardController::class, 'exportSchedulePdf'])->name('dosen.schedule.pdf');
     });
 
-    // --- Notifikasi Dosen ---
     Route::controller(DosenNotificationController::class)->group(function () {
         Route::get('/pemberitahuan', 'index')->name('dosen.notifications');
         Route::get('/pemberitahuan/{id}', 'read')->name('dosen.notifications.read.single');
         Route::post('/pemberitahuan/read-all', 'markAllRead')->name('dosen.notifications.read');
     });
 
-    // --- Profil Dosen ---
     Route::controller(ProfilDosenController::class)->group(function () {
         Route::get('/profile', 'index')->name('dosen.profile');
         Route::get('/profile/edit', 'edit')->name('dosen.profile.edit');
@@ -211,7 +192,6 @@ Route::prefix('dosen')->middleware('auth:dosen')->group(function () {
         Route::put('/profile/password', 'updatePassword')->name('dosen.profile.password');
     });
 
-    // --- Manajemen Kelas (CRUD) ---
     Route::controller(KelasController::class)->group(function () {
         Route::get('/kelas', 'index')->name('dosen.kelas.index');
         Route::post('/kelas', 'store')->name('dosen.kelas.store');
@@ -219,7 +199,6 @@ Route::prefix('dosen')->middleware('auth:dosen')->group(function () {
         Route::delete('/kelas/{id}', 'destroy')->name('dosen.kelas.destroy');
     });
 
-    // --- Manajemen Mata Kuliah ---
     Route::controller(CourseController::class)->group(function () {
         Route::get('/mata-kuliah', 'index')->name('dosen.courses');
         Route::get('/mata-kuliah/{id}', 'manage')->name('dosen.course.manage');
@@ -232,7 +211,6 @@ Route::prefix('dosen')->middleware('auth:dosen')->group(function () {
         Route::delete('/course/{kelas}/session/{session}', 'destroySession')->name('dosen.course.session.destroy');
     });
 
-    // --- Manajemen Sesi & Materi ---
     Route::controller(CourseSessionController::class)->group(function () {
         Route::get('/mata-kuliah/{kelas}/session/{session}', 'detail')->name('dosen.course.session.detail');
         Route::post('/session/{id}/diskusi', 'storeDiskusi')->name('session.diskusi.store');
@@ -247,7 +225,6 @@ Route::prefix('dosen')->middleware('auth:dosen')->group(function () {
         Route::delete('/materi/{id}', 'destroy')->name('dosen.materi.destroy');
     });
 
-    // API Realtime Sesi
     Route::get('/session/{session}/realtime', function ($sessionId) {
         $session = \App\Models\CourseSession::findOrFail($sessionId);
         return response()->json([
@@ -257,7 +234,6 @@ Route::prefix('dosen')->middleware('auth:dosen')->group(function () {
         ]);
     });
 
-    // --- Manajemen Presensi ---
     Route::controller(AttendanceController::class)->group(function () {
         Route::get('/kelas/{kelas}/absensi', 'index')->name('dosen.attendance.index');
         Route::get('/attendance/history/{session}', 'history')->name('dosen.attendance.history');
@@ -267,7 +243,6 @@ Route::prefix('dosen')->middleware('auth:dosen')->group(function () {
         Route::delete('/attendance/{session}/reset', 'reset')->name('dosen.attendance.reset');
     });
 
-    // --- Manajemen Penugasan ---
     Route::controller(AssignmentController::class)->group(function () {
         Route::get('/mata-kuliah/{kelas}/penugasan', 'index')->name('dosen.course.assignments');
         Route::get('/mata-kuliah/{kelas}/penugasan/create', 'create')->name('dosen.assignment.create');
@@ -280,7 +255,6 @@ Route::prefix('dosen')->middleware('auth:dosen')->group(function () {
         Route::get('/kelas/{kelas}/assignment-recap/pdf', 'exportPdf')->name('dosen.assignment.recap.pdf');
     });
     
-    // --- Penilaian & Feedback Tugas ---
     Route::controller(AssignmentGradeController::class)->group(function () {
         Route::get('/mata-kuliah/{kelas}/assignment/{assignment}/grade/{mahasiswa?}', 'show')->name('dosen.assignment.grade');
         Route::post('/mata-kuliah/{kelas}/assignment/{assignment}/grade/{mahasiswa?}', 'store')->name('dosen.assignment.grade.store');
@@ -288,7 +262,6 @@ Route::prefix('dosen')->middleware('auth:dosen')->group(function () {
         Route::post('/submission/{submission}/message', 'sendMessage')->name('dosen.assignment.message');
     });
 
-    // --- Rekap Nilai Akhir ---
     Route::controller(RekapNilaiController::class)->group(function () {
         Route::get('/penilaian', 'globalInput')->name('dosen.grading');
         Route::post('/penilaian/{kelas}', 'globalStore')->name('dosen.grading.store');
@@ -299,7 +272,6 @@ Route::prefix('dosen')->middleware('auth:dosen')->group(function () {
         Route::get('/kelas/{kelas}/rekap-nilai/export', 'exportExcel')->name('dosen.grades.export');
     });
 
-    // --- Manajemen Ujian ---
     Route::controller(ExamController::class)->group(function () {
         Route::get('/ujian', 'index')->name('dosen.exams');
         Route::post('/ujian', 'store')->name('dosen.exams.store');
@@ -313,7 +285,6 @@ Route::prefix('dosen')->middleware('auth:dosen')->group(function () {
         Route::get('/ujian/{exam}/hasil/export', 'exportHasil')->name('dosen.exams.results.export');
     });
 
-    // --- Pesan (Chat) Dosen ---
     Route::controller(DosenMessageController::class)->group(function () {
         Route::get('/messages', 'index')->name('dosen.messages');
         Route::get('/messages-search', 'searchStudents')->name('dosen.messages.search');
