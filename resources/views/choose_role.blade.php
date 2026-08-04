@@ -140,21 +140,27 @@
             <div
                 class="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 w-full max-w-5xl mx-auto pt-16 pb-12 lg:pt-28 lg:pb-16"
             >
-                <div class="text-center mb-10 sm:mb-16">
+                <!-- BAGIAN HEADER YANG DIREVISI -->
+                <div class="text-center mb-10 sm:mb-14">
                     <div
-                        class="inline-block px-4 py-1.5 bg-blue-100 text-blue-700 font-bold text-xs rounded-full mb-4 tracking-wider uppercase"
+                        class="inline-block px-4 py-1.5 bg-blue-100 text-blue-700 font-bold text-xs rounded-full mb-3 tracking-wider uppercase"
                     >
                         Portal Akademik Terintegrasi
                     </div>
+
                     <h1
-                        class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 mb-4 tracking-tight drop-shadow-sm"
+                        class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 mb-3 tracking-tight drop-shadow-sm leading-tight max-w-3xl mx-auto"
                     >
-                        LMS Inklusi UMMI
+                        Selamat Datang di Kampus Inklusi
+                        <br class="hidden md:block" />Universitas Muhammadiyah
+                        Sukabumi
                     </h1>
+
                     <p
-                        class="text-slate-600 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed font-medium"
+                        class="text-slate-600 text-sm sm:text-base max-w-xl mx-auto leading-relaxed font-medium"
                     >
-                        Selamat datang. Silakan pilih akses masuk Anda.
+                        Silakan pilih akses peran Anda untuk memulai
+                        pembelajaran.
                     </p>
                 </div>
 
@@ -323,7 +329,7 @@
                 parseFloat(localStorage.getItem("speechRate")) || 1.1;
 
             const teksSambutanUtama =
-                "Selamat datang di L M S Inklusi U M M I. Silakan pilih akses masuk Anda. Sebutkan Satu, untuk masuk sebagai Dosen. Sebutkan Dua, untuk masuk sebagai Mahasiswa. Atau sebutkan Tiga, untuk membuka halaman Modul Panduan.";
+                "Selamat datang di Kampus Inklusi Universitas Muhammadiyah Sukabumi. Silakan pilih akses masuk Anda. Sebutkan Satu, untuk masuk sebagai Dosen. Sebutkan Dua, untuk masuk sebagai Mahasiswa. Atau sebutkan Tiga, untuk membuka halaman Modul Panduan.";
 
             let suaraIndonesia = null;
             function siapkanSuara() {

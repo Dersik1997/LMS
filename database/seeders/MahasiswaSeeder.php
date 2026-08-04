@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Mahasiswa; // Pastikan model Mahasiswa di-import
 use Illuminate\Support\Facades\Hash;
 
 class MahasiswaSeeder extends Seeder
@@ -88,6 +88,12 @@ class MahasiswaSeeder extends Seeder
             ]
         ];
 
-        DB::table('mahasiswas')->insert($mahasiswa);
+        // Loop dan gunakan updateOrCreate untuk menghindari error duplicate entry
+        foreach ($mahasiswa as $mhs) {
+            Mahasiswa::updateOrCreate(
+                ['nim' => $mhs['nim']], // Kondisi pencarian: Cek apakah NIM ini sudah ada
+                $mhs // Data yang dimasukkan jika baru, atau ditimpa jika sudah ada
+            );
+        }
     }
 }

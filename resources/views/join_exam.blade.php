@@ -90,7 +90,7 @@
                                 </div>
                             </div>
 
-                            <button type="button" id="btn-submit-kode" onclick="validasiAkhir()" class="w-full bg-slate-900 text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm uppercase tracking-widest hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-200 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 sm:gap-3 pointer-events-auto cursor-pointer">
+                            <button type="button" id="btn-submit-kode" onclick="window.validasiAkhir()" class="w-full bg-slate-900 text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm uppercase tracking-widest hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-200 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 sm:gap-3 pointer-events-auto cursor-pointer">
                                 <span class="pointer-events-none">Gabung Sekarang</span>
                                 <svg class="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                             </button>
@@ -198,7 +198,7 @@
                         clickTimer = null;
                         if (navElement && !isRedirecting) {
                             if (navElement.hasAttribute('data-menu')) {
-                                navigasiKe(parseInt(navElement.getAttribute('data-menu')));
+                                window.navigasiKe(parseInt(navElement.getAttribute('data-menu')));
                             } else if (navElement.id === 'btn-submit-kode') {
                                 window.validasiAkhir();
                             }
@@ -324,8 +324,17 @@
                     let hasilTerakhir = event.results[0][0].transcript.toLowerCase().replace(/[.,?!]/g, "").trim();
                     if (!hasilTerakhir) return;
 
-                    if (hasilTerakhir === "nol" || hasilTerakhir.includes("kembali") || hasilTerakhir.includes("batal")) {
-                        navigasiKe(0); return;
+                    // PERBAIKAN: METODE SAMA PERSIS DENGAN HALAMAN GABUNG KELAS & PROFIL
+                    if (
+                        hasilTerakhir === "0" || 
+                        hasilTerakhir === "nol" || 
+                        hasilTerakhir === "kosong" || 
+                        hasilTerakhir.includes("kembali") || 
+                        hasilTerakhir.includes("batal") ||
+                        hasilTerakhir.includes("keluar")
+                    ) {
+                        window.navigasiKe(0); 
+                        return;
                     }
 
                     if (currentStep === 'ASK_TOKEN') {

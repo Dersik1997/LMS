@@ -230,7 +230,7 @@
 
                     utter.onstart = () => {
                         if (statusDesc && teks !== "") {
-                            statusDesc.innerText = "SISTEM BERBICARA";
+                            statusDesc.innerText = "SISTEM BERBICARA"; // FIX: Sebelumnya salah panggil variabel
                             statusDesc.classList.replace("text-green-600", "text-blue-600");
                             statusDesc.classList.replace("text-slate-400", "text-blue-600");
                         }
@@ -263,7 +263,7 @@
                 fieldCode.classList.add("border-blue-600", "bg-white", "shadow-md");
                 let teks = "Halaman Gabung Kelas. ";
                 @if($errors->any()) teks += "Terdapat kesalahan. {{ $errors->first() }}. "; @endif
-                teks += "Sebutkan kode kelas. Atau angka nol untuk kembali.";
+                teks += "Sebutkan kode kelas. Atau sebut Nol untuk kembali.";
                 bicara(teks);
             }
 
@@ -323,7 +323,8 @@
                     let hasilTerakhir = event.results[0][0].transcript.toLowerCase().replace(/[.,?!]/g, "").trim();
                     if (!hasilTerakhir) return;
 
-                    if (hasilTerakhir === "nol" || hasilTerakhir.includes("kembali") || hasilTerakhir.includes("batal")) {
+                    // FIX: Hanya kembali jika ucapan mahasiswa = "0", "nol", atau ada kata "kembali" / "batal" saja.
+                    if (hasilTerakhir === "0" || hasilTerakhir === "nol" || hasilTerakhir === "kosong" || hasilTerakhir.includes("kembali") || hasilTerakhir.includes("batal")) {
                         navigasiKe(0); return;
                     }
 

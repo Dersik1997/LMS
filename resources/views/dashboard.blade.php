@@ -136,10 +136,9 @@
                         <div>
                             <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-none">
                                 @php
-                                    $namaArray = explode(' ', $mahasiswa->nama ?? 'Mahasiswa');
-                                    $namaPanggilan = $namaArray[0];
+                                    $namaLengkap = $mahasiswa->nama ?? 'Mahasiswa';
                                 @endphp
-                                Halo, {{ $namaPanggilan }}
+                                Halo, {{ $namaLengkap }}
                             </h2>
                             <p class="text-[9px] sm:text-sm font-medium text-slate-500 mt-1">Siap untuk belajar hari ini?</p>
                         </div>
@@ -232,7 +231,7 @@
                                 <a href="{{ route('course.detail', ['kelas' => $k->id]) }}" class="group bg-white p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-lg transition-all flex items-center gap-4 sm:gap-6 cursor-pointer link-navigasi">
                                     <div class="w-14 h-14 sm:w-16 sm:h-16 bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 transition-colors">
                                         <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477-4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                                         </svg>
                                     </div>
                                     <div class="flex-1 min-w-0">
@@ -426,7 +425,7 @@
             }
 
             function getPanduanUtama() {
-                let nama = "{{ $namaPanggilan }}";
+                let nama = "{{ $namaLengkap }}";
                 let panduan = `Halo ${nama}. Sebutkan angka berikut: `;
                 panduan += "Satu, Daftar Mata Kuliah. ";
                 panduan += "Dua, Daftar Ujian. ";
